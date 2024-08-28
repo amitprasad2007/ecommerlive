@@ -66,7 +66,7 @@
             <a class="collapse-item" href="{{route('category.index')}}">Category</a>
             <a class="collapse-item" href="{{route('admin.category.subcategory')}}">Sub Category</a>
             <a class="collapse-item" href="{{route('admin.category.subsubcategory')}}">Sub Sub Category</a>
-            <a class="collapse-item" href="{{route('category.create')}}">Add Category</a>
+{{--            <a class="collapse-item" href="{{route('category.create')}}">Add Category</a>--}}
           </div>
         </div>
     </li>
