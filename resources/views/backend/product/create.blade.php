@@ -222,10 +222,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 @endpush
 @push('scripts')
-<script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
+<script src="{{asset('vendor/laravel-filemanager/js/stand-alone-button.js')}}"></script>
 <script src="{{asset('backend/summernote/summernote.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 <script>
+     const appurl = "{{ config('app.url') }}";
     $(document).ready(function() {
         $('#description').summernote({
             placeholder: "Write detail description.....",
@@ -251,7 +252,7 @@
         var cat_id = $(this).val();
         if (cat_id != null) {
             $.ajax({
-                url: "/admin/category/" + cat_id + "/child",
+                url: appurl+"/admin/category/" + cat_id + "/child",
                 data: {
                     _token: "{{csrf_token()}}",
                     id: cat_id
@@ -285,7 +286,7 @@
         var child_cat_id = $(this).val();
         if (child_cat_id != null) {
             $.ajax({
-                url: "/admin/category/" + child_cat_id + "/subchild",
+                url: appurl+"/admin/category/" + child_cat_id + "/subchild",
                 data: {
                     _token: "{{csrf_token()}}",
                     id: child_cat_id

@@ -103,8 +103,9 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+     public function store(Request $request)
     {
+
         // return $request->all();
         $this->validate($request,[
             'title'=>'string|required',
@@ -114,18 +115,17 @@ class CategoryController extends Controller
             'is_parent'=>'sometimes|in:1',
             'parent_id'=>'nullable|exists:categories,id',
         ]);
-
-        if($request->input('subsubcat', 1)){
+        if($request->input('subsubcat') ==1 || $request->input('subsubcat') !='' ){
+            $this->validate($request,[
+                'parent_id' => 'required|integer|exists:categories,id',
+                'sub_cat_id' => 'required|integer|exists:categories,id',
+            ]);
+        }
+         if ($request->parent_id != "") {
             $this->validate($request,[
                 'parent_id' => 'required|integer|exists:categories,id',
             ]);
         }
-        if ($request->parent_id != "") { 
-            $this->validate($request,[
-                'sub_cat_id' => 'required|integer|exists:categories,id',
-            ]);
-        }
-
         $data= $request->all();
         $slug=Str::slug($request->title);
         $count=Category::where('slug',$slug)->count();
@@ -135,7 +135,7 @@ class CategoryController extends Controller
         $data['slug']=$slug;
         $data['is_parent']=$request->input('is_parent',0);
         $data['sub_cat_id'] = $request->sub_cat_id ? $request->sub_cat_id : null;
-        // return $data;   
+        // return $data;
         $status=Category::create($data);
         if($status){
             request()->session()->flash('success','Category successfully added');
@@ -147,7 +147,6 @@ class CategoryController extends Controller
 
 
     }
-
     /**
      * Display the specified resource.
      *

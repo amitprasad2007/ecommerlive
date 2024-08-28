@@ -259,6 +259,7 @@
 </script>
 
 <script>
+    const appurl = "{{ config('app.url') }}";
   var  child_cat_id='{{$product->child_cat_id}}';
         // alert(child_cat_id);
         $('#cat_id').change(function(){
@@ -267,7 +268,7 @@
             if(cat_id !=null){
                 // ajax call
                 $.ajax({
-                    url:"/admin/category/"+cat_id+"/child",
+                    url: appurl+"/admin/category/"+cat_id+"/child",
                     type:"POST",
                     data:{
                         _token:"{{csrf_token()}}"
@@ -312,7 +313,7 @@
       if(child_cat_id !=null){
           // ajax call
           $.ajax({
-              url:"/admin/category/" + child_cat_id + "/subchild",
+              url: appurl+"/admin/category/" + child_cat_id + "/subchild",
               type:"POST",
               data:{
                   _token:"{{csrf_token()}}"
