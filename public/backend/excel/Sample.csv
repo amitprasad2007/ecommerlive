@@ -1,0 +1,2 @@
+title,slug,sku,description,status,price,discount,is_featured,todays_deal,min_qty,tax,shipping_cost,purchase_price,tags
+Product title,Product slug,SKU Code,Product Description,Active or Inactive,8879,15,1 or 0,1 or 0,1,15,20,5000,Product Tags

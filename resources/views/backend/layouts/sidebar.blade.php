@@ -65,7 +65,7 @@
             <h6 class="collapse-header">Category Options:</h6>
             <a class="collapse-item" href="{{route('category.index')}}">Category</a>
             <a class="collapse-item" href="{{route('admin.category.subcategory')}}">Sub Category</a>
-            <a class="collapse-item" href="{{route('admin.category.subsubcategory')}}">Sub SubCategory</a>
+            <a class="collapse-item" href="{{route('admin.category.subsubcategory')}}">Sub Sub Category</a>
             <a class="collapse-item" href="{{route('category.create')}}">Add Category</a>
           </div>
         </div>
