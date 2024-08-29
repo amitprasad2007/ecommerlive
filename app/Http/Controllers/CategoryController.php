@@ -213,8 +213,8 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-    
+    {   
+        // dd ($request->all());
         $category=Category::findOrFail($id);
         $this->validate($request,[
             'title'=>'string|required',
@@ -224,15 +224,19 @@ class CategoryController extends Controller
             'is_parent'=>'sometimes|in:1',
             'parent_id'=>'nullable|exists:categories,id',
         ]);
-        if($request->input('subsubcat', 1)){
+        // dd ($request->all());
+        if($request->input('subsubcat') ==1 || $request->input('subsubcat') !='' ){
+            $this->validate($request,[
+                'parent_id' => 'required|integer|exists:categories,id',
+                'sub_cat_id' => 'required|integer|exists:categories,id',
+            ]);
+        }
+         if ($request->parent_id != "") {
             $this->validate($request,[
                 'parent_id' => 'required|integer|exists:categories,id',
             ]);
         }
-        if ($request->input('parent_id')) {
-            $rules['sub_cat_id'] = 'required|integer|exists:categories,id';
-        }
-
+       // dd ($request->all());
         $data= $request->all();
         $data['is_parent']  = $request->input('is_parent',0);
         $data['parent_id']  = $request->parent_id ? $request->parent_id : 0;
