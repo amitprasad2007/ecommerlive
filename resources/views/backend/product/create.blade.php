@@ -7,7 +7,23 @@
         max-height: 300px;
         display: none;
     }
+    .bootstrap-tagsinput .tag {
+        margin-right: 2px;
+        color: white;
+        background-color: #007bff;
+        padding: 5px;
+        border-radius: 3px;
+    }
+
+    .bootstrap-tagsinput input {
+        width: 2200px !important;
+        height: 30px !important;
+    }
+
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
 <div class="card">
     <h5 class="card-header">Add Product</h5>
     <div class="card-body">
@@ -98,7 +114,11 @@
             </div>
             <div class="form-group">
                 <label for="tag">Tags</label>
-                <input type="text" id="tags" name="tags"  placeholder="Enter Product Tag" value="{{old('tags')}}" class="form-control">
+                <div class="col-lg-12">
+                <input type="text" class="form-control p-2 col-md-5" style="width: fit-content" name="tags[]" placeholder="Type to add a tag" data-role="tagsinput">
+
+                </div>
+
             </div>
             <div class="form-group row ">
                 <label for="tax" style="margin-left: 15px;">Tax <span class="text-danger">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -222,17 +242,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 @endpush
 @push('scripts')
-<script src="{{asset('vendor/laravel-filemanager/js/stand-alone-button.js')}}"></script>
+<script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 <script src="{{asset('backend/summernote/summernote.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 <script>
-     const appurl = "{{ config('app.url') }}";
     $(document).ready(function() {
         $('#description').summernote({
             placeholder: "Write detail description.....",
             tabsize: 2,
             height: 150
         });
+
     });
 
     document.getElementById('image-input').addEventListener('change', function(event) {
@@ -252,7 +272,7 @@
         var cat_id = $(this).val();
         if (cat_id != null) {
             $.ajax({
-                url: appurl+"/admin/category/" + cat_id + "/child",
+                url: "/admin/category/" + cat_id + "/child",
                 data: {
                     _token: "{{csrf_token()}}",
                     id: cat_id
@@ -286,7 +306,7 @@
         var child_cat_id = $(this).val();
         if (child_cat_id != null) {
             $.ajax({
-                url: appurl+"/admin/category/" + child_cat_id + "/subchild",
+                url: "/admin/category/" + child_cat_id + "/subchild",
                 data: {
                     _token: "{{csrf_token()}}",
                     id: child_cat_id
