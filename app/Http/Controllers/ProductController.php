@@ -47,7 +47,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
         $validatedData =  $this->validate($request,[
             'title'=>'string|required',
             'slug'=>'string|required',
@@ -95,14 +94,6 @@ class ProductController extends Controller
         Storage::disk('public')->put($filePathpdf, file_get_contents($filepdf));
 
         $data=$request->all();
-        //  dd($data);
-//        $slug=Str::slug($request->title);
-//        $count=Product::where('slug',$slug)->count();
-//        if($count>0){
-//            $slug=$slug.'-'.date('ymdis').'-'.rand(0,999);
-//        }
-//        $data['slug']=$slug;
-//        $data['is_featured']=$request->input('is_featured',0);
         $data['photo']      = '/storage/'.$filePath;
         $data['pdf']      = '/storage/'.$filePathpdf;
         $status=Product::create($data);
