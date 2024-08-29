@@ -38,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label for="description" class="col-form-label">Description <span class="text-danger">*</span></label>
-                <textarea class="form-control" id="description" name="description">{{old('description')}}</textarea>
+                <textarea class="form-control descriptionclass" id="description" name="description">{{old('description')}}</textarea>
                 @error('description')
                 <span class="text-danger">{{$message}}</span>
                 @enderror
@@ -201,7 +201,7 @@
             </div>
             <div class="form-group">
                 <label for="metadescription" class="col-form-label">Meta Description <span class="text-danger">*</span></label>
-                <textarea class="form-control" id="meta_description" name="meta_description">{{old('meta_description')}}</textarea>
+                <textarea class="form-control descriptionclass" id="meta_description" name="meta_description">{{old('meta_description')}}</textarea>
                 @error('meta_description')
                 <span class="text-danger">{{$message}}</span>
                 @enderror
@@ -245,14 +245,35 @@
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 <script src="{{asset('backend/summernote/summernote.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
+<style>
+	.note-editable {
+		font-family: 'Open Sans', sans-serif !important;
+	}
+</style>
+@section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script> 
 <script>
     $(document).ready(function() {
-        $('#description').summernote({
-            placeholder: "Write detail description.....",
-            tabsize: 2,
-            height: 150
+        $('.descriptionclass').summernote({
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']], 
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ],               
         });
-
+        $('#submit').on('submit', function() {
+            var content = $('#summernote').val();
+            var cleanContent = content.replace(/<[^>]+style="[^"]*font-family:[^"]*"[^>]*>/g, function(match) {
+                return match.replace(/font-family:[^;]+;?/g, '');
+            });
+            $('#summernote').val(cleanContent);
+        });
     });
 
     document.getElementById('image-input').addEventListener('change', function(event) {
