@@ -47,6 +47,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+       // dd($request->tags[0]);
         $validatedData =  $this->validate($request,[
             'title'=>'string|required',
             'slug'=>'string|required',
@@ -94,6 +95,7 @@ class ProductController extends Controller
         Storage::disk('public')->put($filePathpdf, file_get_contents($filepdf));
 
         $data=$request->all();
+        $data['tags'] = implode(',', $request->tags);
         $data['photo']      = '/storage/'.$filePath;
         $data['pdf']      = '/storage/'.$filePathpdf;
         $status=Product::create($data);
@@ -129,7 +131,7 @@ class ProductController extends Controller
         $brand=Brand::get();
         $product=Product::findOrFail($id);
         $videoproviders =VideoProvider::where('status',1)->get();
-       // dd($product);
+        //dd($product);
         $category=Category::where('is_parent',1)->get();
         $items=Product::where('id',$id)->get();
         // return $items;
