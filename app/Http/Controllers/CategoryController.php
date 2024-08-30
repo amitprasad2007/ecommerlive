@@ -204,7 +204,6 @@ class CategoryController extends Controller
         return view('backend.category.subsubedit', compact('category', 'parent_cats', 'sub_cats'));
     }
 
-
     /**
      * Update the specified resource in storage.
      *
@@ -214,40 +213,55 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {   
-        // dd ($request->all());
-        $category=Category::findOrFail($id);
-        $this->validate($request,[
-            'title'=>'string|required',
-            'summary'=>'string|nullable',
-            'photo'=>'string|nullable',
-            'status'=>'required|in:active,inactive',
-            'is_parent'=>'sometimes|in:1',
-            'parent_id'=>'nullable|exists:categories,id',
+        $category = Category::findOrFail($id);
+
+        $this->validate($request, [
+            'title' => 'string|required',
+            'summary' => 'string|nullable',
+            'photo' => 'string|nullable',
+            'status' => 'required|in:active,inactive',
+            'is_parent' => 'sometimes|in:1',
+            'parent_id' => 'nullable|exists:categories,id',
         ]);
-        // dd ($request->all());
-        if($request->input('subsubcat') ==1 || $request->input('subsubcat') !='' ){
-            $this->validate($request,[
+
+        if ($request->input('subsubcat') == 1 || $request->input('subsubcat') !== '') {
+            $this->validate($request, [
                 'parent_id' => 'required|integer|exists:categories,id',
                 'sub_cat_id' => 'required|integer|exists:categories,id',
             ]);
         }
-         if ($request->parent_id != "") {
-            $this->validate($request,[
+
+        if ($request->parent_id !== "") {
+            $this->validate($request, [
                 'parent_id' => 'required|integer|exists:categories,id',
             ]);
         }
-       // dd ($request->all());
-        $data= $request->all();
-        $data['is_parent']  = $request->input('is_parent',0);
-        $data['parent_id']  = $request->parent_id ? $request->parent_id : 0;
-        $data['sub_cat_id'] = $request->sub_cat_id ? $request->sub_cat_id : 0; 
-        $status=$category->fill($data)->save();
-        if($status){
-            request()->session()->flash('success','Category successfully updated');
+
+        $data = $request->all();
+        $data['is_parent'] = $request->input('is_parent', 0);
+        $data['parent_id'] = $request->parent_id ?: 0;
+        $data['sub_cat_id'] = $request->sub_cat_id ?: 0;
+
+        // Add slug generation
+        $data['slug'] = Str::slug($request->title);
+
+        // Check if the slug already exists
+        $slug_count = Category::where('slug', $data['slug'])->where('id', '!=', $id)->count();
+        if ($slug_count > 0) {
+            $data['slug'] = $data['slug'] . '-' . $id;
         }
-        else{
-            request()->session()->flash('error','Error occurred, Please try again!');
+
+        $status = $category->fill($data)->save();
+
+        if ($status) {
+            // Clear cache
+            Cache::forget('categories');
+            
+            request()->session()->flash('success', 'Category successfully updated');
+        } else {
+            request()->session()->flash('error', 'Error occurred, Please try again!');
         }
+
         return redirect()->route('category.index');
     }
 
