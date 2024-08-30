@@ -17,11 +17,11 @@
 
         <div class="form-group">
           <label for="summary" class="col-form-label">Summary</label>
-          <textarea class="form-control" id="summary" name="summary">{{old('summary')}}</textarea>
+          <textarea class="form-control descriptionclass" id="summary" name="summary">{{old('summary')}}</textarea>
           @error('summary')
           <span class="text-danger">{{$message}}</span>
           @enderror
-        </div> 
+        </div>
 
         <div class="form-group" id='parent_cat_div'>
           <label for="parent_id">Parent Category</label>
@@ -32,7 +32,7 @@
               @endforeach
           </select>
         </div>
-      
+
         <div class="form-group">
           <label for="inputPhoto" class="col-form-label">Photo</label>
           <div class="input-group">
@@ -49,7 +49,7 @@
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
-        
+
         <div class="form-group">
           <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
           <select name="status" class="form-control">
@@ -76,22 +76,37 @@
 @push('scripts')
 <script src="{{asset('vendor/laravel-filemanager/js/stand-alone-button.js')}}"></script>
 <script src="{{asset('backend/summernote/summernote.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
+<style>
+    .note-editable {
+        font-family: 'Open Sans', sans-serif !important;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script>
     $('#lfm').filemanager('image');
 
     $(document).ready(function() {
-      $('#summary').summernote({
-        placeholder: "Write short description.....",
-          tabsize: 2,
-          height: 120
-      });
+        $('.descriptionclass').summernote({
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ],
+        });
     });
 </script>
 
-<script> 
+<script>
   $('#parent_id').change(function(){
       var parent_id = $(this).val();
-      if(parent_id != ''){ 
+      if(parent_id != ''){
         $('#sub_cat_div').removeClass('d-none');
       }else{
         $('#sub_cat_div').addClass('d-none');
