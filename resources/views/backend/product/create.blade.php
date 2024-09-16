@@ -255,7 +255,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script>
-     var customVariable = "{{ config('app.custom_variable') }}";
+     var customVariable = "{{ config('app.url') }}";
     $(document).ready(function() {
         $('.descriptionclass').summernote({
             toolbar: [
