@@ -255,6 +255,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script>
+     var customVariable = "{{ config('app.custom_variable') }}";
     $(document).ready(function() {
         $('.descriptionclass').summernote({
             toolbar: [
@@ -286,7 +287,7 @@
         var cat_id = $(this).val();
         if (cat_id != null) {
             $.ajax({
-                url: "/admin/category/" + cat_id + "/child",
+                url: customVariable +"/admin/category/" + cat_id + "/child",
                 data: {
                     _token: "{{csrf_token()}}",
                     id: cat_id
