@@ -321,7 +321,7 @@
         var child_cat_id = $(this).val();
         if (child_cat_id != null) {
             $.ajax({
-                url: "/admin/category/" + child_cat_id + "/subchild",
+                url: customVariable +"/admin/category/" + child_cat_id + "/subchild",
                 data: {
                     _token: "{{csrf_token()}}",
                     id: child_cat_id
