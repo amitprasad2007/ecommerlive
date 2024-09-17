@@ -220,18 +220,7 @@
               <span class="text-danger">{{$message}}</span>
               @enderror
           </div>
-          <div class="form-group">
-              <label for="inputPdf" class="col-form-label">Pdf Specification </label>
-              <div class="input-group">
-                    <span class="input-group-btn">
-                        <input type="file" name="pdf" id="pdf-input" accept="application/pdf/*" value="{{$product->pdf}}">
-                           <input readonly style="width: 550px" class="form-control" type="text" value="{{$product->pdf}}">
-                    </span>
-                  @error('pdf')
-                  <span class="text-danger">{{$message}}</span>
-                  @enderror
-              </div>
-          </div>
+
         <div class="form-group">
           <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
           <select name="status" class="form-control">
