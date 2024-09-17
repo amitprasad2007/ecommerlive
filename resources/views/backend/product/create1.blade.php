@@ -24,13 +24,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
-
 <div class="card">
-<h5 class="card-header">Add Product</h5>
+    <h5 class="card-header">Add Product</h5>
     <div class="card-body">
-    <form method="post" action="{{route('product.store')}}" enctype="multipart/form-data">
-        {{csrf_field()}}
-        <div class="form-group">
+        <form method="post" action="{{route('product.store')}}" enctype="multipart/form-data">
+            {{csrf_field()}}
+            <div class="form-group">
                 <label for="inputTitle" class="col-form-label">Title <span class="text-danger">*</span></label>
                 <input id="inputTitle" type="text" name="title" placeholder="Enter title" value="{{old('title')}}" class="form-control">
                 @error('title')
@@ -63,7 +62,8 @@
                     <option value='{{$cat_data->id}}'>{{$cat_data->title}}</option>
                     @endforeach
                 </select>
-            </div><div class="form-group d-none" id="child_cat_div">
+            </div>
+            <div class="form-group d-none" id="child_cat_div">
                 <label for="child_cat_id">Sub Category</label>
                 <select name="child_cat_id" id="child_cat_id" class="form-control">
                     <option value="">--Select any category--</option>
@@ -180,24 +180,20 @@
                     <option value="1">Yes</option>
                 </select>
             </div>
-
-        <div class="form-group">
-          <label for="inputPhoto" class="col-form-label">Photo</label>
-          <div class="input-group">
-              <span class="input-group-btn">
-                  <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                  <i class="fa fa-picture-o"></i> Choose
-                  </a>
-              </span>
-            <input id="thumbnail" class="form-control" type="text" name="photo" value="{{old('photo')}}">
-          </div>
-          <div id="holder" style="margin-top:15px;max-height:100px;"></div>
-          @error('photo')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
-        </div>
-
-        <div class="form-group">
+            <div class="form-group">
+                <label for="inputPhoto" class="col-form-label">Photo <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <input type="file" name="photo" id="image-input" accept="image/*">
+                    </span>
+                    @error('photo')
+                    <span class="text-danger">{{$message}}</span>
+                    @enderror
+                </div>
+                <img id="image-preview" src="#" alt="Image Preview">
+            </div>
+            
+            <div class="form-group">
                 <label for="inputMetaTitle" class="col-form-label">Meta Title <span class="text-danger">*</span></label>
                 <input id="inputMetaTitle" type="text" name="meta_title" placeholder="Enter Meta Title" value="{{old('meta_title')}}" class="form-control">
                 @error('meta_title')
@@ -226,7 +222,7 @@
                 <button type="reset" class="btn btn-warning">Reset</button>
                 <button class="btn btn-success" type="submit">Submit</button>
             </div>
-      </form>
+        </form>
     </div>
 </div>
 
@@ -234,6 +230,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{asset('backend/summernote/summernote.min.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 @endpush
 @push('scripts')
 <script src="{{asset('vendor/laravel-filemanager/js/stand-alone-button.js')}}"></script>
@@ -241,15 +238,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
 <style>
-    .note-editable {
-        font-family: 'Open Sans', sans-serif !important;
-    }
+	.note-editable {
+		font-family: 'Open Sans', sans-serif !important;
+	}
 </style>
+@section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script>
-    $('#lfm').filemanager('image');
-
+     var customVariable = "{{ config('app.url') }}";
     $(document).ready(function() {
         $('.descriptionclass').summernote({
             toolbar: [
@@ -263,11 +260,21 @@
             ],
         });
     });
-</script>
 
-<script>
- var customVariable = "{{ config('app.url') }}";      
-$('#cat_id').change(function() {
+    document.getElementById('image-input').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const img = document.getElementById('image-preview');
+            img.src = e.target.result;
+            img.style.display = 'block';
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    $('#cat_id').change(function() {
         var cat_id = $(this).val();
         if (cat_id != null) {
             $.ajax({
