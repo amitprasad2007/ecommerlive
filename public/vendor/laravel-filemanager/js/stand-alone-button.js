@@ -1,7 +1,9 @@
 (function( $ ){
 
   $.fn.filemanager = function(type, options) {
-      type = type || 'file';    
+    type = type || 'file';
+    const appurl = "{{ config('app.url') }}";
+    console.log(appurl);
     this.on('click', function(e) {
       var route_prefix = (options && options.prefix) ? options.prefix :'/filemanager';
       var target_input = $('#' + $(this).data('input'));
