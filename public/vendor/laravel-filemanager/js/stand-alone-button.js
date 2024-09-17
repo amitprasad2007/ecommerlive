@@ -2,7 +2,7 @@
 
   $.fn.filemanager = function(type, options) {
     type = type || 'file';
-    const appurl = process.env.APP_URL;
+    const appurl = window.Laravel.appUrl;
     console.log(appurl);
     this.on('click', function(e) {
       var route_prefix = (options && options.prefix) ? options.prefix :'/filemanager';
