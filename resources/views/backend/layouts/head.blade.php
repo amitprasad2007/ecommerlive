@@ -17,3 +17,8 @@
     @stack('styles')
   
 </head>
+<script>
+    window.Laravel = {
+        appUrl: "{{ config('app.url') }}"
+    };
+</script>
