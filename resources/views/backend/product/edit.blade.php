@@ -268,19 +268,19 @@
 </style>
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script>
     $(document).ready(function() {
         $('.descriptionclass').summernote({
             toolbar: [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontsize', ['fontsize']], 
+                ['fontsize', ['fontsize']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
                 ['insert', ['link', 'picture', 'video']],
                 ['view', ['fullscreen', 'codeview', 'help']]
-            ],               
+            ],
         });
         $('#submit').on('submit', function() {
             var content = $('#summernote').val();
@@ -296,7 +296,7 @@
 <script>
     const appurl = "{{ config('app.url') }}";
   var  child_cat_id='{{$product->child_cat_id}}';
-        // alert(child_cat_id);
+         alert(child_cat_id);
         $('#cat_id').change(function(){
             var cat_id=$(this).val();
 
