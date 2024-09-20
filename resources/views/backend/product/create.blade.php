@@ -27,6 +27,16 @@
 
 <div class="card">
 <h5 class="card-header">Add Product</h5>
+
+@if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="card-body">
     <form method="post" action="{{route('product.store')}}" enctype="multipart/form-data">
         {{csrf_field()}}
@@ -63,17 +73,27 @@
                     <option value='{{$cat_data->id}}'>{{$cat_data->title}}</option>
                     @endforeach
                 </select>
-            </div><div class="form-group d-none" id="child_cat_div">
+            </div>
+            @error('cat_id')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
+            <div class="form-group d-none" id="child_cat_div">
                 <label for="child_cat_id">Sub Category</label>
                 <select name="child_cat_id" id="child_cat_id" class="form-control">
                     <option value="">--Select any category--</option>
                 </select>
             </div>
+            @error('child_cat_id')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
             <div class="form-group d-none" id="sub_child_cat_div">
                 <label for="sub_child_cat_id">Sub Sub Category</label>
                 <select name="sub_child_cat_id" id="sub_child_cat_id" class="form-control">
                     <option value="">--Select any category--</option>
                 </select>
+                @error('sub_child_cat_id')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="slug" class="col-form-label">Slug<span class="text-danger">*</span> </label>
@@ -97,6 +117,9 @@
                     <option value="{{$brand->id}}">{{$brand->title}}</option>
                     @endforeach
                 </select>
+                @error('brand_id')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="purchase_price">Purchase price <span class="text-danger">*</span></label>
@@ -106,36 +129,53 @@
                 @enderror
             </div>
             <div class="form-group row">
-                <label for="discount" style="margin-left: 15px;">Shipping Cost <span class="text-danger">*</span></label>
+                <label for="shipping_cost" style="margin-left: 15px;">Shipping Cost <span class="text-danger">*</span></label>
                 <input id="shipping_cost" type="number" name="shipping_cost" min="0" max="100" placeholder="Enter Shipping Cost" value="{{old('shipping_cost')}}" class="p-2 col-md-5 form-control" style="margin-left: 16px;">
                 <select name="shipping_type" id="shipping_type"  class=" p-2 col-md-3 form-control" style="margin-left: 30px;" >
                     <option selected  value="flat">Flat</option>
                 </select>
+                @error('shipping_cost')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
+                @error('shipping_type')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="tag">Tags</label>
                 <div class="col-lg-12">
-                <input type="text" class="form-control p-2 col-md-5" style="width: fit-content" name="tags[]" placeholder="Type to add a tag" data-role="tagsinput">
-
+                    <input type="text" id="tags" class="form-control p-2 col-md-5" style="width: fit-content" name="tags[]" placeholder="Type to add a tag" data-role="tagsinput" value="{{ old('tags') ? implode(',', old('tags')) : '' }}">
                 </div>
-
+                
+                @error('tags.0')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
             <div class="form-group row ">
-                <label for="tax" style="margin-left: 15px;">Tax <span class="text-danger">*</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label for="tax" style="margin-left: 15px;">Tax <span class="text-danger">*</span></label>
                 <input id="tax" type="number" name="tax" min="0" placeholder="Enter Tax" value="{{old('tax')}}" class="p-2 col-md-5 form-control" style="margin-left: 16px;">
                 <select name="tax_type" id="tax_type" class=" p-2 col-md-3 form-control" style="margin-left: 30px;" >
                     <option value="flat">Flat</option>
                     <option value="percent">Percent</option>
                 </select>
+                @error('tax')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
+                @error('tax_type')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
             </div>
             <div class="form-group row">
                 <label for="discount" style="margin-left: 15px;">Discount(%)</label>
                 <input id="discount" type="number" name="discount" min="0" max="100" placeholder="Enter discount" value="{{old('discount')}}" class="p-2 col-md-5 form-control" style="margin-left: 16px;">
-                <select  name="discounttype" id="discounttype"  class=" p-2 col-md-3 form-control" style="margin-left: 30px;" >
+                <select name="discount_type" id="discount_type" class="p-2 col-md-3 form-control" style="margin-left: 30px;">
                     <option disabled value="flat">Flat</option>
-                    <option selected  value="percent">Percent</option>
+                    <option selected value="percent">Percent</option>
                 </select>
                 @error('discount')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
+                @error('discount_type')
                 <span class="text-danger">{{$message}}</span>
                 @enderror
             </div>
@@ -153,6 +193,9 @@
                     <option value="Liters">Liters</option>
                     <option value="grams">Grams</option>
                 </select>
+                @error('unit')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="min_qty">Min Qty <span class="text-danger">*</span></label>
@@ -170,8 +213,14 @@
                         <option value="{{$videoprovider->id}}">{{$videoprovider->name}}</option>
                     @endforeach
                 </select>
+                @error('video_provider_id')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
                 <label class="form-group" style="margin-left: 15px;" for="video_link"> Video Link </label>
-                <input id="video_link" type="text" name="video_link" min="0" placeholder="Enter Video Link" style="margin-left: 16px;" value="{{old('video_link')}}" class="p-2 col-md-4 form-control">
+                <input id="video_link" type="text" name="video_link" placeholder="Enter Video Link" style="margin-left: 16px;" value="{{old('video_link')}}" class="p-2 col-md-4 form-control">
+                @error('video_link')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
             </div>
             <div class="form-group">
                 <label class="form-group" for="todays_deal">Today's Deal </label>
@@ -180,6 +229,9 @@
                     <option value="1">Yes</option>
                 </select>
             </div>
+            @error('todays_deal')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
 
         <div class="form-group">
           <label for="inputPhoto" class="col-form-label">Photo</label>

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Models\PhotoProduct; // Import the PhotoProduct model
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -47,58 +48,60 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-       // dd($request->tags[0]);
+     
         $validatedData =  $this->validate($request,[
             'title'=>'string|required',
-            'slug'=>'string|required',
-            'sku'=>'string|required',
             'description'=>'string|required',
-            'photo'=>'required|image|mimes:jpeg,png',
-            'stock'=>"required|numeric",
-            'min_qty'=>"required|numeric",
-            'cat_id'=>'required|exists:categories,id',
-            'brand_id'=>'nullable|exists:brands,id',
-            'child_cat_id'=>'nullable|exists:categories,id',
             'is_featured'=>'sometimes|in:1',
-            'status'=>'required|in:active,inactive',
+            'sku'=>'string|required',
+            'cat_id'=>'required|exists:categories,id',
+            'child_cat_id'=>'nullable|exists:categories,id',
+            'sub_child_cat_id'=>'nullable|exists:categories,id',
+            'slug'=>'string|required',
             'price'=>'required|numeric',
+            'brand_id'=>'required|exists:brands,id',
+            'purchase_price'=>'required|numeric',
+            'shipping_type'=>'required|in:flat,percent',
             'shipping_cost'=>'required|numeric',
+            'tags' => 'required|array',
+            'tags.*' => 'string|required',
             'tax'=>'required|numeric',
-            'discount'=>'nullable|numeric',
+            'tax_type'=>'required|in:percent,flat',
+            'discount'=>'required|numeric',
+            'discount_type'=>'required|in:percent,flat',
+            'stock'=>"required|integer|min:0",
+            'unit'=>'required|string',
+            'min_qty'=>"required|integer|min:1",
+            'video_provider_id'=>'nullable|exists:video_providers,id',
+            'video_link'=>'nullable|string',
+            'todays_deal'=>'sometimes|in:1,0',
+            'photo'=>'string|required',
             'meta_title'=>'string|required',
             'meta_description'=>'string|required',
-            'pdf' => 'required|mimes:pdf|max:10000',
+            'status'=>'required|in:active,inactive'
+            
         ]);
-        // Get the uploaded file
-        $file = $request->file('photo');
-          // Check if the file is valid
-          if (!$file->isValid()) {
-            return response()->json(['message' => 'Invalid file upload.'], 400);
-        }
-        // Create an instance of the image
-        try {
-            $image = Image::make($file->getRealPath());
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Image source not readable.'], 400);
-        }
-        $webpImage = $image->encode('webp');
-        $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '.webp';
-        $filePath = 'photos/1/Products/' . $fileName;
-        Storage::disk('public')->put($filePath, $webpImage);
-
-        $filepdf = $request->file('pdf');
-        if (!$filepdf->isValid()) {
-            return response()->json(['message' => 'Invalid file upload.'], 400);
-        }
-        $fileNamepdf = pathinfo($filepdf->getClientOriginalName(), PATHINFO_FILENAME) . '.pdf';
-        $filePathpdf = 'files/pdf/' . $fileNamepdf;
-        Storage::disk('public')->put($filePathpdf, file_get_contents($filepdf));
-
+        
         $data=$request->all();
+        // dd($data);
         $data['tags'] = implode(',', $request->tags);
-        $data['photo']      = '/storage/'.$filePath;
-        $data['pdf']      = '/storage/'.$filePathpdf;
         $status=Product::create($data);
+        $newid = $status->id;
+        // Handle multiple image paths
+        if ($request->has('photo')) {
+            $photoPaths = explode(',', $request->photo);
+            foreach ($photoPaths as $photoPath) {
+                // Trim any whitespace from the path
+                $photoPath = trim($photoPath);
+                if (!empty($photoPath)) {
+                    // Create a new PhotoProduct record for each path
+                    PhotoProduct::create([
+                        'product_id' => $newid,
+                        'photo_path' => $photoPath
+                    ]);
+                }
+            }
+        }
         if($status){
             request()->session()->flash('success','Product Successfully added');
         }

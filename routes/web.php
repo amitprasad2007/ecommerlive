@@ -128,7 +128,7 @@ Route::get('/test-logging', function () {
 
 
 
-    Route::prefix('admin')->group(function () {
+    Route::group( ['prefix'=>'/admin', 'middleware' => ['auth', 'admin']], function () {
     // Backend section start
     Route::get('/category/subcategory', [CategoryController::class, 'subCategory'])->name('admin.category.subcategory');
     Route::get('/category/subsubcategory', [CategoryController::class, 'subsubcategory'])->name('admin.category.subsubcategory');
