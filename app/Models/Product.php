@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Cart;
 class Product extends Model
 {
-    protected $fillable=['video_provider_id','video_link','meta_title','shipping_type','unit','tax_type','tax','tags','shipping_cost','purchase_price','sub_child_cat_id','title','slug','description','cat_id','child_cat_id','price','brand_id','discount','status','stock','is_featured','sku','meta_description','discount_type'];
+    protected $fillable=['min_qty','video_provider_id','video_link','meta_title','shipping_type','unit','tax_type','tax','tags','shipping_cost','purchase_price','sub_child_cat_id','title','slug','description','cat_id','child_cat_id','price','brand_id','discount','status','stock','is_featured','sku','meta_description','discount_type'];
 
     public function cat_info(){
+
         return $this->hasOne('App\Models\Category','id','cat_id');
     }
     public function sub_cat_info(){
@@ -46,5 +47,13 @@ class Product extends Model
         return $this->hasOne(Brand::class,'id','brand_id');
     }
 
+    public function photoproduct(){
+        return $this->hasMany(PhotoProduct::class);
+    }
 
+    public function photostring(){
+        $photo = $this->hasMany(PhotoProduct::class)->pluck('photo_path')->toArray();
+        return implode(',', $photo);
+    }
 }
+

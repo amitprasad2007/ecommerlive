@@ -89,9 +89,9 @@
                       @endif
                     </td>
                     <td>
-                        @if($product->photo)
+                        @if($product->photostring())
                             @php
-                              $photo=explode(',',$product->photo);
+                              $photo=explode(',',$product->photostring());
                             @endphp
                           <img src="{{asset( $photo[0])}}" class="img-fluid zoom" style="max-width:80px" alt="avatar.png">
                         @else

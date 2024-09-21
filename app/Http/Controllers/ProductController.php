@@ -48,7 +48,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-     
+       // dd($request->all());
         $validatedData =  $this->validate($request,[
             'title'=>'string|required',
             'description'=>'string|required',
@@ -94,11 +94,11 @@ class ProductController extends Controller
                 // Trim any whitespace from the path
                 $photoPath = trim($photoPath);
                 if (!empty($photoPath)) {
-                    // Create a new PhotoProduct record for each path
-                    PhotoProduct::create([
-                        'product_id' => $newid,
-                        'photo_path' => $photoPath
-                    ]);
+                    // Update or create a new PhotoProduct record for each path
+                    PhotoProduct::updateOrCreate(
+                        ['product_id' => $newid, 'photo_path' => $photoPath],
+                        ['photo_path' => $photoPath]
+                    );
                 }
             }
         }
@@ -134,9 +134,10 @@ class ProductController extends Controller
         $brand=Brand::get();
         $product=Product::findOrFail($id);
         $videoproviders =VideoProvider::where('status',1)->get();
-        //dd($product);
+       // dd($product->photoproduct);
         $category=Category::where('is_parent',1)->get();
         $items=Product::where('id',$id)->get();
+
         // return $items;
         return view('backend.product.edit')->with('product',$product)
                     ->with('brands',$brand)
@@ -154,39 +155,58 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product=Product::findOrFail($id);
-       // dd($product);
+     //  dd($request);
         $validatedData = $this->validate($request,[
             'title'=>'string|required',
-            'description'=>'string|nullable',
-            'photo'=>'string|required',
-            'stock'=>"required|numeric",
+            'description'=>'string|required',
+            'is_featured'=>'sometimes|in:1',
+            'sku'=>'string|required',
             'cat_id'=>'required|exists:categories,id',
             'child_cat_id'=>'nullable|exists:categories,id',
-            'is_featured'=>'sometimes|in:1',
-            'brand_id'=>'nullable|exists:brands,id',
-            'status'=>'required|in:active,inactive',
-            'price'=>'required|numeric',
-            'discount'=>'nullable|numeric',
+            'sub_child_cat_id'=>'nullable|exists:categories,id',
             'slug'=>'string|required',
-            'sku'=>'string|required',
-            'min_qty'=>"required|numeric",
+            'price'=>'required|numeric',
+            'brand_id'=>'required|exists:brands,id',
+            'purchase_price'=>'required|numeric',
+            'shipping_type'=>'required|in:flat,percent',
             'shipping_cost'=>'required|numeric',
+            'tags' => 'required|array',
+            'tags.*' => 'string|required',
             'tax'=>'required|numeric',
+            'tax_type'=>'required|in:percent,flat',
+            'discount'=>'required|numeric',
+            'discount_type'=>'required|in:percent,flat',
+            'stock'=>"required|integer|min:0",
+            'unit'=>'required|string',
+            'min_qty'=>"required|integer|min:1",
+            'video_provider_id'=>'nullable|exists:video_providers,id',
+            'video_link'=>'nullable|string',
+            'todays_deal'=>'sometimes|in:1,0',
+            'photo'=>'string|required',
             'meta_title'=>'string|required',
-            'meta_description'=>'string|required'
+            'meta_description'=>'string|required',
+            'status'=>'required|in:active,inactive'
         ]);
    //dd( $validatedData );
         $data=$request->all();
-       // $data['is_featured']=$request->input('is_featured',0);
-//        $size=$request->input('size');
-//        if($size){
-//            $data['size']=implode(',',$size);
-//        }
-//        else{
-//            $data['size']='';
-//        }
-//        // return $data;
+        $data['tags'] = implode(',', $request->tags);
+        // Handle multiple image paths
+        if ($request->has('photo')) {
+            $photoPaths = explode(',', $request->photo);
+            foreach ($photoPaths as $photoPath) {
+                // Trim any whitespace from the path
+                $photoPath = trim($photoPath);
+                if (!empty($photoPath)) {
+                    // Update or create a new PhotoProduct record for each path
+                    PhotoProduct::updateOrCreate(
+                        ['product_id' => $id, 'photo_path' => $photoPath],
+                        ['photo_path' => $photoPath]
+                    );
+                }
+            }
+        }
         $status=$product->fill($data)->save();
+
         if($status){
             request()->session()->flash('success','Product Successfully updated');
         }
