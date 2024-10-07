@@ -36,6 +36,7 @@ Route::get('/test-logging', function () {
     | contains the "web" middleware group. Now create something great!
     |
     */
+ 
 
     // CACHE CLEAR ROUTE
     Route::get('cache-clear', function () {
