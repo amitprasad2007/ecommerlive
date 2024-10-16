@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\BannerController;
+use App\Http\Controllers\Api\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,5 +28,5 @@ Route::get('getproductlist', [ProductController::class, 'getproductlist']);
 Route::get('getproductbyid/{id}', [ProductController::class, 'getproductbyid']);
 Route::get('getproductbycategoryid/{id}', [ProductController::class, 'getproductbycategoryid']);
 Route::get('getis_featuredproduct', [ProductController::class, 'getis_featuredproduct']);
-
-
+Route::get('getbannerlist', [BannerController::class, 'getbannerlist']);
+Route::get('userlogin', [UserController::class, 'userlogin']);
