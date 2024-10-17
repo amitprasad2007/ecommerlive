@@ -17,7 +17,7 @@ class ProductController extends Controller
         return response()->json(['product' => $product]);
     }
     public function getproductbycategoryid($id){
-        $product = Product::where('category_id', $id)->get();
+        $product = Product::where('cat_id', $id)->get();
         return response()->json(['product' => $product]);
     }
 
@@ -25,5 +25,5 @@ class ProductController extends Controller
         $product = Product::where('is_featured', 1)->get();
         return response()->json(['product' => $product]);
     }
-    
+
 }
