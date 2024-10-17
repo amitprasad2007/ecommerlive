@@ -16,7 +16,7 @@ return [
     */
 
     'paths' => ['api/*'],
-    'allowed_origins' => ['http://localhost:3000'],
+    'allowed_origins' => ['http://localhost:3000','http://localhost:5173/reactapp/'],
 
     'allowed_methods' => ['*'],
 
