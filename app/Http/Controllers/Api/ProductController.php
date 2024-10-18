@@ -9,20 +9,20 @@ class ProductController extends Controller
 {
     //
     public function getproductlist(){
-        $products = Product::getAllProduct();
+        $products = Product::with('photoproduct')-> get();
         return response()->json(['products' => $products]);
     }
     public function getproductbyid($id){
-        $product = Product::find($id)->with('photostring') ;
+        $product = Product::with('photoproduct')-> find($id);
         return response()->json(['product' => $product]);
     }
     public function getproductbycategoryid($id){
-        $product = Product::where('cat_id', $id)->get();
+        $product = Product::with('photoproduct')-> where('cat_id', $id)->get();
         return response()->json(['product' => $product]);
     }
 
     public function getis_featuredproduct(){
-        $product = Product::where('is_featured', 1)->get();
+        $product = Product::with('photoproduct')-> where('is_featured', 1)->get();
         return response()->json(['product' => $product]);
     }
 
