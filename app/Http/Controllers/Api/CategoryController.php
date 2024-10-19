@@ -10,7 +10,7 @@ class CategoryController extends Controller
 {
     //
     public function getcategorieslist(){
-        $categories = Category::where('is_parent', '!=', 0)->get();
+        $categories = Category::where('is_parent', '!=', 0)->with(['products','products.photoproduct'])->get();
         return response()->json(['categories' => $categories]);
     }
 
