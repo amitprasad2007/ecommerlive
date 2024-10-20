@@ -214,7 +214,7 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-            dd($request);
+           // dd($request);
         $this->validate($request, [
             'title' => 'string|required',
             'summary' => 'string|nullable',
