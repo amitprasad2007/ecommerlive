@@ -16,7 +16,7 @@ class CategoryController extends Controller
     public function index()
     {
        // $category=Category::getAllCategory();
-        $category = Category::where('is_parent', '!=', 0) 
+        $category = Category::where('is_parent', '!=', 0)
         ->paginate(10);
         return view('backend.category.index')->with('categories',$category);
     }
@@ -26,7 +26,7 @@ class CategoryController extends Controller
       */
       public function subCategory()
       {
-         
+
         $categories = Category::where('parent_id', '!=', 0)
         ->where(function ($query) {
             $query->where('sub_cat_id', '=', 0)
@@ -37,19 +37,19 @@ class CategoryController extends Controller
           if ($categories->isEmpty()) {
               return redirect()->back()->with('error', 'No subcategories found!');
           }
-      
+
           // Return the view with categories
           return view('backend.category.subcategory')->with('categories', $categories);
       }
 
-  
+
     /**
      * Sub SubCategory
     */
     public function subsubcategory()
     {
         $category=Category::where('sub_cat_id', '!=', '0')->paginate(10);
-       
+
         return view('backend.category.subsubcategory')->with('categories',$category);
     }
 
@@ -75,7 +75,7 @@ class CategoryController extends Controller
     public function subcreate()
     {
         $parent_cats=Category::where('is_parent',1)->orderBy('title','ASC')->get();
-        $sub_cats = Category::where('parent_id', '!=', null)->get(); 
+        $sub_cats = Category::where('parent_id', '!=', null)->get();
         return view('backend.category.subcreate', compact('parent_cats', 'sub_cats'));
     }
 
@@ -87,7 +87,7 @@ class CategoryController extends Controller
     public function subsubcreate()
     {
         $parent_cats=Category::where('is_parent',1)->orderBy('title','ASC')->get();
-        $sub_cats = Category::where('parent_id', '!=', null)->get(); 
+        $sub_cats = Category::where('parent_id', '!=', null)->get();
         return view('backend.category.subsubcreate', compact('parent_cats', 'sub_cats'));
     }
 
@@ -212,7 +212,7 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {   
+    {
         $category = Category::findOrFail($id);
 
         $this->validate($request, [
@@ -224,7 +224,7 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id',
         ]);
 
-        if ($request->input('subsubcat') == 1 || $request->input('subsubcat') !== '') {
+        if ($request->input('subsubcat') == 1 || $request->input('subsubcat') != null) {
             $this->validate($request, [
                 'parent_id' => 'required|integer|exists:categories,id',
                 'sub_cat_id' => 'required|integer|exists:categories,id',
@@ -256,7 +256,7 @@ class CategoryController extends Controller
         if ($status) {
             // Clear cache
             Cache::forget('categories');
-            
+
             request()->session()->flash('success', 'Category successfully updated');
         } else {
             request()->session()->flash('error', 'Error occurred, Please try again!');
@@ -277,7 +277,7 @@ class CategoryController extends Controller
         $child_cat_id=Category::where('parent_id',$id)->pluck('id');
         // return $child_cat_id;
         $status=$category->delete();
-        
+
         if($status){
             if(count($child_cat_id)>0){
                 Category::shiftChild($child_cat_id);
@@ -290,9 +290,9 @@ class CategoryController extends Controller
         return redirect()->route('category.index');
     }
 
-    public function getChildByParent(Request $request){   
+    public function getChildByParent(Request $request){
         $category=Category::findOrFail($request->id);
-        $child_cat=Category::getChildByParentID($request->id);       
+        $child_cat=Category::getChildByParentID($request->id);
         if(count($child_cat)<=0){
             return response()->json(['status'=>false,'msg'=>'','data'=>null]);
         }
