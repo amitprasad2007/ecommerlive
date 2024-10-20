@@ -214,7 +214,7 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-
+            dd($request);
         $this->validate($request, [
             'title' => 'string|required',
             'summary' => 'string|nullable',
@@ -231,7 +231,7 @@ class CategoryController extends Controller
             ]);
         }
 
-        if ($request->parent_id !== "") {
+        if ($request->parent_id != 1) {
             $this->validate($request, [
                 'parent_id' => 'required|integer|exists:categories,id',
             ]);
