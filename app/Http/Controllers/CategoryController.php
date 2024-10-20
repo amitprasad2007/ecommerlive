@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Dompdf\Image\Cache;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Str;
