@@ -20,6 +20,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\TrailingSlashMiddleware::class,
     ];
 
     /**
@@ -65,5 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'admin'=> \App\Http\Middleware\Admin::class,
         'user'=> \App\Http\Middleware\User::class,
+        'trailing-slash' => \App\Http\Middleware\TrailingSlashMiddleware::class,
     ];
 }
