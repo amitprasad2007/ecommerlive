@@ -16,7 +16,7 @@ return [
     */
 
     'paths' => ['api/*'],
-    'allowed_origins' => ['http://localhost:3000','http://localhost:5173/reactapp/'],
+    'allowed_origins' => ['http://localhost:3000','http://localhost:5173/','https://siyabling.com/','https://admin.siyabling.com/'],
 
     'allowed_methods' => ['*'],
 
