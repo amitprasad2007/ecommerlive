@@ -35,7 +35,6 @@
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/vendor/symfony/mime" />
       <path value="$PROJECT_DIR$/vendor/symfony/error-handler" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
       <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
@@ -207,7 +206,10 @@
       <workItem from="1729755838612" duration="2656000" />
       <workItem from="1729764404479" duration="2232000" />
       <workItem from="1729781972033" duration="1243000" />
-      <workItem from="1729869563834" duration="1860000" />
+      <workItem from="1729869563834" duration="4319000" />
+      <workItem from="1729876863151" duration="607000" />
+      <workItem from="1729879635762" duration="622000" />
+      <workItem from="1729880580416" duration="26000" />
     </task>
     <servers />
   </component>
