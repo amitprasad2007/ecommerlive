@@ -23,4 +23,12 @@ class CategoryController extends Controller
         $subcategories = Category::where('parent_id', $id)->get();
         return response()->json(['subcategories' => $subcategories]);
     }
+
+    public function catsubsub()
+    {
+        $categories = Category::where('is_parent', '!=', 0)
+            ->with(['subCategories', 'subCategories.subSubCategories'])
+            ->get();
+        return response()->json(['categories' => $categories]);
+    }
 }

@@ -19,7 +19,11 @@ class Category extends Model
     }
     public function subcategories()
     {
-        return $this->hasMany('App\Models\Category', 'sub_cat_id');
+        return $this->hasMany(Category::class, 'parent_id')->where('sub_cat_id', 0);
+    }
+    public function subSubCategories()
+    {
+        return $this->hasMany(Category::class, 'sub_cat_id');
     }
     public static function shiftChild($cat_id){
         return Category::whereIn('id',$cat_id)->update(['is_parent'=>1]);
