@@ -13,7 +13,7 @@ class ProductController extends Controller
         return response()->json(['products' => $products]);
     }
     public function getproductbyid($id){
-        $product = Product::with('photoproduct')-> find($id);
+        $product = Product::with('photoproduct')-> where('slug',$id)->get();
         return response()->json(['product' => $product]);
     }
     public function getproductbycategoryid($id){

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable=['title','slug','summary','photo','status','is_parent','parent_id','sub_cat_id','added_by'];
+    protected $fillable=['title','slug','summary','photo','status','is_parent','parent_id','sub_cat_id','added_by','icon_path'];
 
     public function parent_info(){
         return $this->hasOne('App\Models\Category','id','parent_id');

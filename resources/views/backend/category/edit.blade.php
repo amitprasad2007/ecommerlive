@@ -59,17 +59,33 @@
           <label for="inputPhoto" class="col-form-label">Photo</label>
           <div class="input-group">
               <span class="input-group-btn">
-                  <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                  <a id="lfm" data-input="thumbnail" data-preview="holder-photo" class="btn btn-primary">
                   <i class="fa fa-picture-o"></i> Choose
                   </a>
               </span>
           <input id="thumbnail" class="form-control" type="text" name="photo" value="{{$category->photo}}">
         </div>
-        <div id="holder" style="margin-top:15px;max-height:100px;"></div>
+            <div id="holder-photo" style="margin-top:15px;max-height:100px;"></div>
           @error('photo')
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
+          <div class="form-group">
+              <label for="inputIcon" class="col-form-label">Icons</label>
+              <div class="input-group">
+        <span class="input-group-btn">
+            <a id="lfmicon" data-input="thumbnailicon" data-preview="holder-icon" class="btn btn-primary">
+                <i class="fa fa-picture-o"></i> Choose
+            </a>
+        </span>
+                  <input id="thumbnailicon" class="form-control" type="text" name="icon_path" value="{{ old('icon') }}">
+              </div>
+              <div id="holder-icon" style="margin-top:15px;max-height:100px;"></div>
+
+              @error('icon')
+              <span class="text-danger">{{ $message }}</span>
+              @enderror
+          </div>
 
         <div class="form-group">
           <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
@@ -106,7 +122,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script>
-    $('#lfm').filemanager('image');
+    function initializeFileManager(buttonId, inputId, previewId) {
+        $('#' + buttonId).filemanager('image', {
+            input: '#' + inputId,
+            preview: '#' + previewId
+        });
+    }
+    initializeFileManager('lfm', 'thumbnail', 'holder-photo');
+    initializeFileManager('lfmicon', 'thumbnailicon', 'holder-icon');
 
     $(document).ready(function() {
         $('.descriptionclass').summernote({

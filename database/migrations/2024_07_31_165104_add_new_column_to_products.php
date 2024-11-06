@@ -41,7 +41,28 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            //
+            $table->dropForeign(['sub_child_cat_id']);
+            $table->dropForeign(['video_provider_id']);
+
+            $table->dropColumn([
+                'todays_deal',
+                'sku',
+                'unit',
+                'min_qty',
+                'tax',
+                'tax_type',
+                'shipping_type',
+                'shipping_cost',
+                'meta_title',
+                'meta_description',
+                'pdf',
+                'rating',
+                'purchase_price',
+                'tags',
+                'video_link',
+                'sub_child_cat_id',
+                'video_provider_id'
+            ]);
         });
     }
 };

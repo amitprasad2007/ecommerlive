@@ -13,8 +13,8 @@ class UserController extends Controller
     public function userlogin(Request $request)
     {
         $user = User::where('mobile', $request->mobile)->first();
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid email or password'], 401);
+        if (!$user) {
+
         }
         return response()->json($user);
     }
