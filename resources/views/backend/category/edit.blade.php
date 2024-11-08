@@ -78,7 +78,7 @@
                 <i class="fa fa-picture-o"></i> Choose
             </a>
         </span>
-                  <input id="thumbnailicon" class="form-control" type="text" name="icon_path" value="{{ old('icon') }}">
+                  <input id="thumbnailicon" class="form-control" type="text" name="icon_path" value="{{$category->icon_path}}">
               </div>
               <div id="holder-icon" style="margin-top:15px;max-height:100px;"></div>
 
