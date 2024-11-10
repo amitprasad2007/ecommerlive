@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f711bcb-22ba-458e-9c91-f25c72da694c" name="Changes" comment="" />
+    <list default="true" id="4f711bcb-22ba-458e-9c91-f25c72da694c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/BrandController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/BrandController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Brand.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Brand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/brand/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/brand/create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/brand/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/brand/edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/brand/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/brand/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -211,6 +219,8 @@
       <workItem from="1729881607556" duration="2038000" />
       <workItem from="1730223561829" duration="4215000" />
       <workItem from="1730904784166" duration="8126000" />
+      <workItem from="1731001513213" duration="155000" />
+      <workItem from="1731264997324" duration="1406000" />
     </task>
     <servers />
   </component>

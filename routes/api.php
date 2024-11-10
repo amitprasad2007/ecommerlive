@@ -29,5 +29,6 @@ Route::get('getproductbyid/{id}', [ProductController::class, 'getproductbyid']);
 Route::get('getproductbycategoryid/{id}', [ProductController::class, 'getproductbycategoryid']);
 Route::get('getis_featuredproduct', [ProductController::class, 'getis_featuredproduct']);
 Route::get('getbannerlist', [BannerController::class, 'getbannerlist']);
+Route::get('getbrandlist', [\App\Http\Controllers\Api\BrandController::class, 'getbrandlist']);
 Route::post('userlogin', [UserController::class, 'userlogin']);
 Route::get('getcatwithsubandsub',[CategoryController::class,'catsubsub']);

@@ -6,7 +6,7 @@
     <h5 class="card-header">Edit Brand</h5>
     <div class="card-body">
       <form method="post" action="{{route('brand.update',$brand->id)}}">
-        @csrf 
+        @csrf
         @method('PATCH')
         <div class="form-group">
           <label for="inputTitle" class="col-form-label">Title <span class="text-danger">*</span></label>
@@ -14,7 +14,7 @@
         @error('title')
         <span class="text-danger">{{$message}}</span>
         @enderror
-        </div>        
+        </div>
         <div class="form-group">
           <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
           <select name="status" class="form-control">
@@ -25,6 +25,21 @@
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
+          <div class="form-group">
+              <label for="inputPhoto" class="col-form-label">Photo <span class="text-danger">*</span></label>
+              <div class="input-group">
+            <span class="input-group-btn">
+                <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                <i class="fa fa-picture-o"></i> Choose
+                </a>
+            </span>
+                  <input id="thumbnail" class="form-control" type="text" name="photo" value="{{$brand->photo}}">
+              </div>
+              <div id="holder" style="margin-top:15px;max-height:100px;"></div>
+              @error('photo')
+              <span class="text-danger">{{$message}}</span>
+              @enderror
+          </div>
         <div class="form-group mb-3">
            <button class="btn btn-success" type="submit">Update</button>
         </div>

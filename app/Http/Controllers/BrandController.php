@@ -14,7 +14,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brand=Brand::orderBy('id','DESC')->paginate();
+        $brand=Brand::orderBy('id','DESC')->paginate(10);
         return view('backend.brand.index')->with('brands',$brand);
     }
 
@@ -38,6 +38,7 @@ class BrandController extends Controller
     {
         $this->validate($request,[
             'title'=>'string|required',
+            'photo'=>'string|required',
         ]);
         $data=$request->all();
         $slug=Str::slug($request->title);
@@ -46,7 +47,6 @@ class BrandController extends Controller
             $slug=$slug.'-'.date('ymdis').'-'.rand(0,999);
         }
         $data['slug']=$slug;
-        // return $data;
         $status=Brand::create($data);
         if($status){
             request()->session()->flash('success','Brand successfully created');
@@ -96,9 +96,10 @@ class BrandController extends Controller
         $brand=Brand::find($id);
         $this->validate($request,[
             'title'=>'string|required',
+            'photo'=>'string|required',
         ]);
         $data=$request->all();
-       
+
         $status=$brand->fill($data)->save();
         if($status){
             request()->session()->flash('success','Brand successfully updated');
