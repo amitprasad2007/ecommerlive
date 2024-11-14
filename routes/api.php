@@ -32,5 +32,5 @@ Route::get('getbannerlist', [BannerController::class, 'getbannerlist']);
 Route::get('getbrandlist', [\App\Http\Controllers\Api\BrandController::class, 'getbrandlist']);
 Route::post('userlogin', [UserController::class, 'userlogin']);
 Route::get('getcatwithsubandsub',[CategoryController::class,'catsubsub']);
-Route::get('getproductSearch', [ProductController::class, 'getproductSearch']);
+Route::get('getproductSearch/', [ProductController::class, 'getproductSearch']);
 

@@ -28,17 +28,30 @@ class ProductController extends Controller
 
     public function getproductSearch(Request $request){
         $recent_products=Product::where('status','active')->orderBy('id','DESC')->limit(3)->get();
-        $products=Product::orwhere('title','like','%'.$request->search.'%')
-                    ->orwhere('slug','like','%'.$request->search.'%')
-                    ->orwhere('description','like','%'.$request->search.'%')
-                    ->orwhere('summary','like','%'.$request->search.'%')
-                    ->orwhere('price','like','%'.$request->search.'%')
-                    ->orderBy('id','DESC');
-            if(!empty($request->cat_id) || $request->cat_id !='' ){
-                $products->where('cat_id',$request->cat_id);
-            }                    
-            $products->paginate('9');
-            return  response()->json(['product' => $product,'recent_products'=> $recent_products]);
+        $searchTerm = '%' . $request->search . '%';
+        $catId = $request->cat_id;
+        $query1 = Product::where('cat_id', $catId)
+                    ->where(function($query) use ($searchTerm) {
+                        $query->where('title', 'like', $searchTerm)
+                              ->orWhere('slug', 'like', $searchTerm)
+                              ->orWhere('description', 'like', $searchTerm)
+                              ->orWhere('summary', 'like', $searchTerm)
+                              ->orWhere('price', 'like', $searchTerm);
+                    })
+                    ->orderBy('id', 'DESC');
+        $query2 = Product::where(function($query) use ($searchTerm) {
+                        $query->where('title', 'like', $searchTerm)
+                              ->orWhere('slug', 'like', $searchTerm)
+                              ->orWhere('description', 'like', $searchTerm)
+                              ->orWhere('summary', 'like', $searchTerm)
+                              ->orWhere('price', 'like', $searchTerm);
+                    })
+                    ->where('cat_id', '!=', $catId)
+                    ->orderBy('id', 'DESC');
+        $query3 = Product::where('cat_id', $catId)
+                    ->orderBy('id', 'DESC');
+        $products = $query1->union($query2)->union($query3)->distinct()->paginate(9);
+        return response()->json(['product' => $products, 'recent_products' => $recent_products]);
     }
 
 
