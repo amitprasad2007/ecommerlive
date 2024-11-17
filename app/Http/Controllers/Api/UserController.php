@@ -14,13 +14,16 @@ class UserController extends Controller
     {
         $user = User::where('mobile', $request->mobile)->first();
         if (!$user) {
-            User::create([
+            $user =  User::create([
                 'mobile' => $request->mobile,
                 'role' => 'user',
                 'status' => 'active',
                 'password' => Hash::make('123456')
             ]); 
-            return response()->json(['message' => 'please send password'], 200);       
+            if (Hash::check($request->password, $user->password)) {
+                $token = $user->createToken('authToken')->plainTextToken;
+                return response()->json(['token' => $token]);
+            }    
         } else {
             if ($request->password) {
                 if (Hash::check($request->password, $user->password)) {

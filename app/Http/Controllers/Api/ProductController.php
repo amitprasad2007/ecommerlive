@@ -18,7 +18,8 @@ class ProductController extends Controller
     }
     public function getproductbycategoryid($id){
         $product = Product::with('photoproduct')-> where('cat_id', $id)->get();
-        return response()->json(['product' => $product]);
+        $recent_products=Product::where('status','active')->orderBy('id','DESC')->limit(8)->get();
+        return response()->json(['product' => $product,'recent_products' => $recent_products]);
     }
 
     public function getis_featuredproduct(){
