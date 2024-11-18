@@ -17,10 +17,7 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return auth()->user();
-});
-
+Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'userauth'] );
 Route::get('getcategorieslist', [CategoryController::class, 'getcategorieslist']);
 Route::get('getcategorybyid/{id}', [CategoryController::class, 'getcategorybyid']);
 Route::get('getsubcategorieslist/{id}', [CategoryController::class, 'getsubcategorieslist']);

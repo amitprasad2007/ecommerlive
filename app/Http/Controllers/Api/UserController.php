@@ -37,5 +37,8 @@ class UserController extends Controller
         }
     }
 
-    
+    public function userauth(Request $request){
+
+        return response()->json(['user' => auth()->user()]);
+    }
 }
