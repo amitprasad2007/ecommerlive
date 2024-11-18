@@ -18,6 +18,6 @@ class CorsMiddleware
         return $next($request)
             ->header('Access-Control-Allow-Origin', '*') // Adjust to specific origins as needed
             ->header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-            ->header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With');
+            ->header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
     }
 }
