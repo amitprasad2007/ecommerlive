@@ -28,7 +28,7 @@ class CategoryController extends Controller
       */
       public function subCategory()
       {
-        dd('werwerwerwerwr');
+        // dd('werwerwerwerwr');
         $categories = Category::where('parent_id', '!=', 0)
         ->where(function ($query) {
             $query->where('sub_cat_id', '=', 0)
@@ -36,6 +36,7 @@ class CategoryController extends Controller
         })
         ->paginate(10); // Change to paginate
           // Check if query returns results
+          dd($categories);
           if ($categories->isEmpty()) {
               return redirect()->back()->with('error', 'No subcategories found!');
           }
