@@ -14,7 +14,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users=User::orderBy('id','ASC')->get();
+        $users=User::where('role','!=','admin')-> orderBy('id','ASC')->get();
         return view('backend.users.index')->with('users',$users);
     }
 

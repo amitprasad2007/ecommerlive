@@ -19,11 +19,11 @@ class UserController extends Controller
                 'role' => 'user',
                 'status' => 'active',
                 'password' => Hash::make('123456')
-            ]); 
+            ]);
             if (Hash::check($request->password, $user->password)) {
                 $token = $user->createToken('authToken')->plainTextToken;
                 return response()->json(['token' => $token]);
-            }    
+            }
         } else {
             if ($request->password) {
                 if (Hash::check($request->password, $user->password)) {
@@ -33,12 +33,10 @@ class UserController extends Controller
                     return response()->json(['message' => 'Invalid email or password'], 401);
                 }
             }
-            return response()->json(['message' => 'please send password'], 200);   
+            return response()->json(['message' => 'please send password'], 200);
         }
     }
-
-    public function userauth(Request $request){
-
-        return response()->json(['user' => auth()->user()]);
+    public function userauth(){
+        return response()->json(['user' => Auth::user()]);
     }
 }

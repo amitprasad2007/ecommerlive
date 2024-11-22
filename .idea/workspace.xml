@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f711bcb-22ba-458e-9c91-f25c72da694c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/BrandController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/BrandController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Brand.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Brand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/brand/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/brand/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/brand/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/brand/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/backend/brand/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/brand/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Kernel.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +22,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="E:\laragon\bin\php\php-8.3.4-Win32-vs16-x64\php.exe">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\laragon\bin\php\php-8.1.10-Win32-vs16-x64\php.exe">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
@@ -221,6 +218,7 @@
       <workItem from="1730904784166" duration="8126000" />
       <workItem from="1731001513213" duration="155000" />
       <workItem from="1731264997324" duration="1406000" />
+      <workItem from="1732007876091" duration="911000" />
     </task>
     <servers />
   </component>
