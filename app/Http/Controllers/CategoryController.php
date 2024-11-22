@@ -28,7 +28,7 @@ class CategoryController extends Controller
       */
       public function subCategory()
       {
-
+        dd('werwerwerwerwr');
         $categories = Category::where('parent_id', '!=', 0)
         ->where(function ($query) {
             $query->where('sub_cat_id', '=', 0)
