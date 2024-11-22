@@ -129,7 +129,7 @@
                 @enderror
             </div>
             <div class="form-group row">
-                <label for="shipping_cost" style="margin-left: 15px;">Shipping Cost <span class="text-danger">*</span></label>
+                <label for="shipping_cost" style="margin-left: 15px;">Shipping Cost (Optional)</span></label>
                 <input id="shipping_cost" type="number" name="shipping_cost" min="0" max="100" placeholder="Enter Shipping Cost" value="{{old('shipping_cost')}}" class="p-2 col-md-5 form-control" style="margin-left: 16px;">
                 <select name="shipping_type" id="shipping_type"  class=" p-2 col-md-3 form-control" style="margin-left: 30px;" >
                     <option selected  value="flat">Flat</option>
@@ -152,7 +152,7 @@
                 @enderror
             </div>
             <div class="form-group row ">
-                <label for="tax" style="margin-left: 15px;">Tax <span class="text-danger">*</span></label>
+                <label for="tax" style="margin-left: 15px;">Tax (Optional) </label>
                 <input id="tax" type="number" name="tax" min="0" placeholder="Enter Tax" value="{{old('tax')}}" class="p-2 col-md-5 form-control" style="margin-left: 16px;">
                 <select name="tax_type" id="tax_type" class=" p-2 col-md-3 form-control" style="margin-left: 30px;" >
                     <option value="flat">Flat</option>
@@ -166,7 +166,7 @@
                 @enderror
             </div>
             <div class="form-group row">
-                <label for="discount" style="margin-left: 15px;">Discount(%)</label>
+                <label for="discount" style="margin-left: 15px;">Discount(%) (Optional)</label>
                 <input id="discount" type="number" name="discount" min="0" max="100" placeholder="Enter discount" value="{{old('discount')}}" class="p-2 col-md-5 form-control" style="margin-left: 16px;">
                 <select name="discount_type" id="discount_type" class="p-2 col-md-3 form-control" style="margin-left: 30px;">
                     <option disabled value="flat">Flat</option>
