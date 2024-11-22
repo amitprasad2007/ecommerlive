@@ -36,11 +36,6 @@ class CategoryController extends Controller
         })
         ->paginate(10); // Change to paginate
           // Check if query returns results
-          dd($categories);
-          if ($categories->isEmpty()) {
-              return redirect()->back()->with('error', 'No subcategories found!');
-          }
-
           // Return the view with categories
           return view('backend.category.subcategory')->with('categories', $categories);
       }
