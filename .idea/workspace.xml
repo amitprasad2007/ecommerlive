@@ -7,8 +7,11 @@
     <list default="true" id="4f711bcb-22ba-458e-9c91-f25c72da694c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/UserController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Kernel.php" afterDir="false" />
+=======
+>>>>>>> 6bb8a2b (changes)
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +221,11 @@
       <workItem from="1730904784166" duration="8126000" />
       <workItem from="1731001513213" duration="155000" />
       <workItem from="1731264997324" duration="1406000" />
+<<<<<<< HEAD
       <workItem from="1732007876091" duration="911000" />
+=======
+      <workItem from="1732039009913" duration="1411000" />
+>>>>>>> 6bb8a2b (changes)
     </task>
     <servers />
   </component>
