@@ -79,6 +79,7 @@ class ProductController extends Controller
         $data=$request->all();
         // dd($data);
         $data['tags'] = implode(',', $request->tags);
+        $data['slug'] = str_replace(' ','-',$data['slug']);
         $status=Product::create($data);
         $newid = $status->id;
         // Handle multiple image paths
