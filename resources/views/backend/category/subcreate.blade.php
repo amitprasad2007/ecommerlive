@@ -14,7 +14,7 @@
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
-
+        <input id="sub_cat_id" type="hidden" name="sub_cat_id"  value="0" class="form-control">
         <div class="form-group">
           <label for="summary" class="col-form-label">Summary</label>
           <textarea class="form-control descriptionclass" id="summary" name="summary">{{old('summary')}}</textarea>
