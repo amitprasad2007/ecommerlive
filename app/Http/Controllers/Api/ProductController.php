@@ -28,10 +28,10 @@ class ProductController extends Controller
     }
 
     public function getproductSearch(Request $request){
-        $recent_products=Product::where('status','active')->orderBy('id','DESC')->limit(3)->get();
+        $recent_products = Product::with('photoproduct')->where('status','active')->orderBy('id','DESC')->limit(3)->get();
         $searchTerm = '%' . $request->search . '%';
         $catId = $request->cat_id;
-        $query1 = Product::where('cat_id', $catId)
+        $query1 = Product::with('photoproduct')->where('slug', $catId)
                     ->where(function($query) use ($searchTerm) {
                         $query->where('title', 'like', $searchTerm)
                               ->orWhere('slug', 'like', $searchTerm)
@@ -40,18 +40,18 @@ class ProductController extends Controller
                               ->orWhere('price', 'like', $searchTerm);
                     })
                     ->orderBy('id', 'DESC');
-        $query2 = Product::where(function($query) use ($searchTerm) {
+        $query2 = Product::with('photoproduct')->where(function($query) use ($searchTerm) {
                         $query->where('title', 'like', $searchTerm)
                               ->orWhere('slug', 'like', $searchTerm)
                               ->orWhere('description', 'like', $searchTerm)
                               ->orWhere('summary', 'like', $searchTerm)
                               ->orWhere('price', 'like', $searchTerm);
                     })
-                    ->where('cat_id', '!=', $catId)
+                    ->where('slug', '!=', $catId)
                     ->orderBy('id', 'DESC');
-        $query3 = Product::where('cat_id', $catId)
+        $query3 = Product::with('photoproduct')->where('slug', $catId)
                     ->orderBy('id', 'DESC');
-        $products = $query1->union($query2)->union($query3)->distinct()->paginate(9);
+        $products = $query1->union($query2)->union($query3)->distinct()->get();
         return response()->json(['product' => $products, 'recent_products' => $recent_products]);
     }
 
