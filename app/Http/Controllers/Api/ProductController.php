@@ -30,39 +30,59 @@ class ProductController extends Controller
     }
 
     public function getproductSearch(Request $request){
-        $recent_products=Product::with('photoproduct')
-                            ->where('status','active')
-                            ->orderBy('id','DESC'
-                            )->limit(4)
+        $recent_products = Product::with('photoproduct')
+                            ->where('status', 'active')
+                            ->orderBy('id', 'DESC')
+                            ->limit(4)
                             ->get();
-        $searchTerm = '%' . $request->search . '%';
-        $catslug = $request->cat_id;
-        $category = Category::where('slug',$catslug)->first();
-        $catId = $category->id;
-        $query1 = Product::where('cat_id', $catId)
-                    ->with('photoproduct')
-                    ->where(function($query) use ($searchTerm) {
-                        $query->where('title', 'like', $searchTerm)
-                              ->orWhere('slug', 'like', $searchTerm)
-                              ->orWhere('description', 'like', $searchTerm)
-                              ->orWhere('summary', 'like', $searchTerm)
-                              ->orWhere('price', 'like', $searchTerm);
-                    })
-                    ->orderBy('id', 'DESC');
 
-        $query2 = Product::with('photoproduct')
-                        ->where(function($query) use ($searchTerm){
-                        $query->where('title', 'like', $searchTerm)
-                              ->orWhere('slug', 'like', $searchTerm)
-                              ->orWhere('description', 'like', $searchTerm)
-                              ->orWhere('summary', 'like', $searchTerm)
-                              ->orWhere('price', 'like', $searchTerm);
-                    })
-                    ->where('cat_id', '!=', $catId)
-                    ->orderBy('id', 'DESC');
-        $query3 = Product:: with('photoproduct')->where('cat_id', $catId)
-                    ->orderBy('id', 'DESC');
+        $searchTerm = $request->search ? '%' . $request->search . '%' : null;
+        $catslug = $request->cat_id;
+        $catId = null;
+
+        if ($catslug) {
+            $category = Category::where('slug', $catslug)->first();
+            $catId = $category ? $category->id : null;
+        }
+
+        $query1 = Product::query();
+        if ($catId) {
+            $query1->where('cat_id', $catId);
+        }
+        if ($searchTerm) {
+            $query1->where(function($query) use ($searchTerm) {
+                $query->where('title', 'like', $searchTerm)
+                      ->orWhere('slug', 'like', $searchTerm)
+                      ->orWhere('description', 'like', $searchTerm)
+                      ->orWhere('summary', 'like', $searchTerm)
+                      ->orWhere('price', 'like', $searchTerm);
+            });
+        }
+        $query1->with('photoproduct')->orderBy('id', 'DESC');
+
+        $query2 = Product::query();
+        if ($searchTerm) {
+            $query2->where(function($query) use ($searchTerm) {
+                $query->where('title', 'like', $searchTerm)
+                      ->orWhere('slug', 'like', $searchTerm)
+                      ->orWhere('description', 'like', $searchTerm)
+                      ->orWhere('summary', 'like', $searchTerm)
+                      ->orWhere('price', 'like', $searchTerm);
+            });
+        }
+        if ($catId) {
+            $query2->where('cat_id', '!=', $catId);
+        }
+        $query2->with('photoproduct')->orderBy('id', 'DESC');
+
+        $query3 = Product::query();
+        if ($catId) {
+            $query3->where('cat_id', $catId);
+        }
+        $query3->with('photoproduct')->orderBy('id', 'DESC');
+
         $products = $query1->union($query2)->union($query3)->distinct()->paginate(9);
+
         return response()->json(['product' => $products, 'recent_products' => $recent_products]);
     }
 
