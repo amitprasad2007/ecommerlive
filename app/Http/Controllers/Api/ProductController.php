@@ -94,7 +94,7 @@ class ProductController extends Controller
 
         // Return both products and brands in the response
         return response()->json([
-            'products' => $products,
+            'product' => $products,
             'brands' => $brands,
             'recent_products' => $recent_products
         ]);
