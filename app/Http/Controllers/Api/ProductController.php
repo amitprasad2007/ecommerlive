@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Brand;
 
 class ProductController extends Controller
 {
@@ -83,7 +84,20 @@ class ProductController extends Controller
 
         $products = $query1->union($query2)->union($query3)->distinct()->paginate(9);
 
-        return response()->json(['product' => $products, 'recent_products' => $recent_products]);
+        // Get the product IDs from the search results
+        $productIds = $products->pluck('id');
+
+        // Retrieve brands associated with these products
+        $brands = Brand::whereHas('products', function($query) use ($productIds) {
+            $query->whereIn('id', $productIds);
+        })->get();
+
+        // Return both products and brands in the response
+        return response()->json([
+            'products' => $products,
+            'brands' => $brands,
+            'recent_products' => $recent_products
+        ]);
     }
 
 
