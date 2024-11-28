@@ -26,7 +26,7 @@ class ProductController extends Controller
     }
 
     public function getis_featuredproduct(){
-        $product = Product::with('photoproduct')-> where('is_featured', 1)->get();
+        $product = Product::with('photoproduct')-> where('is_featured', 1)->paginate(9);
         return response()->json(['product' => $product]);
     }
 
