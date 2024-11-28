@@ -26,8 +26,25 @@ class ProductController extends Controller
     }
 
     public function getis_featuredproduct(){
-        $product = Product::with('photoproduct')-> where('is_featured', 1)->paginate(9);
-        return response()->json(['product' => $product]);
+        $recent_products = Product::with('photoproduct')
+        ->where('status', 'active')
+        ->orderBy('id', 'DESC')
+        ->limit(4)
+        ->get();
+        $products = Product::with('photoproduct')-> where('is_featured', 1)->paginate(9);
+        // Get the product IDs from the search results
+        $productIds = $products->pluck('id');
+
+        // Retrieve brands associated with these products
+        $brands = Brand::whereHas('products', function($query) use ($productIds) {
+            $query->whereIn('id', $productIds);
+        })->get();
+       // Return both products and brands in the response
+       return response()->json([
+        'product' => $products,
+        'brands' => $brands,
+        'recent_products' => $recent_products
+    ]);
     }
 
     public function getproductSearch(Request $request){
