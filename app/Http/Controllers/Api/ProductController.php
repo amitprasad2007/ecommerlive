@@ -26,19 +26,14 @@ class ProductController extends Controller
     }
 
     public function getis_featuredproduct(){
-        $recent_products = Product::with('photoproduct')
-        ->where('status', 'active')
-        ->orderBy('id', 'DESC')
-        ->limit(4)
-        ->get();
+        $recent_products =  $recent_products = $this->apiRecentProduct();
+
         $products = Product::with('photoproduct')-> where('is_featured', 1)->paginate(9);
         // Get the product IDs from the search results
         $productIds = $products->pluck('id');
 
         // Retrieve brands associated with these products
-        $brands = Brand::whereHas('products', function($query) use ($productIds) {
-            $query->whereIn('id', $productIds);
-        })->get();
+        $brands = $this->apiBrand($productIds);
        // Return both products and brands in the response
        return response()->json([
         'product' => $products,
@@ -48,11 +43,7 @@ class ProductController extends Controller
     }
 
     public function getproductSearch(Request $request){
-        $recent_products = Product::with('photoproduct')
-                            ->where('status', 'active')
-                            ->orderBy('id', 'DESC')
-                            ->limit(4)
-                            ->get();
+        $recent_products = $this->apiRecentProduct();
 
         $searchTerm = $request->search ? '%' . $request->search . '%' : null;
         $catslug = $request->cat_id;
@@ -105,9 +96,7 @@ class ProductController extends Controller
         $productIds = $products->pluck('id');
 
         // Retrieve brands associated with these products
-        $brands = Brand::whereHas('products', function($query) use ($productIds) {
-            $query->whereIn('id', $productIds);
-        })->get();
+        $brands = $this->apiBrand($productIds);
 
         // Return both products and brands in the response
         return response()->json([
@@ -117,5 +106,69 @@ class ProductController extends Controller
         ]);
     }
 
+    
+    protected function apiBrand($productIds){
 
+        return Brand::whereHas('products', function($query) use ($productIds) {
+            $query->whereIn('id', $productIds);
+        })->get();
+    }
+
+    protected function apiRecentProduct(){
+
+        return Product::with('photoproduct')
+                            ->where('status', 'active')
+                            ->orderBy('id', 'DESC')
+                            ->limit(4)
+                            ->get();
+    }
+
+    public function getCateidProduct(Request $request){
+        $recent_products =  $recent_products = $this->apiRecentProduct();
+
+        $products = Product::with('photoproduct')-> where('cat_id', $request->cat_id)->paginate(9);
+        // Get the product IDs from the search results
+        $productIds = $products->pluck('id');
+
+        // Retrieve brands associated with these products
+        $brands = $this->apiBrand($productIds);
+       // Return both products and brands in the response
+       return response()->json([
+        'product' => $products,
+        'brands' => $brands,
+        'recent_products' => $recent_products
+    ]);
+    }
+    public function getSubCateidProduct(Request $request){
+        $recent_products =  $recent_products = $this->apiRecentProduct();
+
+        $products = Product::with('photoproduct')-> where('child_cat_id', $request->cat_id)->paginate(9);
+        // Get the product IDs from the search results
+        $productIds = $products->pluck('id');
+
+        // Retrieve brands associated with these products
+        $brands = $this->apiBrand($productIds);
+       // Return both products and brands in the response
+       return response()->json([
+        'product' => $products,
+        'brands' => $brands,
+        'recent_products' => $recent_products
+    ]);
+    }
+    public function getSubSubCateidProduct(Request $request){
+        $recent_products =  $recent_products = $this->apiRecentProduct();
+
+        $products = Product::with('photoproduct')-> where('sub_child_cat_id', $request->cat_id)->paginate(9);
+        // Get the product IDs from the search results
+        $productIds = $products->pluck('id');
+
+        // Retrieve brands associated with these products
+        $brands = $this->apiBrand($productIds);
+       // Return both products and brands in the response
+       return response()->json([
+        'product' => $products,
+        'brands' => $brands,
+        'recent_products' => $recent_products
+    ]);
+    }
 }
