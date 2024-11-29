@@ -58,7 +58,7 @@ class ProductController extends Controller
         if ($catId) {
             $query1->where('cat_id', $catId);
         }
-        if ($searchTerm) {
+        if ($searchTerm!="%''%") {
             $query1->where(function($query) use ($searchTerm) {
                 $query->where('title', 'like', $searchTerm)
                       ->orWhere('slug', 'like', $searchTerm)
@@ -70,7 +70,7 @@ class ProductController extends Controller
         $query1->with('photoproduct')->orderBy('id', 'DESC');
 
         $query2 = Product::query();
-        if ($searchTerm) {
+        if ($searchTerm!=="%''%") {
             $query2->where(function($query) use ($searchTerm) {
                 $query->where('title', 'like', $searchTerm)
                       ->orWhere('slug', 'like', $searchTerm)
