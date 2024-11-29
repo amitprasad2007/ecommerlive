@@ -30,7 +30,6 @@ Route::get('getbrandlist', [\App\Http\Controllers\Api\BrandController::class, 'g
 Route::post('userlogin', [UserController::class, 'userlogin']);
 Route::get('getcatwithsubandsub',[CategoryController::class,'catsubsub']);
 Route::get('getproductSearch/', [ProductController::class, 'getproductSearch']);
-
 Route::get('getCateidProduct/', [ProductController::class, 'getCateidProduct']);
 Route::get('getSubCateidProduct/', [ProductController::class, 'getSubCateidProduct']);
 Route::get('getSubSubCateidProduct/', [ProductController::class, 'getSubSubCateidProduct']);
