@@ -62,9 +62,9 @@ class ProductController extends Controller
             $query1->where(function($query) use ($searchTerm) {
                 $query->where('title', 'like', $searchTerm)
                       ->orWhere('slug', 'like', $searchTerm)
-                      ->orWhere('description', 'like', $searchTerm)
-                      ->orWhere('summary', 'like', $searchTerm)
-                      ->orWhere('price', 'like', $searchTerm);
+                    //   ->orWhere('description', 'like', $searchTerm)
+                      ->orWhere('summary', 'like', $searchTerm);
+                    //   ->orWhere('price', 'like', $searchTerm);
             });
         }
         $query1->with('photoproduct')->orderBy('id', 'DESC');
@@ -74,9 +74,9 @@ class ProductController extends Controller
             $query2->where(function($query) use ($searchTerm) {
                 $query->where('title', 'like', $searchTerm)
                       ->orWhere('slug', 'like', $searchTerm)
-                      ->orWhere('description', 'like', $searchTerm)
-                      ->orWhere('summary', 'like', $searchTerm)
-                      ->orWhere('price', 'like', $searchTerm);
+                    //   ->orWhere('description', 'like', $searchTerm)
+                      ->orWhere('summary', 'like', $searchTerm);
+                    //   ->orWhere('price', 'like', $searchTerm);
             });
         }
         if ($catId) {
