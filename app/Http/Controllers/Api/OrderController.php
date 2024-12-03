@@ -14,7 +14,7 @@ class OrderController extends Controller
         $totalcart = $request->cart;
         foreach($totalcart as $cart ){
 
-            return response()->json(['req' => $cart]);      
+            return response()->json(['req' => $cart['slug']]);      
 
         }
 
