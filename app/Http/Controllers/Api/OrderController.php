@@ -12,6 +12,6 @@ class OrderController extends Controller
     public function savecart(Request $request){
         //dd($request)
 
-        return response()->json(['user' => Auth::user()]);
+        return response()->json(['req' => $request]);
     }
 }
