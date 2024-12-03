@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\OrderController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -33,6 +34,9 @@ Route::get('getproductSearch/', [ProductController::class, 'getproductSearch']);
 Route::get('getCateidProduct', [ProductController::class, 'getCateidProduct']);
 Route::get('getSubCateidProduct', [ProductController::class, 'getSubCateidProduct']);
 Route::get('getSubSubCateidProduct', [ProductController::class, 'getSubSubCateidProduct']);
+
+
+Route::post('savecart', [OrderController::class, 'savecart']);
 
 
 
