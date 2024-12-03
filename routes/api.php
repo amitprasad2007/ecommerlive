@@ -36,7 +36,7 @@ Route::get('getSubCateidProduct', [ProductController::class, 'getSubCateidProduc
 Route::get('getSubSubCateidProduct', [ProductController::class, 'getSubSubCateidProduct']);
 
 
-Route::post('savecart', [OrderController::class, 'savecart']);
+Route::middleware('auth:sanctum')->post('savecart', [OrderController::class, 'savecart']);
 
 
 
