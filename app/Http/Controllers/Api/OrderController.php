@@ -11,7 +11,13 @@ class OrderController extends Controller
 {
     public function savecart(Request $request){
         //dd($request)
+        $totalcart = $request->cart;
+        foreach($totalcart as $cart ){
 
-        return response()->json(['req' => $request->cart]);
+            return response()->json(['req' => $cart->slug]);      
+
+        }
+
+      
     }
 }
