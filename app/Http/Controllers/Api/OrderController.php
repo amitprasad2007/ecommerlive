@@ -17,12 +17,11 @@ class OrderController extends Controller
         foreach($totalcart as $cart ){
             $slug = $cart['slug'];
             $quantity = $cart['quantity'];
-            return response()->json([
-                'slug' => $slug,
-                'qunir'=> $quantity
-            ]);
-            $product = Product::where('slug', $slug)->first();
 
+            $product = Product::where('slug', $slug)->first();
+            return response()->json([
+                'product' => $product
+            ]);
             $cart = new Cart;
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $product->id;
@@ -33,9 +32,7 @@ class OrderController extends Controller
             $cart->save();
             $products[]=$product;
         }
-        return response()->json([
-            'product' => $products
-        ]);
+        
       
     }
 }
