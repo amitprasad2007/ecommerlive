@@ -17,6 +17,10 @@ class OrderController extends Controller
         foreach($totalcart as $cart ){
             $slug = $cart['slug'];
             $quantity = $cart['quantity'];
+            return response()->json([
+                'slug' => $slug,
+                'qunir'=> $quantity
+            ]);
             $product = Product::where('slug', $slug)->first();
 
             $cart = new Cart;
