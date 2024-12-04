@@ -19,9 +19,11 @@ class OrderController extends Controller
             $quantity = $cart['quantity'];
 
             $product = Product::where('slug', $slug)->first();
-            return response()->json([
-                'product' => $product
-            ]);
+            if (empty($product)) {
+                return response()->json([
+                    'product' => $slug
+                ]);
+            }
             $cart = new Cart;
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $product->id;
