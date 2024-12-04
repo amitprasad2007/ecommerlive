@@ -31,7 +31,7 @@ class OrderController extends Controller
             $slug = $cart['slug'];
             $quantity = $cart['quantity'];
 
-            $product = Product::where('slug', $slug)->first();
+            $product = Product::with('photoproduct')->where('slug', $slug)->first();
             if (!$product) {
                 continue; // Skip if product not found
             }
