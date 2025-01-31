@@ -45,6 +45,7 @@ class OrderController extends Controller
             $cart->status = 'new';
             $cart->save();
             $products[] = $product;
+            $products['cartqunatity']= $quantity;
         }
 
         return response()->json([
