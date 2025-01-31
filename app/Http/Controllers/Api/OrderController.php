@@ -36,6 +36,7 @@ class OrderController extends Controller
                 continue; // Skip if product not found
             }
 
+            $product->quantity = $quantity;
             $cart = new Cart;
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $product->id;
@@ -44,8 +45,7 @@ class OrderController extends Controller
             $cart->amount = $cart->price * $cart->quantity;
             $cart->status = 'new';
             $cart->save();
-            $products[] = $product;
-            $products['cartqunatity']= $quantity;
+            $products[] = $product;            
         }
 
         return response()->json([
