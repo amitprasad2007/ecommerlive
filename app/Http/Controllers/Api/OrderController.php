@@ -36,7 +36,7 @@ class OrderController extends Controller
                 continue; // Skip if product not found
             }
 
-            $product->quantity = $quantity;
+            $product->cartquantity = $quantity;
             $cart = new Cart;
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $product->id;
