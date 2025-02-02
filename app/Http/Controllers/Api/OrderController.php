@@ -52,4 +52,8 @@ class OrderController extends Controller
             'product' => $products
         ]);
     }
+
+    public function updatecart(Request $request){ 
+        dd($request);
+    }
 }
