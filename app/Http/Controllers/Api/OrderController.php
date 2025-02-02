@@ -54,8 +54,13 @@ class OrderController extends Controller
     }
 
     public function updatecart(Request $request){ 
-        return response()->json([
-            'product' => $request->cart[0]->title
-        ]);
+        // Ensure the cart is an array and has at least one item
+        if (isset($request->cart[0]) && is_array($request->cart[0])) {
+            return response()->json([
+                'product' => $request->cart[0]['title'] // Accessing 'title' as an array key
+            ]);
+        }
+
+        return response()->json(['error' => 'Invalid cart data'], 400); // Handle error case
     }
 }
