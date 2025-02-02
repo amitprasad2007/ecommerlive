@@ -54,6 +54,8 @@ class OrderController extends Controller
     }
 
     public function updatecart(Request $request){ 
-        dd($request);
+        return response()->json([
+            'product' => $request
+        ]);
     }
 }
