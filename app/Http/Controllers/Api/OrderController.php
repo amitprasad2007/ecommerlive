@@ -73,7 +73,7 @@ class OrderController extends Controller
         // Ensure the cart is an array and has at least one item
         if (isset($request->cart[0]) && is_array($request->cart[0])) {
             return response()->json([
-                'product' => $request->cart // Accessing 'title' as an array key
+                'product' => $request->cart[0]['cart_id'] // Accessing 'title' as an array key
             ]);
         }
 
