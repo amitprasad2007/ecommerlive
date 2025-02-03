@@ -71,12 +71,45 @@ class OrderController extends Controller
 
     public function updatecart(Request $request){ 
         // Ensure the cart is an array and has at least one item
-        if (isset($request->cart[0]) && is_array($request->cart[0])) {
-            return response()->json([
-                'product' => $request->cart[0]['cart_id'] // Accessing 'title' as an array key
-            ]);
+        if (!isset($request->cart) || !is_array($request->cart) || count($request->cart) < 1) {
+            return response()->json(['error' => 'Invalid cart data'], 400);
         }
 
-        return response()->json(['error' => 'Invalid cart data'], 400); // Handle error case
+        $products = []; // Initialize products array
+        $cart_id = $request->cart[0]['cart_id'];
+        $cartquantity = $request->cart[0]['cartquantity'];
+        $slug = $request->cart[0]['slug'];
+
+        // Find the existing cart entry
+        $cart = Cart::where('id', $cart_id)
+            ->where('order_id', null)
+            ->where('status', 'new')
+            ->first();
+
+        if ($cart) {
+            // Update the cart quantity
+            $cart->quantity = $cartquantity;
+            $cart->amount = $cart->price * $cart->quantity; // Update amount based on new quantity
+            $cart->save();
+
+            // Retrieve all products in the user's cart
+            $userCarts = Cart::where('user_id', auth()->user()->id)
+                ->where('order_id', null)
+                ->where('status', 'new')
+                ->with('product') // Assuming you want to load product details
+                ->get();
+
+            foreach ($userCarts as $userCart) {
+                $product_id = $userCart->product->id;
+                $product = Product::with('photoproduct')->find($product_id);
+                $product->cartquantity = $userCart->quantity;
+                $product->cart_id = $userCart->id;
+                $products[] = $product;
+            }
+        }
+
+        return response()->json([
+            'product' => $products
+        ]);
     }
 }
