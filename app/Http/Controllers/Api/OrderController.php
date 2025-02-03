@@ -36,7 +36,22 @@ class OrderController extends Controller
                 continue; // Skip if product not found
             }
 
-            $product->cartquantity = $quantity;
+            // Check for existing cart entry with null order_id, same product_id, and status 'new'
+            $existingCart = Cart::where('product_id', $product->id)
+                ->where('order_id', null)
+                ->where('status', 'new')
+                ->where('user_id', auth()->user()->id)
+                ->first();
+
+            if ($existingCart) {
+                // Return product with cartquantity and existing cart id
+                $product->cartquantity = $existingCart->quantity;
+                $product->cart_id = $existingCart->id;
+                $products[] = $product;
+                continue; // Skip creating a new cart entry
+            }
+
+            $product->cartquantity = $quantity;            
             $cart = new Cart;
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $product->id;
