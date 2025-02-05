@@ -36,6 +36,22 @@ class OrderController extends Controller
                 continue; // Skip if product not found
             }
 
+            // Check for existing cart entry with null order_id, same product_id, and status 'new'
+            $existingCart = Cart::where('product_id', $product->id)
+                ->where('order_id', null)
+                ->where('status', 'new')
+                ->where('user_id', auth()->user()->id)
+                ->first();
+
+            if ($existingCart) {
+                // Return product with cartquantity and existing cart id
+                $product->cartquantity = $existingCart->quantity;
+                $product->cart_id = $existingCart->id;
+                $products[] = $product;
+                continue; // Skip creating a new cart entry
+            }
+
+            $product->cartquantity = $quantity;            
             $cart = new Cart;
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $product->id;
@@ -44,7 +60,52 @@ class OrderController extends Controller
             $cart->amount = $cart->price * $cart->quantity;
             $cart->status = 'new';
             $cart->save();
-            $products[] = $product;
+            $product->cart_id = $cart->id;
+            $products[] = $product;            
+        }
+
+        return response()->json([
+            'product' => $products
+        ]);
+    }
+
+    public function updatecart(Request $request){ 
+        // Ensure the cart is an array and has at least one item
+        if (!isset($request->cart) || !is_array($request->cart) || count($request->cart) < 1) {
+            return response()->json(['error' => 'Invalid cart data'], 400);
+        }
+
+        $products = []; // Initialize products array
+        $cart_id = $request->cart[0]['cart_id'];
+        $cartquantity = $request->cart[0]['cartquantity'];
+        $slug = $request->cart[0]['slug'];
+
+        // Find the existing cart entry
+        $cart = Cart::where('id', $cart_id)
+            ->where('order_id', null)
+            ->where('status', 'new')
+            ->first();
+
+        if ($cart) {
+            // Update the cart quantity
+            $cart->quantity = $cartquantity;
+            $cart->amount = $cart->price * $cart->quantity; // Update amount based on new quantity
+            $cart->save();
+
+            // Retrieve all products in the user's cart
+            $userCarts = Cart::where('user_id', auth()->user()->id)
+                ->where('order_id', null)
+                ->where('status', 'new')
+                ->with('product') // Assuming you want to load product details
+                ->get();
+
+            foreach ($userCarts as $userCart) {
+                $product_id = $userCart->product->id;
+                $product = Product::with('photoproduct')->find($product_id);
+                $product->cartquantity = $userCart->quantity;
+                $product->cart_id = $userCart->id;
+                $products[] = $product;
+            }
         }
 
         return response()->json([
