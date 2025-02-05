@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
-use App\Models\PhotoProduct; // Import the PhotoProduct model
+use App\Models\PhotoProduct; 
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -128,12 +128,9 @@ class ProductController extends Controller
     {
         $brand=Brand::get();
         $product=Product::findOrFail($id);
-        $videoproviders =VideoProvider::where('status',1)->get();
-       // dd($product->photoproduct);
+        $videoproviders =VideoProvider::where('status',1)->get(); 
         $category=Category::where('is_parent',1)->get();
-        $items=Product::where('id',$id)->get();
-
-        // return $items;
+        $items=Product::where('id',$id)->get(); 
         return view('backend.product.edit')->with('product',$product)
                     ->with('brands',$brand)
                     ->with('videoproviders',$videoproviders)
@@ -147,11 +144,21 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        $product=Product::findOrFail($id);
-     //  dd($request);
-        $validatedData = $this->validate($request,[
+    public function manageProduct(Request $request, $id=null)
+    {       
+        $product = $id ? Product::find($id) : null;
+        $videoproviders =VideoProvider::where('status',1)->get(); 
+        $items=Product::where('id',$id)->get();        
+        $brands = Brand::get();
+        $categories = Category::where('is_parent', 1)->get(); 
+        $childCategories = $product && $product->cat_id ? 
+            Category::where('parent_id', $product->cat_id)->get() : [];
+        
+        $subChildCategories = $product && $product->child_cat_id ? 
+            Category::where('sub_cat_id', $product->child_cat_id)->get() : [];
+ 
+        if ($request->isMethod('post')) {
+            $validatedData = $this->validate($request,[
             'title'=>'string|required',
             'description'=>'string|required',
             'is_featured'=>'sometimes|in:1',
@@ -176,39 +183,53 @@ class ProductController extends Controller
             'min_qty'=>"required|integer|min:1",
             'video_provider_id'=>'nullable|exists:video_providers,id',
             'video_link'=>'nullable|string',
-            'todays_deal'=>'sometimes|in:1,0',
-            'photo'=>'string|required',
+            'todays_deal'=>'sometimes|in:1,0',             
             'meta_title'=>'string|required',
             'meta_description'=>'string|required',
+            'photo' => 'nullable|array',  
+            'photo.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status'=>'required|in:active,inactive'
-        ]);
-   //dd( $validatedData );
+        ]); 
         $data=$request->all();
-        $data['tags'] = implode(',', $request->tags);
-        // Handle multiple image paths
-        if ($request->has('photo')) {
-            $photoPaths = explode(',', $request->photo);
-            foreach ($photoPaths as $photoPath) {
-                // Trim any whitespace from the path
-                $photoPath = trim($photoPath);
-                if (!empty($photoPath)) {
-                    // Update or create a new PhotoProduct record for each path
-                    PhotoProduct::updateOrCreate(
-                        ['product_id' => $id, 'photo_path' => $photoPath],
-                        ['photo_path' => $photoPath]
-                    );
-                }
+        $data['tags'] = implode(',', $request->tags); 
+
+        if ($product) { 
+            $product->update($data);
+            $id = $product->id; 
+            session()->flash('success', 'Product updated successfully.');
+        } else { 
+            $newProduct = Product::create($data);
+            $id = $newProduct->id;
+            session()->flash('success', 'Product created successfully.');
+        }
+
+        if ($request->hasFile('photo')) {           
+            foreach ($request->file('photo') as $file) {
+                $filename = uniqid() . '.webp';
+                $originalPath = 'products/photos/' . $filename;
+                $thumbnailPath = 'products/photos/thumbnails/' . $filename; 
+                $image = Image::make($file)->encode('webp', 90);  
+                Storage::disk('public')->put($originalPath, $image); 
+                $thumbnail = Image::make($file)
+                    ->resize(240, 240, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    })
+                    ->encode('webp', 90);
+                Storage::disk('public')->put($thumbnailPath, $thumbnail); 
+                PhotoProduct::updateOrCreate(
+                    ['product_id' => $id, 'photo_path' => $filename],
+                    ['photo_path' => $filename]
+                );
             }
         }
-        $status=$product->fill($data)->save();
 
-        if($status){
-            request()->session()->flash('success','Product Successfully updated');
-        }
-        else{
-            request()->session()->flash('error','Please try again!!');
-        }
+    
+ 
         return redirect()->route('product.index');
+        }
+     
+        return view('backend.product.edit', compact( 'product', 'brands', 'videoproviders', 'categories', 'childCategories', 'subChildCategories','items' ));
     }
 
     /**
@@ -282,6 +303,22 @@ class ProductController extends Controller
         }
         return redirect()->route('product.index')->with('success', 'Products uploaded successfully!');
     }
+
+
+    public function photoDelete($photoid)
+{
+    $photo = PhotoProduct::find($photoid);
+
+    if (!$photo) {
+        return response()->json(['success' => false, 'message' => 'Photo not found.'], 404);
+    } 
+    Storage::disk('public')->delete('products/photos/' . $photo->photo_path);
+    Storage::disk('public')->delete('products/photos/thumbnails/' . $photo->photo_path);
+ 
+    $photo->delete();
+
+    return response()->json(['success' => true, 'message' => 'Photo deleted successfully.']);
+}
 
 
 }

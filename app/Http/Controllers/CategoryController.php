@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
@@ -213,57 +215,82 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-          //  dd($request);
+    
         $this->validate($request, [
             'title' => 'string|required',
             'summary' => 'string|nullable',
-            'photo' => 'string|nullable',
-            'icon_path'=>'string|nullable',
+            'photo' => 'nullable|image|max:2048',  
+            'icon_path' => 'nullable|image|max:2048',
             'status' => 'required|in:active,inactive',
             'is_parent' => 'sometimes|in:1',
             'parent_id' => 'nullable|exists:categories,id',
         ]);
-
+    
         if ($request->input('subsubcat') == 1 || $request->input('subsubcat') != null) {
             $this->validate($request, [
                 'parent_id' => 'required|integer|exists:categories,id',
                 'sub_cat_id' => 'required|integer|exists:categories,id',
             ]);
         }
-
+    
         if ($request->is_parent != 1) {
             $this->validate($request, [
                 'parent_id' => 'required|integer|exists:categories,id',
             ]);
         }
-
+    
         $data = $request->all();
         $data['is_parent'] = $request->input('is_parent', 0);
         $data['parent_id'] = $request->parent_id ?: 0;
         $data['sub_cat_id'] = $request->sub_cat_id ?: 0;
-
+    
         // Add slug generation
-        $data['slug'] = Str::slug($request->title);
-
-        // Check if the slug already exists
+        $data['slug'] = Str::slug($request->title); 
         $slug_count = Category::where('slug', $data['slug'])->where('id', '!=', $id)->count();
         if ($slug_count > 0) {
             $data['slug'] = $data['slug'] . '-' . $id;
         }
-
+    
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = uniqid() . '.webp';
+            $originalPath = 'categories/' . $filename;
+            $thumbnailPath = 'categories/thumbnails/' . $filename;    
+            $image = Image::make($file)->encode('webp', 90);
+            Storage::disk('public')->put($originalPath, $image);
+    
+            $thumbnail = Image::make($file)
+                ->resize(120, 120, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('webp', 90);
+            Storage::disk('public')->put($thumbnailPath, $thumbnail); 
+            $data['photo'] = $originalPath;
+        }
+    
+        // Handle icon_path upload
+        if ($request->hasFile('icon_path')) {
+            $icon = $request->file('icon_path');
+            $filename = uniqid() . '.webp';
+            $originalPath = 'categories/icons/' . $filename;
+            $image = Image::make($icon)->encode('webp', 90);
+            Storage::disk('public')->put($originalPath, $image); 
+            $data['icon_path'] = $originalPath;
+        } 
         $status = $category->fill($data)->save();
-
-        if ($status) {
-            // Clear cache
-            Cache::forget('categories');
-
+    
+        if ($status) { 
+            Cache::forget('categories'); 
             request()->session()->flash('success', 'Category successfully updated');
         } else {
             request()->session()->flash('error', 'Error occurred, Please try again!');
         }
-
+    
         return redirect()->route('category.index');
     }
+  
 
     /**
      * Remove the specified resource from storage.

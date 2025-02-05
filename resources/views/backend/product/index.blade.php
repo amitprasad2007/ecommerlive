@@ -6,7 +6,7 @@
 
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary float-left">Product Lists</h6>
-      <a href="{{route('product.create')}}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add Product</a>
+      <a href="{{route('product.manage')}}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add Product</a>
         <form id="deleteForm" action="{{ route('product.bulkDelete') }}" method="POST">
             @csrf
             @method('DELETE')
@@ -93,7 +93,7 @@
                             @php
                               $photo=explode(',',$product->photostring());
                             @endphp
-                          <img src="{{asset( $photo[0])}}" class="img-fluid zoom" style="max-width:80px" alt="avatar.png">
+                          <img src="{{ asset('storage/products/photos/thumbnails/'.$photo[0])}}" class="img-fluid zoom" style="max-width:80px" alt="avatar.png">
                         @else
                             <img src="{{asset('backend/img/thumbnail-default.jpg')}}" class="img-fluid" style="max-width:80px" alt="avatar.png">
                         @endif
@@ -106,7 +106,7 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{route('product.edit',$product->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit" data-placement="bottom"><i class="fas fa-edit"></i></a>
+                        <a href="{{route('product.manage',$product->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit" data-placement="bottom"><i class="fas fa-edit"></i></a>
                     <form method="POST" action="{{route('product.destroy',[$product->id])}}">
                       @csrf
                       @method('delete')

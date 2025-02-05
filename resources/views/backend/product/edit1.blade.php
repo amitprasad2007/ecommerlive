@@ -284,7 +284,7 @@
 
 <script>
     const appurl = "{{ config('app.url') }}";
-  var  child_cat_id='{{$product->child_cat_id}}';
+    var  child_cat_id='{{$product->child_cat_id}}';
          alert(child_cat_id);
         $('#cat_id').change(function(){
             var cat_id=$(this).val();
@@ -331,7 +331,7 @@
             $('#cat_id').change();
         }
   var  sub_child_cat_id='{{$product->sub_child_cat_id}}';
-  // alert(child_cat_id);
+  alert(sub_child_cat_id);
   $('#child_cat_id').change(function(){
       var child_cat_id ='{{$product->child_cat_id}}';
       if(child_cat_id !=null){

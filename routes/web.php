@@ -168,7 +168,11 @@ Route::get('/test-logging', function () {
         // Product
         Route::post('/products/bulk-upload', [ProductController::class, 'bulkUpload'])->name('product.bulkUpload');
         Route::delete('/products/bulk-delete', [ProductController::class, 'bulkDelete'])->name('product.bulkDelete');
-        Route::resource('/product', ProductController::class);
+        Route::delete('/product/photos/delete/{id}', [ProductController::class, 'photoDelete'])->name('photos.delete');
+       
+        Route::match(['get', 'post', 'patch'], '/product/manage/{id?}', [ProductController::class, 'manageProduct'])->name('product.manage');
+        Route::resource('/product', ProductController::class)->except(['create', 'edit', 'update', 'store']);
+       
         // Ajax for sub category
         Route::post('/category/{id}/child', 'CategoryController@getChildByParent');
         Route::post('/category/{id}/subchild', 'CategoryController@getSubChildCategories');
