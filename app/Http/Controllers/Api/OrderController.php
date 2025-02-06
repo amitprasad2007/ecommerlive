@@ -87,7 +87,9 @@ class OrderController extends Controller
                 ->where('order_id', null)
                 ->where('status', 'new')
                 ->first();
-            dd( $cartquantity);
+            return response()->json([
+                'product' => $cartquantity
+            ]);
 
             if ($cart) {
                 // Update the cart quantity
