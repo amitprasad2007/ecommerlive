@@ -81,15 +81,15 @@ class OrderController extends Controller
             $cart_id =  $cartv['cart_id'];
             $cartquantity = $cartv['cartquantity'];
 
-            return response()->json([
-                'product' => auth()->user()->id
-            ]);
-
                // Find the existing cart entry
             $cart = Cart::where('id', $cart_id)
                 ->where('order_id', null)
+                ->where('user_id', auth()->user()->id)
                 ->where('status', 'new')
                 ->first();
+                        return response()->json([
+                'product' => $cart
+                        ]);
             if($cartquantity >0){
                 if ($cart) {
                     // Update the cart quantity
