@@ -74,53 +74,33 @@ class OrderController extends Controller
         if (!isset($request->cart) || !is_array($request->cart) || count($request->cart) < 1) {
             return response()->json(['error' => 'Invalid cart data'], 400);
         }
-
         $products = []; // Initialize products array
         $totalcart = $request->cart;
         foreach($totalcart as $cartv ){
             $cart_id =  $cartv['cart_id'];
             $cartquantity = $cartv['cartquantity'];
-
-               // Find the existing cart entry
             $cart = Cart::where('id', $cart_id)
                 ->where('order_id', null)
                 ->where('user_id', auth()->user()->id)
                 ->where('status', 'new')
                 ->first();
-                        return response()->json([
-                'product' => $cart
-                        ]);
             if($cartquantity >0){
                 if ($cart) {
-                    // Update the cart quantity
                     $cart->quantity = $cartquantity;
-                    $cart->amount = $cart->price * $cart->quantity; // Update amount based on new quantity
+                    $cart->amount = $cart->price * $cartquantity; // Update amount based on new quantity
                     $cart->save();
-
-                    // Retrieve all products in the user's cart
-                    $userCarts = Cart::where('user_id', auth()->user()->id)
-                        ->where('order_id', null)
-                        ->where('status', 'new')
-                        ->with('product') // Assuming you want to load product details
-                        ->get();
-                    //  dd($userCarts);
-                    foreach ($userCarts as $userCart) {
-                        $product_id = $userCart->product->id;
-                        // dd($product_id);
-                        $product = Product::with('photoproduct')->find($product_id);
-                        $product->cartquantity = $userCart->quantity;
-                        $product->cart_id = $userCart->id;
-                        $products[] = $product;
-                    }
+                    $product_id = $cart->product_id;
+                    $product = Product::with('photoproduct')->find($product_id);
+                    $product->cartquantity = $cartquantity;
+                    $product->cart_id = $cart->id;
+                    $products[] = $product;
                 }
             }else{
                 $cart->quantity = $cartquantity;
                 $cart->amount = 0;
-                // Update amount based on new quantity
+                $cart->status = 'delete';
                 $cart->save();
             }
-
-
         }
         return response()->json([
             'product' => $products
