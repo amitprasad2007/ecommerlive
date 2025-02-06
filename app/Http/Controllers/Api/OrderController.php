@@ -51,7 +51,7 @@ class OrderController extends Controller
                 continue; // Skip creating a new cart entry
             }
 
-            $product->cartquantity = $quantity;            
+            $product->cartquantity = $quantity;
             $cart = new Cart;
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $product->id;
@@ -61,7 +61,7 @@ class OrderController extends Controller
             $cart->status = 'new';
             $cart->save();
             $product->cart_id = $cart->id;
-            $products[] = $product;            
+            $products[] = $product;
         }
 
         return response()->json([
@@ -69,7 +69,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function updatecart(Request $request){ 
+    public function updatecart(Request $request){
         // Ensure the cart is an array and has at least one item
         if (!isset($request->cart) || !is_array($request->cart) || count($request->cart) < 1) {
             return response()->json(['error' => 'Invalid cart data'], 400);
@@ -78,22 +78,23 @@ class OrderController extends Controller
         $products = []; // Initialize products array
         $totalcart = $request->cart;
         foreach($totalcart as $cartv ){
-            $cart_id =  $cartv['cart_id']; 
+            $cart_id =  $cartv['cart_id'];
             $cartquantity = $cartv['cartquantity'];
             $slug = $cartv['slug'];
-            
+
                // Find the existing cart entry
             $cart = Cart::where('id', $cart_id)
                 ->where('order_id', null)
                 ->where('status', 'new')
                 ->first();
-    
+            dd( $cartquantity);
+
             if ($cart) {
                 // Update the cart quantity
                 $cart->quantity = $cartquantity;
                 $cart->amount = $cart->price * $cart->quantity; // Update amount based on new quantity
                 $cart->save();
-    
+
                 // Retrieve all products in the user's cart
                 $userCarts = Cart::where('user_id', auth()->user()->id)
                     ->where('order_id', null)
@@ -110,7 +111,7 @@ class OrderController extends Controller
                     $products[] = $product;
                 }
             }
-              
+
         }
         return response()->json([
             'product' => $products
