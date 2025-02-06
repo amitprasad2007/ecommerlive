@@ -96,7 +96,7 @@ class OrderController extends Controller
                     $products[] = $product;
                 }
             }else{
-                $cart->quantity = $cartquantity;
+                $cart->quantity = 0;
                 $cart->amount = 0;
                 $cart->status = 'delete';
                 $cart->save();
