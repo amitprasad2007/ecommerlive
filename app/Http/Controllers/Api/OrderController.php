@@ -38,7 +38,6 @@ class OrderController extends Controller
 
             // Check for existing cart entry with null order_id, same product_id, and status 'new'
             $existingCart = Cart::where('product_id', $product->id)
-                ->where('order_id', null)
                 ->where('status', 'new')
                 ->where('user_id', auth()->user()->id)
                 ->first();
