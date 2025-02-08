@@ -38,6 +38,7 @@ Route::get('getSubSubCateidProduct', [ProductController::class, 'getSubSubCateid
 
 Route::middleware('auth:sanctum')->post('savecart', [OrderController::class, 'savecart']);
 Route::middleware('auth:sanctum')->post('updatecart', [OrderController::class, 'updatecart']);
+Route::middleware('auth:sanctum')->post('placeorder', [OrderController::class, 'placeorder']);
 
 
 

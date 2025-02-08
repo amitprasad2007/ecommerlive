@@ -105,4 +105,10 @@ class OrderController extends Controller
             'product' => $products
         ]);
     }
+    public function placeorder(Request $request)
+    {
+        return response()->json([
+            'request' => $request
+        ]);
+    }
 }
