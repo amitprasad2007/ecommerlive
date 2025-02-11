@@ -108,7 +108,7 @@ class OrderController extends Controller
     public function placeorder(Request $request)
     {
         return response()->json([
-            'request' => $request
+            'request' => $request->customerDetails['email']
         ]);
     }
 }
