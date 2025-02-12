@@ -21,7 +21,8 @@ class PaymentController extends Controller
                'currency'        => 'INR',
                'payment_capture' => 1 // Auto capture
            ];
-           dd( $orderData);
+           $order = $api->order->create($orderData);
+           dd($order);
            try {
                $order = $api->order->create($orderData);
                return response()->json($order);
