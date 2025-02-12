@@ -11,6 +11,8 @@ class PaymentController extends Controller
 {
     public function createOrder(Request $request)
        {
+        dd('dfwerwerwerwe');
+
            $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
 
            $orderData = [
