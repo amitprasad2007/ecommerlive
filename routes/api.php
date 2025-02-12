@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -39,6 +40,6 @@ Route::get('getSubSubCateidProduct', [ProductController::class, 'getSubSubCateid
 Route::middleware('auth:sanctum')->post('savecart', [OrderController::class, 'savecart']);
 Route::middleware('auth:sanctum')->post('updatecart', [OrderController::class, 'updatecart']);
 Route::middleware('auth:sanctum')->post('placeorder', [OrderController::class, 'placeorder']);
-
+Route::post('/create-order', [PaymentController::class, 'createOrder']);
 
 
