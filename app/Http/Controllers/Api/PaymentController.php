@@ -14,14 +14,14 @@ class PaymentController extends Controller
        // dd('dfwerwerwerwe');
 
            $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
-            dd($api);
+          //  dd($api);
            $orderData = [
                'receipt'         => 'rcptid_11',
                'amount'          => 50000, // Amount in paise
                'currency'        => 'INR',
                'payment_capture' => 1 // Auto capture
            ];
-
+           dd( $orderData);
            try {
                $order = $api->order->create($orderData);
                return response()->json($order);
