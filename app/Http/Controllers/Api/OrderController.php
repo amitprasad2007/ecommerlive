@@ -107,8 +107,38 @@ class OrderController extends Controller
     }
     public function placeorder(Request $request)
     {
-        return response()->json([
-            'request' => $request->customerDetails['email']
+        $customeremail = $request->customerDetails['email'];
+        $customername = $request->customerDetails['customername'];
+        $billingAddress = $request->customerDetails['billingAddress'];
+        $billingstate = $request->customerDetails['billingstate'];
+        $billingzip =  $request->customerDetails['billingzip'];
+        $mobile = $request->customerDetails['mobile'];
+        $totalcart = $request->products;
+        foreach($totalcart as $products){
+            $slug = $products['slug'];
+            $products['quantity'];
+            $products['price'];
+            $productonly = Product::with('photoproduct')->where('slug', $slug)->first();
+            $Order = new Order;
+            $Order->user_id = auth()->user()->id;
+            $Order->order_number = 'ORD-' . time() . '-' . bin2hex(random_bytes(5));
+            $Order->sub_total = $productonly->price;
+            $Order->quantity = $products['quantity'];
+            $Order->total_amount = $productonly->price * $products['quantity'];
+            $Order->status = 'new';
+            $Order->payment_method = 
+            $Order->payment_status =
+            $Order->first_name =
+            $Order->last_name =
+            $Order->email =
+            $Order->phone =
+            $Order->country =
+            $Order->post_code =
+            $Order->address1 =
+
+        }
+        return  response()->json([
+           
         ]);
     }
 }
