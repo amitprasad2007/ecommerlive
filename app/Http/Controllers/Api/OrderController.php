@@ -136,6 +136,7 @@ class OrderController extends Controller
             $Order->first_name = $firstName;
             $Order->last_name = $lastName;
             $Order->email = $customeremail;
+            $Order->product_id =  $productonly->id;
             $Order->phone =$mobile;
             $Order->country ='India';
             $Order->post_code = $billingzip;
