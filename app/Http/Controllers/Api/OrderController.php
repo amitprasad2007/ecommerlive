@@ -109,11 +109,15 @@ class OrderController extends Controller
     {
         $customeremail = $request->customerDetails['email'];
         $customername = $request->customerDetails['customername'];
+        $nameParts = explode(' ', $customername, 2); 
+        $firstName = $nameParts[0];
+        $lastName = isset($nameParts[1]) ? $nameParts[1] : ''; 
         $billingAddress = $request->customerDetails['billingAddress'];
         $billingstate = $request->customerDetails['billingstate'];
         $billingzip =  $request->customerDetails['billingzip'];
         $mobile = $request->customerDetails['mobile'];
         $totalcart = $request->products;
+        $orderIds = []; // Initialize an array to store order IDs
         foreach($totalcart as $products){
             $slug = $products['slug'];
             $products['quantity'];
@@ -126,19 +130,21 @@ class OrderController extends Controller
             $Order->quantity = $products['quantity'];
             $Order->total_amount = $productonly->price * $products['quantity'];
             $Order->status = 'new';
-            $Order->payment_method = 
-            $Order->payment_status =
-            $Order->first_name =
-            $Order->last_name =
-            $Order->email =
-            $Order->phone =
-            $Order->country =
-            $Order->post_code =
-            $Order->address1 =
-
+            $Order->payment_method =  $request->pay_method;
+            $Order->payment_status = ($request->pay_method=='COD')? "Pending":"Paid";
+            $Order->first_name = $firstName;
+            $Order->last_name = $lastName;
+            $Order->email = $customeremai;
+            $Order->phone =$mobile;
+            $Order->country ='India';
+            $Order->post_code = $billingzip;
+            $Order->address1 = $billingAddress;
+            $Order->address2 = $billingstate;
+            $Order->save();
+            $orderIds[] = $Order->id; // Store the order ID in the array
         }
-        return  response()->json([
-           
+        return response()->json([
+            'orderIds' => $orderIds // Return the array of order IDs
         ]);
     }
 }
