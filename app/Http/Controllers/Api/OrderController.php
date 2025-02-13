@@ -135,7 +135,7 @@ class OrderController extends Controller
             $Order->payment_status = ($request->pay_method=='COD')? "Pending":"Paid";
             $Order->first_name = $firstName;
             $Order->last_name = $lastName;
-            $Order->email = $customeremai;
+            $Order->email = $customeremail;
             $Order->phone =$mobile;
             $Order->country ='India';
             $Order->post_code = $billingzip;
