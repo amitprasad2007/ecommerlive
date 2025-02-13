@@ -142,7 +142,13 @@ class OrderController extends Controller
             $Order->address1 = $billingAddress;
             $Order->address2 = $billingstate;
             $Order->save();
-            $orderIds[] = $Order->id; // Store the order ID in the array
+            $cart = Cart::find($products['cart_id']);
+            if ($cart) {
+                $cart->order_id = $Order->id;
+                $cart->status='progress';
+                $cart->save();
+            }
+            $orderIds[] = $Order->order_number; // Store the order ID in the array
         }
         return response()->json([
             'orderIds' => $orderIds // Return the array of order IDs
