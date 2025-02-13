@@ -132,7 +132,7 @@ class OrderController extends Controller
             $Order->total_amount = $productonly->price * $products['quantity'];
             $Order->status = 'new';
             $Order->payment_method =  $products['pay_method'];
-            $Order->payment_status = ($products['pay_method'] == 'COD') ? "Pending" : "Paid";
+            $Order->payment_status = ($products['pay_method'] == 'cod') ? "unpaid" : "paid";
             $Order->first_name = $firstName;
             $Order->last_name = $lastName;
             $Order->email = $customeremail;
