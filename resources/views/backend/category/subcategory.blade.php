@@ -2,7 +2,7 @@
 
 @section('main-content')
  <!-- DataTales Example -->
- <div class="card shadow mb-4"> 
+ <div class="card shadow mb-4">
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary float-left">Category Lists</h6>
       <a href="{{ route('admin.category.subcreate') }}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Add Category">
@@ -17,7 +17,7 @@
             <tr>
               <th>S.N.</th>
               <th>Title</th>
-              <th>Slug</th> 
+              <th>Slug</th>
               <th>Parent Category</th>
               <th>Photo</th>
               <th>Status</th>
@@ -28,7 +28,7 @@
             <tr>
               <th>S.N.</th>
               <th>Title</th>
-              <th>Slug</th> 
+              <th>Slug</th>
               <th>Parent Category</th>
               <th>Photo</th>
               <th>Status</th>
@@ -40,11 +40,11 @@
                 <tr>
                     <td>{{ $category->id }}</td>
                     <td>{{ $category->title }}</td>
-                    <td>{{ $category->slug }}</td> 
+                    <td>{{ $category->slug }}</td>
                     <td>{{ $category->parent_info->title ?? '' }}</td>
                     <td>
                         @if($category->photo)
-                            <img src="{{asset( $category->photo )}}" class="img-fluid" style="max-width:80px" alt="{{ $category->title }}">
+                            <img src="{{asset( 'storage/categories/thumbnails/'.$category->photo )}}" class="img-fluid" style="max-width:80px" alt="{{ $category->title }}">
                         @else
                             <img src="{{ asset('backend/img/thumbnail-default.jpg') }}" class="img-fluid" style="max-width:80px" alt="avatar.png">
                         @endif

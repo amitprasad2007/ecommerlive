@@ -2,7 +2,7 @@
 
 @section('main-content')
  <!-- DataTales Example -->
- <div class="card shadow mb-4"> 
+ <div class="card shadow mb-4">
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary float-left">Sub SubCategory Lists</h6>
       <a href="{{route('admin.category.subsubcreate')}}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add Sub SubCategory</a>
@@ -50,7 +50,7 @@
                     </td>
                     <td>
                         @if($category->photo)
-                            <img src="{{asset($category->photo)}}" class="img-fluid" style="max-width:80px" alt="{{$category->photo}}">
+                            <img src="{{asset('storage/categories/thumbnails/'.$category->photo)}}" class="img-fluid" style="max-width:80px" alt="{{$category->photo}}">
                         @else
                             <img src="{{asset('backend/img/thumbnail-default.jpg')}}" class="img-fluid" style="max-width:80px" alt="avatar.png">
                         @endif
