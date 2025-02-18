@@ -26,6 +26,6 @@ class PaymentController extends Controller
 
     public function paychecksave(Request $request){
 
-        return response()->json(['orderIds' => $request->response ]);
+        return response()->json(['orderIds' => $request->response->razorpay_payment_id ]);
     }
 }
