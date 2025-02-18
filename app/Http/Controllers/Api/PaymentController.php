@@ -32,8 +32,16 @@ class PaymentController extends Controller
 
         // Add Razorpay payment capture logic
         $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
-        $response = $api->payment->fetch($payment_id)->capture(array('amount' => 50000)); // Capture the payment
+        $payment = $api->payment->fetch($payment_id); // Fetch the payment details
 
-        return response()->json(['orderIds' => $response->toArray() ]);
+        // Check if the payment is already captured
+        if ($payment->status === 'captured') {
+            // Payment is already captured, return the payment details
+            return response()->json(['paymentDetails' => $payment->toArray()]);
+        } else {
+            // Capture the payment
+            $response = $payment->capture(array('amount' => 50000)); // Capture the payment
+            return response()->json(['orderIds' => $response->toArray()]);
+        }
     }
 }
