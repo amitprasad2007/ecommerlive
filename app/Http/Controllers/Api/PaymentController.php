@@ -26,6 +26,14 @@ class PaymentController extends Controller
 
     public function paychecksave(Request $request){
 
-        return response()->json(['orderIds' => $request->response['razorpay_payment_id'] ]);
+        $payment_id = $request->response['razorpay_payment_id'];    
+        $order_id = $request->response['razorpay_order_id']; 
+        $signature = $request->response['razorpay_signature'];
+
+        // Add Razorpay payment capture logic
+        $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
+        $response = $api->payment->fetch($payment_id)->capture(array('amount' => 50000)); // Capture the payment
+
+        return response()->json(['orderIds' => $response->toArray() ]);
     }
 }
