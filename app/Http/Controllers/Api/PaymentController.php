@@ -23,8 +23,9 @@ class PaymentController extends Controller
             'orderIds' => $order->toArray() // Convert the order object to an array
             ]);
     }
+
     public function paychecksave(Request $request){
-        
-        return response()->json(['orderIds' => $request ]);
+
+        return response()->json(['orderIds' => $request->response ]);
     }
 }
