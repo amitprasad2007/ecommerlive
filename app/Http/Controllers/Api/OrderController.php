@@ -155,4 +155,8 @@ class OrderController extends Controller
             'orderIds' => $orderIds // Return the array of order IDs
         ]);
     }
+
+    public function statelist(){
+
+    }
 }

@@ -11,10 +11,8 @@ class PaymentController extends Controller
 {
     public function createOrder(Request $request)
        {
-       // dd('dfwerwerwerwe');
 
            $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
-          //  dd($api);
            $orderData = [
                'receipt'         => 'rcptid_11',
                'amount'          => 50000, // Amount in paise
@@ -22,12 +20,8 @@ class PaymentController extends Controller
                'payment_capture' => 1 // Auto capture
            ];
            $order = $api->order->create($orderData);
-           dd($order);
-           try {
-               $order = $api->order->create($orderData);
-               return response()->json($order);
-           } catch (\Exception $e) {
-               return response()->json(['error' => $e->getMessage()], 500);
-           }
+           return response()->json([
+            'orderIds' => $order->toArray() // Convert the order object to an array
+            ]);
        }
 }
