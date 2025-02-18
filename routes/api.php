@@ -41,5 +41,7 @@ Route::middleware('auth:sanctum')->post('savecart', [OrderController::class, 'sa
 Route::middleware('auth:sanctum')->post('updatecart', [OrderController::class, 'updatecart']);
 Route::middleware('auth:sanctum')->post('placeorder', [OrderController::class, 'placeorder']);
 Route::middleware('auth:sanctum')->post('create-order', [PaymentController::class, 'createOrder']);
+Route::middleware('auth:sanctum')->post('paychecksave', [PaymentController::class, 'paychecksave']);
+
 
 

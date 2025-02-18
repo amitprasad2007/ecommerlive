@@ -9,8 +9,7 @@ use Razorpay\Api\Api;
 
 class PaymentController extends Controller
 {
-    public function createOrder(Request $request)
-       {
+    public function createOrder(Request $request){
 
            $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
            $orderData = [
@@ -23,5 +22,9 @@ class PaymentController extends Controller
            return response()->json([
             'orderIds' => $order->toArray() // Convert the order object to an array
             ]);
-       }
+    }
+    public function paychecksave(Request $request){
+        
+        return response()->json(['orderIds' => $request ]);
+    }
 }
