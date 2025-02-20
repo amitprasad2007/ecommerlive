@@ -5,22 +5,81 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Razorpay\Api\Api;
+use App\User;
+use App\Models\Cart;
+use App\Models\Product;
+use App\Models\Order;
 
 
 class PaymentController extends Controller
 {
     public function createOrder(Request $request){
+        $customername=$request->cartdata['formData']['customername'];
+        $nameParts = explode(' ', $customername, 2); 
+        $firstName = $nameParts[0];
+        $lastName = isset($nameParts[1]) ? $nameParts[1] : ''; 
+        $customeremail = $request->cartdata['formData']['email'];
+        $mobile = $request->cartdata['formData']['mobile'];
+        $billingAddress = $request->cartdata['formData']['billingAddress'];
+        $billingstate = $request->cartdata['formData']['billingstate'];
+        $billingzip = $request->cartdata['formData']['billingzip'];
+        $TOTALAMT = $request->cartdata['TOTALAMT'];
+        $productes = $request->cartdata['products'];
+        $orderIds = [];
+        $orderIdstirng = ''; // Initialize the orderIdstirng variable
+        foreach( $productes as $products){
+            $slug = $products['slug'];
+            $products['cartquantity'];
+            $products['price'];
+            $productonly = Product::with('photoproduct')->where('slug', $slug)->first();
+            if (!$productonly) {
+                // Handle the case where the product is not found
+                return response()->json(['error' => 'Product not found'], 404);
+            }
+            $Order = new Order;
+            $Order->user_id = auth()->user()->id;
+            $Order->order_number = 'ORD-' . time() . '-' . bin2hex(random_bytes(5));
+            $Order->sub_total = $productonly->price;
+            $Order->quantity = $products['cartquantity'];
+            $Order->total_amount = $productonly->price * $products['cartquantity'];
+            $Order->status = 'new';
+            $Order->payment_method =  'online';
+            $Order->payment_status = "unpaid";
+            $Order->first_name = $firstName;
+            $Order->last_name = $lastName;
+            $Order->email = $customeremail;
+            $Order->product_id =  $productonly->id;
+            $Order->phone =$mobile;
+            $Order->country ='India';
+            $Order->post_code = $billingzip;
+            $Order->address1 = $billingAddress;
+            $Order->address2 = $billingstate;
+            $Order->save();
+            // Check if the order was saved successfully
+            if (!$Order->wasRecentlyCreated) {
+                return response()->json(['error' => 'Order creation failed'], 500);
+            }
+            $cart = Cart::find($products['cart_id']);
+            if ($cart) {
+                $cart->order_id = $Order->id;
+                $cart->status='progress';
+                $cart->save();
+            }
+            $orderIds[] = $Order->order_number;
+            $orderIdstirng = $Order->order_number.'||'.$orderIdstirng; // Concatenate order numbers
+        }
+
 
            $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
            $orderData = [
-               'receipt'         => 'rcptid_11',
-               'amount'          => 50000, // Amount in paise
+               'receipt'         => $orderIdstirng,
+               'amount'          => $TOTALAMT, // Amount in paise
                'currency'        => 'INR',
                'payment_capture' => 1 // Auto capture
            ];
            $order = $api->order->create($orderData);
            return response()->json([
-            'orderIds' => $order->toArray() // Convert the order object to an array
+            'orderIds' => $order // Convert the order object to an array
             ]);
     }
 
