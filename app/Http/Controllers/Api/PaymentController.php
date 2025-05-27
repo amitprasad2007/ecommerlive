@@ -41,7 +41,7 @@ class PaymentController extends Controller
         } else {
             // Capture the payment
             $response = $payment->capture(array('amount' => 50000)); // Capture the payment
-            return response()->json(['orderIds' => $response->toArray()]);
+            return response()->json(['paymentDetails' => $response->toArray()]);
         }
     }
 }

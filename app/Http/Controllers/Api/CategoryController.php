@@ -29,8 +29,44 @@ class CategoryController extends Controller
     public function catsubsub()
     {
         $categories = Category::where('is_parent', '!=', 0)
-            ->with(['subCategories', 'subCategories.subSubCategories'])
+            ->with(['subcategories.subSubCategories'])
             ->get();
-        return response()->json(['categories' => $categories]);
+
+        $formatCategory = function ($category) use (&$formatCategory) {
+            $data = [
+                'id' => (string)$category->id,
+                'name' => $category->title,
+                'slug' => $category->slug,
+                'productCount' => $category->products()->count(),
+            ];
+            if ($category->subcategories && $category->subcategories->count() > 0) {
+                $data['subcategories'] = $category->subcategories->map(function ($sub) use (&$formatCategory) {
+                    $subData = [
+                        'id' => (string)$sub->id,
+                        'name' => $sub->title,
+                        'slug' => $sub->slug,
+                        'productCount' => $sub->products()->count(),
+                    ];
+                    if ($sub->subSubCategories && $sub->subSubCategories->count() > 0) {
+                        $subData['subcategories'] = $sub->subSubCategories->map(function ($subsub) {
+                            return [
+                                'id' => (string)$subsub->id,
+                                'name' => $subsub->title,
+                                'slug' => $subsub->slug,
+                                'productCount' => $subsub->products()->count(),
+                            ];
+                        })->values()->toArray();
+                    }
+                    return $subData;
+                })->values()->toArray();
+            }
+            return $data;
+        };
+
+        $result = $categories->map(function ($cat) use ($formatCategory) {
+            return $formatCategory($cat);
+        })->values()->toArray();
+
+        return response()->json($result);
     }
 }
