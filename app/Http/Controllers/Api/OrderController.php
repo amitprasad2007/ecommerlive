@@ -156,7 +156,5 @@ class OrderController extends Controller
         ]);
     }
 
-    public function statelist(){
-
-    }
+  
 }
