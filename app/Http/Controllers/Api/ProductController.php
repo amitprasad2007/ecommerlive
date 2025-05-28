@@ -25,21 +25,28 @@ class ProductController extends Controller
         return response()->json(['product' => $product,'recent_products' => $recent_products]);
     }
 
-    public function getis_featuredproduct(){
-        $recent_products =  $recent_products = $this->apiRecentProduct();
-
-        $products = Product::with('photoproduct')-> where('is_featured', 1)->paginate(9);
-        // Get the product IDs from the search results
-        $productIds = $products->pluck('id');
-
-        // Retrieve brands associated with these products
-        $brands = $this->apiBrand($productIds);
-       // Return both products and brands in the response
-       return response()->json([
-        'product' => $products,
-        'brands' => $brands,
-        'recent_products' => $recent_products
-    ]);
+    public function getis_featuredproduct() {
+        $products = Product::with(['photoproduct', 'brand'])
+            ->where('is_featured', 1)
+            ->paginate(9);
+        
+        $result = $products->map(function($product) {
+            $photo = $product->photoproduct->first();
+            return [
+                'id' => $product->id,
+                'name' => $product->title,
+                'image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
+                'price' => $product->price,
+                'originalPrice' => $product->original_price ?? null,
+                'rating' => $product->rating ?? null,
+                'reviewCount' => $product->review_count ?? null,
+                'brand' => $product->brand->title ?? null,
+                'isBestSeller' => $product->is_best_seller ?? false,
+                'isNew' => $product->created_at >= now()->subMonth(),
+            ];
+        });
+    
+        return response()->json($result);
     }
 
     public function getproductSearch(Request $request){
