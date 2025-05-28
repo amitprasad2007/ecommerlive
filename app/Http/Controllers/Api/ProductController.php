@@ -139,12 +139,12 @@ class ProductController extends Controller
 
         // Retrieve brands associated with these products
         $brands = $this->apiBrand($productIds);
-       // Return both products and brands in the response
-       return response()->json([
-        'product' => $products,
-        'brands' => $brands,
-        'recent_products' => $recent_products
-    ]);
+        // Return both products and brands in the response
+        return response()->json([
+            'product' => $products,
+            'brands' => $brands,
+            'recent_products' => $recent_products
+        ]);
     }
     public function getSubCateidProduct(Request $request){
         $recent_products =  $recent_products = $this->apiRecentProduct();
@@ -155,12 +155,12 @@ class ProductController extends Controller
 
         // Retrieve brands associated with these products
         $brands = $this->apiBrand($productIds);
-       // Return both products and brands in the response
-       return response()->json([
-        'product' => $products,
-        'brands' => $brands,
-        'recent_products' => $recent_products
-    ]);
+        // Return both products and brands in the response
+        return response()->json([
+            'product' => $products,
+            'brands' => $brands,
+            'recent_products' => $recent_products
+        ]);
     }
     public function getSubSubCateidProduct(Request $request){
         $recent_products =  $recent_products = $this->apiRecentProduct();
@@ -171,11 +171,11 @@ class ProductController extends Controller
 
         // Retrieve brands associated with these products
         $brands = $this->apiBrand($productIds);
-       // Return both products and brands in the response
-       return response()->json([
-        'product' => $products,
-        'brands' => $brands,
-        'recent_products' => $recent_products
-    ]);
+        // Return both products and brands in the response
+        return response()->json([
+            'product' => $products,
+            'brands' => $brands,
+            'recent_products' => $recent_products
+        ]);
     }
 }
