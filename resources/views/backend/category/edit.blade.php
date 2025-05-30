@@ -59,12 +59,19 @@
           <label for="inputPhoto" class="col-form-label">Photo</label>
           <div class="input-group">
               <span class="input-group-btn">
-              <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" multiple>
-
-              </span>
-         
-        </div>
-            <div id="holder-photo" style="margin-top:15px;max-height:100px;"></div>
+                <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
+              </span>         
+          </div>
+          <div id="image-previews"></div>
+          <div style="margin-top: 10px;">
+              <div class="row" id="photo-container">
+                <div class="col-md-3 photo-item" id="photo-{{ ($category->photo) }}">
+                    <div class="card">
+                        <img src="{{ asset('storage/products/photos/thumbnails/' . $category->photo) }}" class="card-img-top img-fluid" alt="Product Photo">
+                    </div>
+                </div>
+              </div>
+          </div>
           @error('photo')
           <span class="text-danger">{{$message}}</span>
           @enderror
@@ -73,7 +80,7 @@
               <label for="inputIcon" class="col-form-label">Icons</label>
               <div class="input-group">
         <span class="input-group-btn">
-        <input type="file" name="icon_path" id="icon_path" class="form-control" onchange="previewImages(event)" multiple>
+        <input type="file" name="icon_path" id="icon_path" class="form-control" onchange="previewImages(event)" >
 
         </span>
                 

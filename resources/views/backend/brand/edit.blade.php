@@ -5,7 +5,7 @@
 <div class="card">
     <h5 class="card-header">Edit Brand</h5>
     <div class="card-body">
-      <form method="post" action="{{route('brand.update',$brand->id)}}">
+      <form method="post" action="{{route('brand.update',$brand->id)}}" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
         <div class="form-group">
@@ -25,21 +25,36 @@
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
-          <div class="form-group">
-              <label for="inputPhoto" class="col-form-label">Photo <span class="text-danger">*</span></label>
-              <div class="input-group">
-            <span class="input-group-btn">
-                <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                <i class="fa fa-picture-o"></i> Choose
-                </a>
-            </span>
-                  <input id="thumbnail" class="form-control" type="text" name="photo" value="{{$brand->photo}}">
-              </div>
-              <div id="holder" style="margin-top:15px;max-height:100px;"></div>
-              @error('photo')
-              <span class="text-danger">{{$message}}</span>
-              @enderror
+        <div class="form-group">
+          <label for="inputPhoto" class="col-form-label">Photo</label>
+          <div class="input-group">
+              <span class="input-group-btn">
+              <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
+
+              </span>
+         
+        </div>
+            <div id="holder-photo" style="margin-top:15px;max-height:100px;"></div>
+          @error('photo')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+
+        <div class="form-group">
+          <label for="inputIcon" class="col-form-label">Icons</label>
+          <div class="input-group">
+    <span class="input-group-btn">
+    <input type="file" name="icon_path" id="icon_path" class="form-control" onchange="previewImages(event)" >
+
+    </span>
+            
           </div>
+          <div id="holder-icon" style="margin-top:15px;max-height:100px;"></div>
+
+          @error('icon')
+          <span class="text-danger">{{ $message }}</span>
+          @enderror
+      </div>
         <div class="form-group mb-3">
            <button class="btn btn-success" type="submit">Update</button>
         </div>

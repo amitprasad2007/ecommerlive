@@ -51,7 +51,7 @@
           <label for="inputPhoto" class="col-form-label">Photo</label>
           <div class="input-group">
               <span class="input-group-btn">
-              <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" multiple>
+              <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
 
               </span>
          
@@ -66,7 +66,7 @@
           <label for="inputIcon" class="col-form-label">Icons</label>
           <div class="input-group">
     <span class="input-group-btn">
-    <input type="file" name="icon_path" id="icon_path" class="form-control" onchange="previewImages(event)" multiple>
+    <input type="file" name="icon_path" id="icon_path" class="form-control" onchange="previewImages(event)" >
 
     </span>
             
