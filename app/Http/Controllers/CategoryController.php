@@ -110,8 +110,8 @@ class CategoryController extends Controller
         $this->validate($request,[
             'title'=>'string|required',
             'summary'=>'string|nullable',
-            'photo'=>'string|nullable',
-            'icon_path'=>'string|nullable',
+           'photo' => 'required|image|max:2048',  
+            'icon_path' => 'required|image|max:2048',
             'status'=>'required|in:active,inactive',
             'is_parent'=>'sometimes|in:1',
             'parent_id'=>'nullable|exists:categories,id',
