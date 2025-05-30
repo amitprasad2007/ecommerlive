@@ -256,7 +256,7 @@ class CategoryController extends Controller
             $file = $request->file('photo');
             $filename = uniqid() . '.webp';
             $originalPath = 'categories/' . $filename;
-            $thumbnailPath = 'categories/thumbnails/' . $filename;    
+            $thumbnailPath = 'categories/thumbnails/categories/' . $filename;    
             $image = Image::make($file)->encode('webp', 90);
             Storage::disk('public')->put($originalPath, $image);
     
