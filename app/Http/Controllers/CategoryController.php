@@ -136,6 +136,35 @@ class CategoryController extends Controller
         $data['slug']=$slug;
         $data['is_parent']=$request->input('is_parent',0);
         $data['sub_cat_id'] = $request->sub_cat_id ? $request->sub_cat_id : null;
+         // Handle photo upload
+         if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = uniqid() . '.webp';
+            $originalPath = 'categories/' . $filename;
+            $thumbnailPath = 'categories/thumbnails/categories/' . $filename;    
+            $image = Image::make($file)->encode('webp', 90);
+            Storage::disk('public')->put($originalPath, $image);
+    
+            $thumbnail = Image::make($file)
+                ->resize(120, 120, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('webp', 90);
+            Storage::disk('public')->put($thumbnailPath, $thumbnail); 
+            $data['photo'] = $originalPath;
+        }
+    
+        // Handle icon_path upload
+        if ($request->hasFile('icon_path')) {
+            $icon = $request->file('icon_path');
+            $filename = uniqid() . '.webp';
+            $originalPath = 'categories/icons/' . $filename;
+            $image = Image::make($icon)->encode('webp', 90);
+            Storage::disk('public')->put($originalPath, $image); 
+            $data['icon_path'] = $originalPath;
+        }
+
         // return $data;
         $status=Category::create($data);
         if($status){
