@@ -3,114 +3,112 @@
 @section('main-content')
 
 <div class="card">
-    <h5 class="card-header">Edit Category</h5>
-    <div class="card-body">
-      <form method="post" action="{{route('category.update',$category->id)}}" enctype="multipart/form-data">
-        @csrf
-        @method('PATCH')
-          <ul>
-              @foreach ($errors->all() as $error)
-                  <li>{{ $error }}</li>
-              @endforeach
-          </ul>
-        <div class="form-group">
-          <label for="inputTitle" class="col-form-label">Title <span class="text-danger">*</span></label>
-          <input id="inputTitle" type="text" name="title" placeholder="Enter title"  value="{{$category->title}}" class="form-control">
-          @error('title')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label for="summary" class="col-form-label">Summary</label>
-          <textarea class="form-control  descriptionclass" id="summary" name="summary">{{$category->summary}}</textarea>
-          @error('summary')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label for="is_parent">Is Parent</label><br>
-          <input type="checkbox" name='is_parent' id='is_parent' value='{{$category->is_parent}}' {{(($category->is_parent==1)? 'checked' : '')}}> Yes
-        </div>
-        {{-- {{$parent_cats}} --}}
-        {{-- {{$category}} --}}
-
+  <h5 class="card-header">Edit Category</h5>
+  <div class="card-body">
+    <form method="post" action="{{route('category.update',$category->id)}}" enctype="multipart/form-data">
+      @csrf
+      @method('PATCH')
+      <ul>
+          @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+          @endforeach
+      </ul>
+      <div class="form-group">
+        <label for="inputTitle" class="col-form-label">Title <span class="text-danger">*</span></label>
+        <input id="inputTitle" type="text" name="title" placeholder="Enter title"  value="{{$category->title}}" class="form-control">
+        @error('title')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+      </div>
+      <div class="form-group">
+        <label for="summary" class="col-form-label">Summary</label>
+        <textarea class="form-control  descriptionclass" id="summary" name="summary">{{$category->summary}}</textarea>
+        @error('summary')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+      </div>
+      <div class="form-group">
+        <label for="is_parent">Is Parent</label><br>
+        <input type="checkbox" name='is_parent' id='is_parent' value='{{$category->is_parent}}' {{(($category->is_parent==1)? 'checked' : '')}}> Yes
+      </div>
       <div class="form-group {{(($category->is_parent==1) ? 'd-none' : '')}}" id='parent_cat_div'>
-          <label for="parent_id">Parent Category</label>
-          <select name="parent_id" class="form-control">
-              <option value="">--Select any category--</option>
-              @foreach($parent_cats as $key=>$parent_cat)
+        <label for="parent_id">Parent Category</label>
+        <select name="parent_id" class="form-control">
+            <option value="">--Select any category--</option>
+            @foreach($parent_cats as $key=>$parent_cat)
 
-                  <option value='{{$parent_cat->id}}' {{(($parent_cat->id==$category->parent_id) ? 'selected' : '')}}>{{$parent_cat->title}}</option>
-              @endforeach
-          </select>
+                <option value='{{$parent_cat->id}}' {{(($parent_cat->id==$category->parent_id) ? 'selected' : '')}}>{{$parent_cat->title}}</option>
+            @endforeach
+        </select>
+      </div>
+      <div class="form-group {{$category->parent_id ? '' : 'd-none'}}" id='sub_cat_div'>
+        <label for="sub_cat_id">Sub Category</label>
+        <select name="sub_cat_id" class="form-control">
+            <option value="">--Select any subcategory--</option>
+            @foreach($sub_cats as $key=>$sub_cat)
+                <option value='{{$sub_cat->id}}' {{($sub_cat->id == $category->sub_cat_id) ? 'selected' : ''}}>{{$sub_cat->title}}</option>
+            @endforeach
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputPhoto" class="col-form-label">Photo</label>
+        <div class="input-group">
+            <span class="input-group-btn">
+              <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
+            </span>         
         </div>
-        <div class="form-group {{$category->parent_id ? '' : 'd-none'}}" id='sub_cat_div'>
-          <label for="sub_cat_id">Sub Category</label>
-          <select name="sub_cat_id" class="form-control">
-              <option value="">--Select any subcategory--</option>
-              @foreach($sub_cats as $key=>$sub_cat)
-                  <option value='{{$sub_cat->id}}' {{($sub_cat->id == $category->sub_cat_id) ? 'selected' : ''}}>{{$sub_cat->title}}</option>
-              @endforeach
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="inputPhoto" class="col-form-label">Photo</label>
-          <div class="input-group">
-              <span class="input-group-btn">
-                <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
-              </span>         
-          </div>
-          <div id="image-previews"></div>
-          <div style="margin-top: 10px;">
-              <div class="row" id="photo-container">
-                <div class="col-md-3 photo-item" id="photo-{{ ($category->photo) }}">
-                    <div class="card">
-                        <img src="{{ asset('storage/products/photos/thumbnails/' . $category->photo) }}" class="card-img-top img-fluid" alt="Product Photo">
-                    </div>
-                </div>
+        <div id="image-previews"></div>
+        <div style="margin-top: 10px;">
+            <div class="row" id="photo-container">
+              <div class="col-md-3 photo-item" id="photo-{{ ($category->photo) }}">
+                  <div class="card">
+                      <img src="{{ asset('storage/categories/thumbnails/'.$category->photo) }}" class="card-img-top img-fluid" alt="Product Photo">
+                  </div>
               </div>
-          </div>
-          @error('photo')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
+            </div>
         </div>
-          <div class="form-group">
-              <label for="inputIcon" class="col-form-label">Icons</label>
-              <div class="input-group">
-        <span class="input-group-btn">
-        <input type="file" name="icon_path" id="icon_path" class="form-control" onchange="previewImages(event)" >
-
-        </span>
-                
+        @error('photo')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+      </div>
+      <div class="form-group">
+        <label for="inputIcon" class="col-form-label">Icons</label>
+        <div class="input-group">
+          <span class="input-group-btn">
+            <input type="file" name="icon_path" id="icon_path" class="form-control" onchange="previewImagesicon(event,)" >
+          </span>                
+        </div>
+        <div id="image-previewsicon"></div>
+        <div style="margin-top: 10px;">
+            <div class="row" id="photo-container">
+              <div class="col-md-1 photo-item" id="photo-{{ ($category->icon_path) }}">
+                  <div class="card">
+                      <img src="{{ asset('storage/'.$category->icon_path) }}" class="card-img-top img-fluid" alt="Product Photo">
+                  </div>
               </div>
-              <div id="holder-icon" style="margin-top:15px;max-height:100px;"></div>
-
-              @error('icon')
-              <span class="text-danger">{{ $message }}</span>
-              @enderror
-          </div>
-
-        <div class="form-group">
-          <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
-          <select name="status" class="form-control">
-              <option value="active" {{(($category->status=='active')? 'selected' : '')}}>Active</option>
-              <option value="inactive" {{(($category->status=='inactive')? 'selected' : '')}}>Inactive</option>
-          </select>
-          @error('status')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
+            </div>
         </div>
-        <div class="form-group mb-3">
-           <button class="btn btn-success" type="submit">Update</button>
-        </div>
-      </form>
-    </div>
+        @error('icon')
+        <span class="text-danger">{{ $message }}</span>
+        @enderror
+      </div>
+      <div class="form-group">
+        <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
+        <select name="status" class="form-control">
+            <option value="active" {{(($category->status=='active')? 'selected' : '')}}>Active</option>
+            <option value="inactive" {{(($category->status=='inactive')? 'selected' : '')}}>Inactive</option>
+        </select>
+        @error('status')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+      </div>
+      <div class="form-group mb-3">
+        <button class="btn btn-success" type="submit">Update</button>
+      </div>
+    </form>
+  </div>
 </div>
-
 @endsection
-
 @push('styles')
 <link rel="stylesheet" href="{{asset('backend/summernote/summernote.min.css')}}">
 @endpush
@@ -171,5 +169,43 @@
         $('#sub_cat_div select').val('');
       }
     });
+</script>
+<script>
+  function previewImages(event) {
+      const previewContainer = document.getElementById('image-previews');
+      previewContainer.innerHTML = '';
+      const files = event.target.files;
+
+      Array.from(files).forEach(file => {
+          const reader = new FileReader();
+
+          reader.onload = function(e) {
+              const img = document.createElement('img');
+              img.src = e.target.result;
+              img.style.maxWidth = '150px';
+              img.style.margin = '5px';
+              previewContainer.appendChild(img);
+          }
+
+          reader.readAsDataURL(file);
+      });
+  }
+  function previewImagesicon(event) {
+      const previewContainer = document.getElementById('image-previewsicon');
+      previewContainer.innerHTML = '';
+      const files = event.target.files;
+      Array.from(files).forEach(file => {
+          const reader = new FileReader();
+
+          reader.onload = function(e) {
+              const img = document.createElement('img');
+              img.src = e.target.result;
+              img.style.maxWidth = '150px';
+              img.style.margin = '5px';
+              previewContainer.appendChild(img);
+          }
+          reader.readAsDataURL(file);
+      });
+  }
 </script>
 @endpush
