@@ -36,7 +36,7 @@ class CategoryController extends Controller
             $data = [
                 'id' => (string)$category->id,
                 'name' => $category->title,
-                'icon' => $category->icon_path ? asset('storage/categories/thumbnails/'.$category->icon_path) : null,
+                'icon' => $category->icon_path ? asset('storage/'.$category->icon_path) : null,
                 'image' => $category->photo,
                 'slug' => $category->slug,
                 'productCount' => $category->products()->count(),
