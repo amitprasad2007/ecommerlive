@@ -36,6 +36,8 @@ class CategoryController extends Controller
             $data = [
                 'id' => (string)$category->id,
                 'name' => $category->title,
+                'icon' => $category->icon_path,
+                'image' => $category->photo,
                 'slug' => $category->slug,
                 'productCount' => $category->products()->count(),
             ];
@@ -44,6 +46,8 @@ class CategoryController extends Controller
                     $subData = [
                         'id' => (string)$sub->id,
                         'name' => $sub->title,
+                        'icon' => $sub->icon_path,
+                        'image' => $sub->photo,
                         'slug' => $sub->slug,
                         'productCount' => $sub->products()->count(),
                     ];
@@ -52,6 +56,8 @@ class CategoryController extends Controller
                             return [
                                 'id' => (string)$subsub->id,
                                 'name' => $subsub->title,
+                                'icon' => $subsub->icon_path,
+                                'image' => $subsub->photo,
                                 'slug' => $subsub->slug,
                                 'productCount' => $subsub->products()->count(),
                             ];
