@@ -10,6 +10,14 @@ class BrandController extends Controller
 {
     public function getbrandlist(){
         $brands = Brand::all();
-        return response()->json(['brands' => $brands]);
+        $result =  $brands->map(function($brand) {
+            return [
+                'id' => $brand->id,
+                'name' => $brand->title,
+                'slug'=> $brand->slug,
+                'logo' => $brand->photo ? asset('storage/photos/1/Brands/'.$brand->photo) : null
+            ];
+        });
+        return response()->json($result);
     }
 }
