@@ -3,7 +3,6 @@
 @section('title','E-SHOP || Banner Create')
 
 @section('main-content')
-
 <div class="card">
     <h5 class="card-header">Add Banner</h5>
     <div class="card-body">
@@ -26,19 +25,18 @@
         </div>
 
         <div class="form-group">
-          <label for="inputPhoto" class="col-form-label">Photo</label>
-          <div class="input-group">
-              <span class="input-group-btn">
-              <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
-
-              </span>
-         
-        </div>
+            <label for="inputPhoto" class="col-form-label">Photo</label>
+            <div class="input-group">
+            <span class="input-group-btn">
+            <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
+            </span>
+            </div>
+            <div id="image-previews"></div>
             <div id="holder-photo" style="margin-top:15px;max-height:100px;"></div>
-          @error('photo')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
-        </div>      
+        @error('photo')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+        </div>
 
         <div class="form-group">
           <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
@@ -77,7 +75,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script>
     $('#lfm').filemanager('image');
-
     $(document).ready(function() {
         $('#description').summernote({
             toolbar: [
@@ -91,5 +88,21 @@
             ],
         });
     });
+    function previewImages(event) {
+        const previewContainer = document.getElementById('image-previews');
+        previewContainer.innerHTML = '';
+        const files = event.target.files;
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '150px';
+                img.style.margin = '5px';
+                previewContainer.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
 </script>
 @endpush

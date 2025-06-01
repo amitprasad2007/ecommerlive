@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Banner;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 class BannerController extends Controller
 {
@@ -40,7 +43,7 @@ class BannerController extends Controller
         $this->validate($request,[
             'title'=>'string|required|max:50',
             'description'=>'string|nullable',
-            'photo'=>'string|required',
+            'photo' => 'required|image|max:2048',
             'status'=>'required|in:active,inactive',
         ]);
         $data=$request->all();
@@ -50,7 +53,24 @@ class BannerController extends Controller
             $slug=$slug.'-'.date('ymdis').'-'.rand(0,999);
         }
         $data['slug']=$slug;
-        // return $slug;
+           // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = uniqid() . '.webp';
+            $originalPath = $filename;
+            $thumbnailPath = 'photos/1/Banner/'.$filename;
+            $image = Image::make($file)->encode('webp', 90);
+            Storage::disk('public')->put($originalPath, $image);
+
+            $thumbnail = Image::make($file)
+                ->resize(120, 120, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('webp', 90);
+            Storage::disk('public')->put($thumbnailPath, $thumbnail);
+            $data['photo'] = $originalPath;
+        }
         $status=Banner::create($data);
         if($status){
             request()->session()->flash('success','Banner successfully added');
@@ -97,17 +117,27 @@ class BannerController extends Controller
         $this->validate($request,[
             'title'=>'string|required|max:50',
             'description'=>'string|nullable',
-            'photo'=>'string|required',
+            'photo' => 'required|image|max:2048',
             'status'=>'required|in:active,inactive',
         ]);
         $data=$request->all();
-        // $slug=Str::slug($request->title);
-        // $count=Banner::where('slug',$slug)->count();
-        // if($count>0){
-        //     $slug=$slug.'-'.date('ymdis').'-'.rand(0,999);
-        // }
-        // $data['slug']=$slug;
-        // return $slug;
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = uniqid() . '.webp';
+            $originalPath = $filename;
+            $thumbnailPath = 'photos/1/Banner/'.$filename;
+            $image = Image::make($file)->encode('webp', 90);
+            Storage::disk('public')->put($originalPath, $image);
+
+            $thumbnail = Image::make($file)
+                ->resize(120, 120, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('webp', 90);
+            Storage::disk('public')->put($thumbnailPath, $thumbnail);
+            $data['photo'] = $originalPath;
+        }
         $status=$banner->fill($data)->save();
         if($status){
             request()->session()->flash('success','Banner successfully updated');

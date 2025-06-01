@@ -49,36 +49,30 @@
           @enderror
         </div>
         <div class="form-group">
-          <label for="inputPhoto" class="col-form-label">Photo</label>
-          <div class="input-group">
+            <label for="inputPhoto" class="col-form-label">Photo</label>
+            <div class="input-group">
               <span class="input-group-btn">
               <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
-
               </span>
-         
-        </div>
+            </div>
+            <div id="image-previews"></div>
             <div id="holder-photo" style="margin-top:15px;max-height:100px;"></div>
           @error('photo')
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
-
         <div class="form-group">
-          <label for="inputIcon" class="col-form-label">Icons</label>
-          <div class="input-group">
-    <span class="input-group-btn">
-    <input type="file" name="icon_path" id="icon_path" class="form-control" onchange="previewImages(event)" >
-
-    </span>
-            
-          </div>
-          <div id="holder-icon" style="margin-top:15px;max-height:100px;"></div>
-
-          @error('icon')
-          <span class="text-danger">{{ $message }}</span>
-          @enderror
-      </div>
-
+            <label for="inputIcon" class="col-form-label">Icons</label>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <input type="file" name="icon_path" id="icon_path" class="form-control" onchange="previewImagesicon(event)" >
+                </span>
+            </div>
+            <div id="image-previewsicon"></div>
+            @error('icon')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
         <div class="form-group">
           <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
           <select name="status" class="form-control">
@@ -116,7 +110,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script>
     $('#lfm').filemanager('image');
-
     $(document).ready(function() {
         $('.descriptionclass').summernote({
             toolbar: [
@@ -130,11 +123,7 @@
             ],
         });
     });
-</script>
-
-<script>
-
-  $('#parent_cat_div select').change(function() {
+    $('#parent_cat_div select').change(function() {
         var parent_id = $(this).val();
         if (parent_id != '') {
             $.ajax({
@@ -155,5 +144,41 @@
             $('#sub_cat_div select').append('<option value="">--Select any subcategory--</option>');
         }
     });
+    function previewImages(event) {
+        const previewContainer = document.getElementById('image-previews');
+        previewContainer.innerHTML = '';
+        const files = event.target.files;
+
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '150px';
+                img.style.margin = '5px';
+                previewContainer.appendChild(img);
+            }
+
+            reader.readAsDataURL(file);
+        });
+    }
+    function previewImagesicon(event) {
+        const previewContainer = document.getElementById('image-previewsicon');
+        previewContainer.innerHTML = '';
+        const files = event.target.files;
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '150px';
+                img.style.margin = '5px';
+                previewContainer.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
 </script>
 @endpush

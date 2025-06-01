@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Brand;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 class BrandController extends Controller
 {
@@ -38,13 +41,32 @@ class BrandController extends Controller
     {
         $this->validate($request,[
             'title'=>'string|required',
-            'photo'=>'string|required',
+            'photo' => 'required|image|max:2048',
+            'icon_path' => 'required|image|max:2048',
         ]);
         $data=$request->all();
         $slug=Str::slug($request->title);
         $count=Brand::where('slug',$slug)->count();
         if($count>0){
             $slug=$slug.'-'.date('ymdis').'-'.rand(0,999);
+        }
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = uniqid() . '.webp';
+            $originalPath = $filename;
+            $thumbnailPath = 'photos/1/Brands/'.$filename;
+            $image = Image::make($file)->encode('webp', 90);
+            Storage::disk('public')->put($originalPath, $image);
+
+            $thumbnail = Image::make($file)
+                ->resize(120, 120, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('webp', 90);
+            Storage::disk('public')->put($thumbnailPath, $thumbnail);
+            $data['photo'] = $originalPath;
         }
         $data['slug']=$slug;
         $status=Brand::create($data);
@@ -96,10 +118,28 @@ class BrandController extends Controller
         $brand=Brand::find($id);
         $this->validate($request,[
             'title'=>'string|required',
-            'photo'=>'string|required',
+            'photo' => 'required|image|max:2048',
+            'icon_path' => 'required|image|max:2048',
         ]);
         $data=$request->all();
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = uniqid() . '.webp';
+            $originalPath = $filename;
+            $thumbnailPath = 'photos/1/Brands/'.$filename;
+            $image = Image::make($file)->encode('webp', 90);
+            Storage::disk('public')->put($originalPath, $image);
 
+            $thumbnail = Image::make($file)
+                ->resize(120, 120, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('webp', 90);
+            Storage::disk('public')->put($thumbnailPath, $thumbnail);
+            $data['photo'] = $originalPath;
+        }
         $status=$brand->fill($data)->save();
         if($status){
             request()->session()->flash('success','Brand successfully updated');

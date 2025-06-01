@@ -44,7 +44,7 @@
                     <td>{{$brand->slug}}</td>
                     <td>
                         @if($brand->photo)
-                            <img src="{{asset($brand->photo)}}" class="img-fluid" style="max-width:80px" alt="{{$brand->photo}}">
+                            <img src="{{asset('storage/photos/1/Brands/'.$brand->photo)}}" class="img-fluid" style="max-width:80px" alt="{{$brand->photo}}">
                         @else
                             <img src="{{asset('backend/img/thumbnail-default.jpg')}}" class="img-fluid" style="max-width:80px" alt="avatar.png">
                         @endif
