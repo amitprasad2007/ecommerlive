@@ -9,7 +9,7 @@ use App\Models\Brand;
 class BrandController extends Controller
 {
     public function getbrandlist(){
-        $brands = Brand::all();
+        $brands = Brand::where('status', 'active')->get(6);
         $result =  $brands->map(function($brand) {
             return [
                 'id' => $brand->id,
