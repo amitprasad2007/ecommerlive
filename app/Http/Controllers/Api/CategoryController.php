@@ -10,12 +10,50 @@ class CategoryController extends Controller
 {
     //
     public function getcategorieslist(){
-        $categories = Category::where('is_parent', '!=', 0)->with(['products' => function($query) {
-            $query->take(8);
-        }, 'products.photoproduct'])->get();
+        $categories = Category::where('is_parent', '!=', 0)
+            ->with(['products' => function($query) {
+                $query->take(8);
+            }, 'products.photoproduct'])
+            ->get()
+            ->map(function ($category) {
+                return [
+                    'name' => $category->title,
+                    'image' => $category->photo,
+                    'description' => $category->description,
+                    'link' => '/category/' . $category->slug,
+                    'gradient' => $this->getGradientForCategory($category->id),
+                    'products' => $category->products->map(function ($product) {
+                        return [
+                            'id' => (string)$product->id,
+                            'name' => $product->title,
+                            'image' => $product->photo,
+                            'price' => (float)$product->price,
+                            'originalPrice' => $product->discount ? (float)$product->price + $product->discount : null,
+                            'rating' => (float)$product->rating,
+                            'reviewCount' => $product->review_count ?? 0,
+                            'brand' => $product->brand->title ?? '',
+                            'isBestSeller' => $product->is_featured == 1
+                        ];
+                    })
+                ];
+            });
+
         return response()->json(['categories' => $categories]);
     }
 
+    private function getGradientForCategory($categoryId)
+    {
+        $gradients = [
+            'from-blue-400 to-purple-600',
+            'from-green-400 to-blue-500',
+            'from-purple-400 to-pink-600',
+            'from-red-400 to-orange-500',
+            'from-yellow-400 to-orange-500',
+            'from-teal-400 to-cyan-500'
+        ];
+
+        return $gradients[$categoryId % count($gradients)];
+    }
     public function getcategorybyid($id){
         $category = Category::find($id);
         return response()->json(['category' => $category]);
