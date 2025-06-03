@@ -17,22 +17,28 @@ class CategoryController extends Controller
             ->get()
             ->map(function ($category) {
                 return [
+                    'id' => $category->id,                    
                     'name' => $category->title,
+                    'icon' => $category->icon_path ? asset('storage/'.$category->icon_path) : null,
                     'image' => $category->photo,
+                    'slug' => $category->slug,
+                    'productCount' => $category->products()->count(),
                     'description' => $category->description,
                     'link' => '/category/' . $category->slug,
                     'gradient' => $this->getGradientForCategory($category->id),
                     'products' => $category->products->map(function ($product) {
+                        $photo = $product->photoproduct->first();
                         return [
-                            'id' => (string)$product->id,
+                            'id' => $product->id,
                             'name' => $product->title,
-                            'image' => $product->photo,
-                            'price' => (float)$product->price,
-                            'originalPrice' => $product->discount ? (float)$product->price + $product->discount : null,
-                            'rating' => (float)$product->rating,
-                            'reviewCount' => $product->review_count ?? 0,
-                            'brand' => $product->brand->title ?? '',
-                            'isBestSeller' => $product->is_featured == 1
+                            'image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
+                            'price' => $product->price,
+                            'originalPrice' => $product->original_price ?? null,
+                            'rating' => $product->rating ?? null,
+                            'reviewCount' => $product->review_count ?? null,
+                            'brand' => $product->brand->title ?? null,
+                            'isBestSeller' => $product->is_best_seller ?? false,
+                            'isNew' => $product->created_at >= now()->subMonth(),
                         ];
                     })
                 ];
