@@ -20,7 +20,7 @@ class CategoryController extends Controller
                     'id' => $category->id,                    
                     'name' => $category->title,
                     'icon' => $category->icon_path ? asset('storage/'.$category->icon_path) : null,
-                    'image' => $category->photo,
+                    'image' => $category->photo? asset('storage/'.$category->photo) : null,
                     'slug' => $category->slug,
                     'productCount' => $category->products()->count(),
                     'description' => $category->description,
