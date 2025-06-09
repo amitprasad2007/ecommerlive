@@ -45,6 +45,15 @@
               </span>
             </div>
             <div id="image-previews"></div>
+            <div style="margin-top: 10px;">
+                <div class="row" id="photo-container">
+                  <div class="col-md-1 photo-item" id="photo-{{ ($category->photo) }}">
+                      <div class="card">
+                          <img src="{{ asset('storage/'.$category->photo) }}" class="card-img-top img-fluid" alt="Product Photo">
+                      </div>
+                  </div>
+                </div>
+            </div
             <div id="holder-photo" style="margin-top:15px;max-height:100px;"></div>
           @error('photo')
           <span class="text-danger">{{$message}}</span>
@@ -58,6 +67,16 @@
                 </span>
             </div>
             <div id="image-previewsicon"></div>
+            <div id="image-previewsicon"></div>
+            <div style="margin-top: 10px;">
+                <div class="row" id="photo-container">
+                  <div class="col-md-1 photo-item" id="photo-{{ ($category->icon_path) }}">
+                      <div class="card">
+                          <img src="{{ asset('storage/'.$category->icon_path) }}" class="card-img-top img-fluid" alt="Product Photo">
+                      </div>
+                  </div>
+                </div>
+            </div>
             @error('icon')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
