@@ -53,7 +53,7 @@
                       </div>
                   </div>
                 </div>
-            </div
+            </div>
             <div id="holder-photo" style="margin-top:15px;max-height:100px;"></div>
           @error('photo')
           <span class="text-danger">{{$message}}</span>
