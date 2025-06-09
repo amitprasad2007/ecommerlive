@@ -42,7 +42,7 @@ class BrandController extends Controller
         $this->validate($request,[
             'title'=>'string|required',
             'photo' => 'required|image|max:2048',
-            'icon_path' => 'required|image|max:2048',
+           
         ]);
         $data=$request->all();
         $slug=Str::slug($request->title);
@@ -119,7 +119,7 @@ class BrandController extends Controller
         $this->validate($request,[
             'title'=>'string|required',
             'photo' => 'required|image|max:2048',
-            'icon_path' => 'required|image|max:2048',
+         
         ]);
         $data=$request->all();
         // Handle photo upload
