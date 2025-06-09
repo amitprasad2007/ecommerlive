@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function userlogin(Request $request)
-    {
+    public function userlogin(Request $request){
         $user = User::where('mobile', $request->mobile)->first();
         if (!$user) {
             $user =  User::create([
