@@ -32,7 +32,7 @@
                     <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
                 </span>
             </div>
-            <div class="col-md-3 photo-item" id="photo-{{ $brand->id }}">
+            <div class="col-md-1 photo-item" id="photo-{{ $brand->id }}">
                 <div class="card">
                     <img src="{{asset('storage/photos/1/Brands/'.$brand->photo)}}" class="card-img-top img-fluid" alt="Product Photo">                   
                 </div>
@@ -42,18 +42,6 @@
         @error('photo')
         <span class="text-danger">{{$message}}</span>
         @enderror
-        </div>
-        <div class="form-group">
-            <label for="inputIcon" class="col-form-label">Icons</label>
-            <div class="input-group">
-                <span class="input-group-btn">
-                    <input type="file" name="icon_path" id="icon_path" class="form-control" onchange="previewImagesicon(event)" >
-                </span>
-            </div>
-            <div id="image-previewsicon"></div>
-            @error('icon')
-                <span class="text-danger">{{ $message }}</span>
-            @enderror
         </div>
         <div class="form-group mb-3">
            <button class="btn btn-success" type="submit">Update</button>
