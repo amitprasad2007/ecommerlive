@@ -28,9 +28,15 @@
         <div class="form-group">
             <label for="inputPhoto" class="col-form-label">Photo</label>
             <div class="input-group">
-            <span class="input-group-btn">
-            <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
-            </span>
+                <span class="input-group-btn">
+                    <input type="file" name="photo" id="photo" class="form-control" onchange="previewImages(event)" >
+                </span>
+            </div>
+            <div class="col-md-3 photo-item" id="photo-{{ $brand->->id }}">
+                <div class="card">
+                    <img src="{{asset('storage/photos/1/Brands/'.$brand->photo)}}" class="card-img-top img-fluid" alt="Product Photo">
+                    <button type="button" class="btn btn-danger btn-sm remove-photo-btn" data-photo-id="{{ $photo->id }}">Remove</button>
+                </div>
             </div>
             <div id="image-previews"></div>
             <div id="holder-photo" style="margin-top:15px;max-height:100px;"></div>
