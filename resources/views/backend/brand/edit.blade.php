@@ -34,8 +34,7 @@
             </div>
             <div class="col-md-3 photo-item" id="photo-{{ $brand->id }}">
                 <div class="card">
-                    <img src="{{asset('storage/photos/1/Brands/'.$brand->photo)}}" class="card-img-top img-fluid" alt="Product Photo">
-                    <button type="button" class="btn btn-danger btn-sm remove-photo-btn" data-photo-id="{{ $photo->id }}">Remove</button>
+                    <img src="{{asset('storage/photos/1/Brands/'.$brand->photo)}}" class="card-img-top img-fluid" alt="Product Photo">                   
                 </div>
             </div>
             <div id="image-previews"></div>
