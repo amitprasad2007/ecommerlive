@@ -59,7 +59,7 @@ class BannerController extends Controller
             $filename = uniqid() . '.webp';
             $originalPath = $filename;
             $thumbnailPath = 'photos/1/Banner/'.$filename;
-            $image = Image::make($file)->encode('webp', 90);
+            $image = Image::make($file)->encode('webp');
             Storage::disk('public')->put($originalPath, $image);
 
             $thumbnail = Image::make($file)

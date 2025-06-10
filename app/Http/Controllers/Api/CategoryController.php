@@ -50,7 +50,7 @@ class CategoryController extends Controller
     private function getGradientForCategory($categoryId)
     {
         $gradients = [
-            'from-blue-400 to-purple-600',
+            'from-blue-200 to-blue-600',
             'from-green-400 to-blue-500',
             'from-purple-400 to-pink-600',
             'from-red-400 to-orange-500',
