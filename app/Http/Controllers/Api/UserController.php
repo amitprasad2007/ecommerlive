@@ -17,7 +17,7 @@ class UserController extends Controller
                 'mobile' => $request->mobile,
                 'role' => 'user',
                 'status' => 'active',
-                'password' => Hash::make('123456')
+                'password' => Hash::make($request->password)
             ]);
             if (Hash::check($request->password, $user->password)) {
                 $token = $user->createToken('authToken')->plainTextToken;
