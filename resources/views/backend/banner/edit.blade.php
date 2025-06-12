@@ -36,7 +36,7 @@
               <div class="row" id="photo-container">
                 <div class="col-md-1 photo-item" id="photo-{{ ($banner->photo) }}">
                     <div class="card">
-                        <img src="{{ asset($banner->photo) }}" class="card-img-top img-fluid" alt="Product Photo">
+                        <img src="{{asset('storage/photos/1/Banner/'.$banner->photo)}}" class="card-img-top img-fluid" alt="Product Photo">
                     </div>
                 </div>
               </div>
