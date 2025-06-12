@@ -127,15 +127,7 @@ class BannerController extends Controller
             $originalPath = $filename;
             $thumbnailPath = 'photos/1/Banner/'.$filename;
             $image = Image::make($file)->encode('webp', 90);
-            Storage::disk('public')->put($originalPath, $image);
-
-            $thumbnail = Image::make($file)
-                ->resize(120, 120, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                })
-                ->encode('webp', 90);
-            Storage::disk('public')->put($thumbnailPath, $thumbnail);
+            Storage::disk('public')->put($thumbnailPath,  $image);
             $data['photo'] = $originalPath;
         }
         $status=$banner->fill($data)->save();
