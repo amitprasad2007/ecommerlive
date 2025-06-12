@@ -32,7 +32,15 @@
             </span>
             </div>
             <div id="image-previews"></div>
-            <div id="holder-photo" style="margin-top:15px;max-height:100px;"></div>
+            <div style="margin-top: 10px;">
+              <div class="row" id="photo-container">
+                <div class="col-md-1 photo-item" id="photo-{{ ($banne->photo) }}">
+                    <div class="card">
+                        <img src="{{ asset($banne->photo) }}" class="card-img-top img-fluid" alt="Product Photo">
+                    </div>
+                </div>
+              </div>
+          </div>
         @error('photo')
         <span class="text-danger">{{$message}}</span>
         @enderror
