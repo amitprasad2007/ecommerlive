@@ -34,9 +34,9 @@
             <div id="image-previews"></div>
             <div style="margin-top: 10px;">
               <div class="row" id="photo-container">
-                <div class="col-md-1 photo-item" id="photo-{{ ($banne->photo) }}">
+                <div class="col-md-1 photo-item" id="photo-{{ ($banner->photo) }}">
                     <div class="card">
-                        <img src="{{ asset($banne->photo) }}" class="card-img-top img-fluid" alt="Product Photo">
+                        <img src="{{ asset($banner->photo) }}" class="card-img-top img-fluid" alt="Product Photo">
                     </div>
                 </div>
               </div>
