@@ -22,7 +22,7 @@ class UserController extends Controller
             if (Hash::check($request->password, $user->password)) {
                 $token = $user->createToken('authToken')->plainTextToken;
                 return response()->json(['token' => $token]);
-            }else {
+            }else{
                 return response()->json(['message' => 'Something went wrong try again'], 401);
             }
         } else {
