@@ -67,7 +67,6 @@
                 </span>
             </div>
             <div id="image-previewsicon"></div>
-            <div id="image-previewsicon"></div>
             <div style="margin-top: 10px;">
                 <div class="row" id="photo-container">
                   <div class="col-md-1 photo-item" id="photo-{{ ($category->icon_path) }}">
