@@ -35,7 +35,7 @@ class CategoryController extends Controller
                             'price' => $product->price,
                             'originalPrice' => $product->original_price ?? null,
                             'rating' => $product->rating ?? 4,
-                            'reviewCount' => $product->review_count ?? null,
+                            'reviewCount' => $product->review_count ?? 15,
                             'brand' => $product->brand->title ?? null,
                             'isBestSeller' => $product->is_best_seller ?? false,
                             'isNew' => $product->created_at >= now()->subMonth(),
