@@ -35,6 +35,7 @@ class ProductController extends Controller
             return [
                 'id' => $product->id,
                 'name' => $product->title,
+                'slug'=> $product->slug,
                 'image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
                 'price' => $product->price,
                 'originalPrice' => $product->original_price ?? null,
