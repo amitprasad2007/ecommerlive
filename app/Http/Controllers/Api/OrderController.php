@@ -45,12 +45,11 @@ class OrderController extends Controller
 
             if ($existingCart) {
                 // Return product with cartquantity and existing cart id
-                $newquantity = $existingCart->quantity+$quantity;
-                $product->cartquantity = $newquantity;
+                $product->cartquantity = $quantity;
                 $product->cart_id = $existingCart->id;
-                $existingCart->quantity = $newquantity;
+                $existingCart->quantity = $quantity;
                 $existingCart->price = ($product->price - ($product->price * $product->discount) / 100);
-                $existingCart->amount = $existingCart->price * $newquantity;
+                $existingCart->amount = $existingCart->price * $quantity;
                 $existingCart->save();
                 $products[] = $product;
 
