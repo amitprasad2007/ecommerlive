@@ -147,8 +147,11 @@ class OrderController extends Controller
     }
 
     public function removecart(Request $request){
-        $cart_id = $request->cart_id;
-        dd($cart_id);
+        if (!isset($request->cart) || !is_array($request->cart) || count($request->cart) < 1) {
+            return response()->json(['error' => 'Invalid cart data'], 400);
+        }
+        $totalcart = $request->cart;
+        $cart_id = $totalcart[0]['cart_id'];
         $cart = Cart::find($cart_id);
         if($cart){
             $cart->quantity = 0;
