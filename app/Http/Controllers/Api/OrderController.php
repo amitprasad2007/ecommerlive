@@ -69,28 +69,7 @@ class OrderController extends Controller
             }
         }
 
-        $cartItems = Cart::with('product')
-            ->where('status', 'new')
-            ->where('order_id', null)
-            ->where('user_id', auth()->user()->id)
-            ->get();
-
-        $formattedCart = $cartItems->map(function($item) {
-            $photo = $item->product->photoproduct->first();
-            return [
-                'slug' => $item->product->slug,
-                'quantity' => $item->quantity,
-                'price' => $item->price,
-                'amount' => $item->amount,
-                'cart_id' => $item->id,
-                'product_id' => $item->product_id,
-                'product_name' => $item->product->name,
-                'product_image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
-                'product_price' => $item->product->price,
-                'product_discount' => $item->product->discount,
-                'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
-            ];
-        });
+        $formattedCart = $this->cartdata();
 
         return response()->json($formattedCart);
     }
@@ -128,33 +107,12 @@ class OrderController extends Controller
                 $cart->save();
             }
         }
-        $cartItems = Cart::with('product')
-            ->where('status', 'new')
-            ->where('order_id', null)
-            ->where('user_id', auth()->user()->id)
-            ->get();
+        $formattedCart = $this->cartdata();
 
-        $formattedCart = $cartItems->map(function($item) {
-            $photo = $item->product->photoproduct->first();
-            return [
-                'slug' => $item->product->slug,
-                'quantity' => $item->quantity,
-                'price' => $item->price,
-                'amount' => $item->amount,
-                'cart_id' => $item->id,
-                'product_id' => $item->product_id,
-                'product_name' => $item->product->name,
-                'product_image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
-                'product_price' => $item->product->price,
-                'product_discount' => $item->product->discount,
-                'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
-            ];
-        });
-
-        return response()->json($formattedCart);;
+        return response()->json($formattedCart);
     }
-    public function placeorder(Request $request)
-    {
+    
+    public function placeorder(Request $request){
         $customeremail = $request->customerDetails['email'];
         $customername = $request->customerDetails['customername'];
         $nameParts = explode(' ', $customername, 2);
@@ -204,6 +162,23 @@ class OrderController extends Controller
     }
 
     public function getcartdata(){
+        $formattedCart = $this->cartdata();
+        return response()->json($formattedCart);
+    }
+
+    public function removecart(Request $request){
+        $cart_id = $request->cart_id;
+        $cart = Cart::find($cart_id);
+        if($cart){
+            $cart->quantity = 0;
+            $cart->amount = 0;
+            $cart->status = 'delete';
+            $cart->save();
+        }
+        return response()->json(['message' => 'Cart removed successfully']);
+    }
+
+    private function cartdata(){
         $cartItems = Cart::with('product')
             ->where('status', 'new')
             ->where('order_id', null)
@@ -226,8 +201,5 @@ class OrderController extends Controller
                 'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
             ];
         });
-
-        return response()->json($formattedCart);
     }
-
 }
