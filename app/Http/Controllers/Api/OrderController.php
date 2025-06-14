@@ -63,6 +63,7 @@ class OrderController extends Controller
     }
 
     public function updatecart(Request $request){
+        //dd($request->all());
         if (!isset($request->cart) || !is_array($request->cart) || count($request->cart) < 1) {
             return response()->json(['error' => 'Invalid cart data'], 400);
         }
@@ -87,6 +88,7 @@ class OrderController extends Controller
             }
         }
         $formattedCart = $this->cartdata();
+        //dd($formattedCart);
         return response()->json($formattedCart);
     }
 
@@ -179,5 +181,6 @@ class OrderController extends Controller
                 'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
             ];
         });
+        return $formattedCart;
     }
 }
