@@ -69,9 +69,28 @@ class OrderController extends Controller
             }
         }
 
-        return response()->json([
-            'product' => $products
-        ]);
+        $cartItems = Cart::with('product')
+            ->where('status', 'new')
+            ->where('user_id', auth()->user()->id)
+            ->get();
+
+        $formattedCart = $cartItems->map(function($item) {
+            return [
+                'slug' => $item->product->slug,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+                'amount' => $item->amount,
+                'cart_id' => $item->id,
+                'product_id' => $item->product_id,
+                'product_name' => $item->product->name,
+                'product_image' => $item->product->photoproduct->image,
+                'product_price' => $item->product->price,
+                'product_discount' => $item->product->discount,
+                'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
+            ];
+        });
+
+        return response()->json($formattedCart);
     }
 
     public function updatecart(Request $request){
@@ -107,9 +126,28 @@ class OrderController extends Controller
                 $cart->save();
             }
         }
-        return response()->json([
-            'product' => $products
-        ]);
+        $cartItems = Cart::with('product')
+            ->where('status', 'new')
+            ->where('user_id', auth()->user()->id)
+            ->get();
+
+        $formattedCart = $cartItems->map(function($item) {
+            return [
+                'slug' => $item->product->slug,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+                'amount' => $item->amount,
+                'cart_id' => $item->id,
+                'product_id' => $item->product_id,
+                'product_name' => $item->product->name,
+                'product_image' => $item->product->photoproduct->image,
+                'product_price' => $item->product->price,
+                'product_discount' => $item->product->discount,
+                'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
+            ];
+        });
+
+        return response()->json($formattedCart);;
     }
     public function placeorder(Request $request)
     {
@@ -170,7 +208,16 @@ class OrderController extends Controller
         $formattedCart = $cartItems->map(function($item) {
             return [
                 'slug' => $item->product->slug,
-                'quantity' => $item->quantity                
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+                'amount' => $item->amount,
+                'cart_id' => $item->id,
+                'product_id' => $item->product_id,
+                'product_name' => $item->product->name,
+                'product_image' => $item->product->photoproduct->image,
+                'product_price' => $item->product->price,
+                'product_discount' => $item->product->discount,
+                'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
             ];
         });
 
