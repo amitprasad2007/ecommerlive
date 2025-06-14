@@ -39,7 +39,7 @@ Route::get('getSubSubCateidProduct', [ProductController::class, 'getSubSubCateid
 
 Route::middleware('auth:sanctum')->post('savecart', [OrderController::class, 'savecart']);
 Route::middleware('auth:sanctum')->post('updatecart', [OrderController::class, 'updatecart']);
-Route::middleware('auth:sanctum')->post('getcartdata',[OrderController::class,'getcartdata']);
+Route::middleware('auth:sanctum')->get('getcartdata',[OrderController::class,'getcartdata']);
 Route::middleware('auth:sanctum')->post('placeorder', [OrderController::class, 'placeorder']);
 Route::middleware('auth:sanctum')->post('create-order', [PaymentController::class, 'createOrder']);
 Route::middleware('auth:sanctum')->post('paychecksave', [PaymentController::class, 'paychecksave']);
