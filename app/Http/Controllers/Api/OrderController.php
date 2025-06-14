@@ -162,8 +162,7 @@ class OrderController extends Controller
     }
 
     public function getcartdata(){
-        $existingCart = Cart::where('product_id', $product->id)
-        ->where('status', 'new')
+        $existingCart = Cart::where('status', 'new')
         ->where('user_id', auth()->user()->id)
         ->first();
         dd($existingCart);
