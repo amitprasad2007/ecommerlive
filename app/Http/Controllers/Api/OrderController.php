@@ -148,6 +148,7 @@ class OrderController extends Controller
 
     public function removecart(Request $request){
         $cart_id = $request->cart_id;
+        dd($cart_id);
         $cart = Cart::find($cart_id);
         if($cart){
             $cart->quantity = 0;
@@ -174,7 +175,7 @@ class OrderController extends Controller
                 'amount' => $item->amount,
                 'cart_id' => $item->id,
                 'product_id' => $item->product_id,
-                'product_name' => $item->product->name,
+                'product_name' => $item->product->title,
                 'product_image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
                 'product_price' => $item->product->price,
                 'product_discount' => $item->product->discount,
