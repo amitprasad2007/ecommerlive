@@ -163,6 +163,15 @@ class OrderController extends Controller
         return response()->json($formattedCart);
     }
 
+    public function clearcart(Request $request){
+        $cartItems = Cart::where('status', 'new')
+            ->where('order_id', null)
+            ->where('user_id', auth()->user()->id)
+            ->update(['quantity' => 0, 'amount' => 0, 'status' => 'delete']);
+        $formattedCart = $this->cartdata();
+        return response()->json($formattedCart);
+    }
+
     private function cartdata(){
         $cartItems = Cart::with('product')
             ->where('status', 'new')
