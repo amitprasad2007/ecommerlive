@@ -162,10 +162,19 @@ class OrderController extends Controller
     }
 
     public function getcartdata(){
-        $existingCart = Cart::where('status', 'new')
-        ->where('user_id', auth()->user()->id)
-        ->first();
-        dd($existingCart);
+        $cartItems = Cart::with('product')
+            ->where('status', 'new')
+            ->where('user_id', auth()->user()->id)
+            ->get();
+
+        $formattedCart = $cartItems->map(function($item) {
+            return [
+                'slug' => $item->product->slug,
+                'quantity' => $item->quantity                
+            ];
+        });
+
+        return response()->json($formattedCart);
     }
 
 }
