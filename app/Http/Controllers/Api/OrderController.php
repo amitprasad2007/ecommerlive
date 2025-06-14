@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Validator;
 class OrderController extends Controller
 {
     public function savecart(Request $request){
-        // Validate the request
         $validator = Validator::make($request->all(), [
             'cart' => 'required|array',
             'cart.*.slug' => 'required|string|exists:products,slug',
@@ -24,9 +23,7 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-
         $totalcart = $request->cart;
-        $products = []; // Initialize products array
 
         foreach($totalcart as $cart ){
             $slug = $cart['slug'];
@@ -34,28 +31,21 @@ class OrderController extends Controller
 
             $product = Product::with('photoproduct')->where('slug', $slug)->first();
             if (!$product) {
-                continue; // Skip if product not found
+                continue;
             }
 
-            // Check for existing cart entry with null order_id, same product_id, and status 'new'
             $existingCart = Cart::where('product_id', $product->id)
                 ->where('status', 'new')
+                ->where('order_id', null)
                 ->where('user_id', auth()->user()->id)
                 ->first();
 
             if ($existingCart) {
-                // Return product with cartquantity and existing cart id
-                $product->cartquantity = $quantity;
-                $product->cart_id = $existingCart->id;
                 $existingCart->quantity = $quantity;
                 $existingCart->price = ($product->price - ($product->price * $product->discount) / 100);
                 $existingCart->amount = $existingCart->price * $quantity;
                 $existingCart->save();
-                $products[] = $product;
-
             }else{
-
-                $product->cartquantity = $quantity;
                 $cart = new Cart;
                 $cart->user_id = auth()->user()->id;
                 $cart->product_id = $product->id;
@@ -64,8 +54,6 @@ class OrderController extends Controller
                 $cart->amount = $cart->price * $cart->quantity;
                 $cart->status = 'new';
                 $cart->save();
-                $product->cart_id = $cart->id;
-                $products[] = $product;
             }
         }
 
@@ -75,11 +63,9 @@ class OrderController extends Controller
     }
 
     public function updatecart(Request $request){
-        // Ensure the cart is an array and has at least one item
         if (!isset($request->cart) || !is_array($request->cart) || count($request->cart) < 1) {
             return response()->json(['error' => 'Invalid cart data'], 400);
         }
-        $products = []; // Initialize products array
         $totalcart = $request->cart;
         foreach($totalcart as $cartv ){
             $cart_id =  $cartv['cart_id'];
@@ -90,16 +76,9 @@ class OrderController extends Controller
                 ->where('status', 'new')
                 ->first();
             if($cartquantity >0){
-                if ($cart) {
-                    $cart->quantity = $cartquantity;
-                    $cart->amount = $cart->price * $cartquantity; // Update amount based on new quantity
-                    $cart->save();
-                    $product_id = $cart->product_id;
-                    $product = Product::with('photoproduct')->find($product_id);
-                    $product->cartquantity = $cartquantity;
-                    $product->cart_id = $cart->id;
-                    $products[] = $product;
-                }
+                $cart->quantity = $cartquantity;
+                $cart->amount = $cart->price * $cartquantity;
+                $cart->save();
             }else{
                 $cart->quantity = 0;
                 $cart->amount = 0;
@@ -108,10 +87,9 @@ class OrderController extends Controller
             }
         }
         $formattedCart = $this->cartdata();
-
         return response()->json($formattedCart);
     }
-    
+
     public function placeorder(Request $request){
         $customeremail = $request->customerDetails['email'];
         $customername = $request->customerDetails['customername'];
@@ -123,7 +101,7 @@ class OrderController extends Controller
         $billingzip =  $request->customerDetails['billingzip'];
         $mobile = $request->customerDetails['mobile'];
         $totalcart = $request->products;
-        $orderIds = []; // Initialize an array to store order IDs
+        $orderIds = [];
         foreach($totalcart as $products){
             $slug = $products['slug'];
             $products['quantity'];
@@ -154,10 +132,10 @@ class OrderController extends Controller
                 $cart->status='progress';
                 $cart->save();
             }
-            $orderIds[] = $Order->order_number; // Store the order ID in the array
+            $orderIds[] = $Order->order_number;
         }
         return response()->json([
-            'orderIds' => $orderIds // Return the array of order IDs
+            'orderIds' => $orderIds
         ]);
     }
 
