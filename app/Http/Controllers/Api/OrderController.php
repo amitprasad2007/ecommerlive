@@ -71,6 +71,7 @@ class OrderController extends Controller
 
         $cartItems = Cart::with('product')
             ->where('status', 'new')
+            ->where('order_id', null)
             ->where('user_id', auth()->user()->id)
             ->get();
 
@@ -103,7 +104,7 @@ class OrderController extends Controller
         $totalcart = $request->cart;
         foreach($totalcart as $cartv ){
             $cart_id =  $cartv['cart_id'];
-            $cartquantity = $cartv['cartquantity'];
+            $cartquantity = $cartv['quantity'];
             $cart = Cart::where('id', $cart_id)
                 ->where('order_id', null)
                 ->where('user_id', auth()->user()->id)
@@ -129,6 +130,7 @@ class OrderController extends Controller
         }
         $cartItems = Cart::with('product')
             ->where('status', 'new')
+            ->where('order_id', null)
             ->where('user_id', auth()->user()->id)
             ->get();
 
@@ -204,6 +206,7 @@ class OrderController extends Controller
     public function getcartdata(){
         $cartItems = Cart::with('product')
             ->where('status', 'new')
+            ->where('order_id', null)
             ->where('user_id', auth()->user()->id)
             ->get();
 
