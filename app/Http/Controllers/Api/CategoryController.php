@@ -17,7 +17,7 @@ class CategoryController extends Controller
             ->get()
             ->map(function ($category) {
                 return [
-                    'id' => $category->id,                    
+                    'id' => $category->id,
                     'name' => $category->title,
                     'icon' => $category->icon_path ? asset('storage/'.$category->icon_path) : null,
                     'image' => $category->photo? asset('storage/'.$category->photo) : null,
@@ -34,8 +34,8 @@ class CategoryController extends Controller
                             'image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
                             'price' => $product->price,
                             'originalPrice' => $product->original_price ?? null,
-                            'rating' => $product->rating ?? null,
-                            'reviewCount' => $product->review_count ?? null,
+                            'rating' => $product->rating ?? 4,
+                            'reviewCount' => $product->review_count ?? 15,
                             'brand' => $product->brand->title ?? null,
                             'isBestSeller' => $product->is_best_seller ?? false,
                             'isNew' => $product->created_at >= now()->subMonth(),

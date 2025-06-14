@@ -29,7 +29,7 @@ class ProductController extends Controller
         $products = Product::with(['photoproduct', 'brand'])
             ->where('is_featured', 1)
             ->paginate(9);
-        
+
         $result = $products->map(function($product) {
             $photo = $product->photoproduct->first();
             return [
@@ -39,14 +39,14 @@ class ProductController extends Controller
                 'image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
                 'price' => $product->price,
                 'originalPrice' => $product->original_price ?? null,
-                'rating' => $product->rating ?? null,
-                'reviewCount' => $product->review_count ?? null,
+                'rating' => $product->rating ?? 4,
+                'reviewCount' => $product->review_count ?? 15,
                 'brand' => $product->brand->title ?? null,
                 'isBestSeller' => $product->is_best_seller ?? false,
                 'isNew' => $product->created_at >= now()->subMonth(),
             ];
         });
-    
+
         return response()->json($result);
     }
 
@@ -114,7 +114,7 @@ class ProductController extends Controller
         ]);
     }
 
-    
+
     protected function apiBrand($productIds){
 
         return Brand::whereHas('products', function($query) use ($productIds) {

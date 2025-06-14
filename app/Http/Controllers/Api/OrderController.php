@@ -45,23 +45,28 @@ class OrderController extends Controller
 
             if ($existingCart) {
                 // Return product with cartquantity and existing cart id
-                $product->cartquantity = $existingCart->quantity;
+                $product->cartquantity = $quantity;
                 $product->cart_id = $existingCart->id;
+                $existingCart->quantity = $quantity;
+                $existingCart->price = ($product->price - ($product->price * $product->discount) / 100);
+                $existingCart->amount = $existingCart->price * $quantity;
+                $existingCart->save();
                 $products[] = $product;
-                continue; // Skip creating a new cart entry
-            }
 
-            $product->cartquantity = $quantity;
-            $cart = new Cart;
-            $cart->user_id = auth()->user()->id;
-            $cart->product_id = $product->id;
-            $cart->price = ($product->price - ($product->price * $product->discount) / 100);
-            $cart->quantity = $quantity;
-            $cart->amount = $cart->price * $cart->quantity;
-            $cart->status = 'new';
-            $cart->save();
-            $product->cart_id = $cart->id;
-            $products[] = $product;
+            }else{
+
+                $product->cartquantity = $quantity;
+                $cart = new Cart;
+                $cart->user_id = auth()->user()->id;
+                $cart->product_id = $product->id;
+                $cart->price = ($product->price - ($product->price * $product->discount) / 100);
+                $cart->quantity = $quantity;
+                $cart->amount = $cart->price * $cart->quantity;
+                $cart->status = 'new';
+                $cart->save();
+                $product->cart_id = $cart->id;
+                $products[] = $product;
+            }
         }
 
         return response()->json([
@@ -110,9 +115,9 @@ class OrderController extends Controller
     {
         $customeremail = $request->customerDetails['email'];
         $customername = $request->customerDetails['customername'];
-        $nameParts = explode(' ', $customername, 2); 
+        $nameParts = explode(' ', $customername, 2);
         $firstName = $nameParts[0];
-        $lastName = isset($nameParts[1]) ? $nameParts[1] : ''; 
+        $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
         $billingAddress = $request->customerDetails['billingAddress'];
         $billingstate = $request->customerDetails['billingstate'];
         $billingzip =  $request->customerDetails['billingzip'];
@@ -155,5 +160,5 @@ class OrderController extends Controller
             'orderIds' => $orderIds // Return the array of order IDs
         ]);
     }
-  
+
 }
