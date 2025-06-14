@@ -133,6 +133,7 @@ class OrderController extends Controller
             ->get();
 
         $formattedCart = $cartItems->map(function($item) {
+            $photo = $item->product->photoproduct->first();
             return [
                 'slug' => $item->product->slug,
                 'quantity' => $item->quantity,
@@ -141,7 +142,7 @@ class OrderController extends Controller
                 'cart_id' => $item->id,
                 'product_id' => $item->product_id,
                 'product_name' => $item->product->name,
-                'product_image' => $item->product->photoproduct->image,
+                'product_image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
                 'product_price' => $item->product->price,
                 'product_discount' => $item->product->discount,
                 'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
@@ -207,6 +208,7 @@ class OrderController extends Controller
             ->get();
 
         $formattedCart = $cartItems->map(function($item) {
+            $photo = $item->product->photoproduct->first();
             return [
                 'slug' => $item->product->slug,
                 'quantity' => $item->quantity,
@@ -215,7 +217,7 @@ class OrderController extends Controller
                 'cart_id' => $item->id,
                 'product_id' => $item->product_id,
                 'product_name' => $item->product->name,
-                'product_image' => $item->product->photoproduct->image,
+                'product_image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
                 'product_price' => $item->product->price,
                 'product_discount' => $item->product->discount,
                 'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
