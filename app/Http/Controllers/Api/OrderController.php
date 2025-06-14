@@ -159,7 +159,8 @@ class OrderController extends Controller
             $cart->status = 'delete';
             $cart->save();
         }
-        return response()->json(['message' => 'Cart removed successfully']);
+        $formattedCart = $this->cartdata();
+        return response()->json($formattedCart);
     }
 
     private function cartdata(){
