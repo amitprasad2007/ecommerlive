@@ -54,8 +54,8 @@ class UserController extends Controller
             'city' => $request->city,
             'state' => $request->state,
             'postal_code' => $request->postal_code,
-            'country' => $request->country,
-            'address_type' => $request->address_type,
+            'country' => $request->country??'India',
+            'address_type' => $request->address_type??'home',
             'is_default' => $request->is_default?:false,
         ]);
         $user->address_users()->update(['is_default' => false]);
@@ -65,7 +65,7 @@ class UserController extends Controller
 
     public function getshippinginfo(){
         $user = Auth::user();
-        $address = $user->address_users()->where('is_default', true)->first();
+        $address = $user->address_users()->first();
         return response()->json(['address' => $address], 200);
     }
 }
