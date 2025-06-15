@@ -62,14 +62,14 @@ class UserController extends Controller
         $user->save();
         $user->address_users()->update(['is_default' => false]);
         $address->update(['is_default' => true]);
-        $address['email'] = $user->email;
+        array_push($address, ['email' => $user->email]);
         return response()->json(['message' => 'Shipping info saved successfully', 'address' => $address], 200);
     }
 
     public function getshippinginfo(){
         $user = Auth::user();
         $address = $user->address_users()->first();
-        $address['email'] = $user->email;
+        array_push($address, ['email' => $user->email]);
         return response()->json(['address' => $address], 200);
     }
 }
