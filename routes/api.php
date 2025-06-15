@@ -41,10 +41,12 @@ Route::middleware('auth:sanctum')->post('savecart', [OrderController::class, 'sa
 Route::middleware('auth:sanctum')->post('updatecart', [OrderController::class, 'updatecart']);
 Route::middleware('auth:sanctum')->post('removecart', [OrderController::class, 'removecart']);
 Route::middleware('auth:sanctum')->post('clearcart', [OrderController::class, 'clearcart']);
+
 Route::middleware('auth:sanctum')->get('getcartdata',[OrderController::class,'getcartdata']);
 Route::middleware('auth:sanctum')->post('placeorder', [OrderController::class, 'placeorder']);
 Route::middleware('auth:sanctum')->post('create-order', [PaymentController::class, 'createOrder']);
 Route::middleware('auth:sanctum')->post('paychecksave', [PaymentController::class, 'paychecksave']);
 
-
+Route::middleware('auth:sanctum')->post('saveshippinginfo', [UserController::class, 'saveshippinginfo']);
+Route::middleware('auth:sanctum')->get('getshippinginfo', [UserController::class, 'getshippinginfo']);
 

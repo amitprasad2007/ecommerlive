@@ -40,4 +40,17 @@ class UserController extends Controller
     public function userauth(){
         return response()->json(['user' => Auth::user()]);
     }
+
+    public function saveshippinginfo(Request $request){
+        dd($request->all());
+        $user = Auth::user();
+        $user->shipping_info = $request->all();
+        $user->save();
+        return response()->json(['message' => 'Shipping info saved successfully'], 200);
+    }
+
+    public function getshippinginfo(){
+        $user = Auth::user();
+        return response()->json(['shipping_info' => $user->shipping_info]);
+    }
 }
