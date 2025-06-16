@@ -14,23 +14,24 @@ use App\Models\Order;
 class PaymentController extends Controller
 {
     public function createOrder(Request $request){
-        $customername=$request->cartdata['formData']['customername'];
-        $nameParts = explode(' ', $customername, 2); 
-        $firstName = $nameParts[0];
-        $lastName = isset($nameParts[1]) ? $nameParts[1] : ''; 
-        $customeremail = $request->cartdata['formData']['email'];
-        $mobile = $request->cartdata['formData']['mobile'];
-        $billingAddress = $request->cartdata['formData']['billingAddress'];
-        $billingstate = $request->cartdata['formData']['billingstate'];
-        $billingzip = $request->cartdata['formData']['billingzip'];
-        $TOTALAMT = $request->cartdata['TOTALAMT'];
-        $productes = $request->cartdata['products'];
+        //dd( $request->items);
+        
+        $firstName = $request->shipping['firstName'];
+        $lastName = $request->shipping['lastName']; 
+        $customeremail = $request->shipping['email'];
+        $mobile = $request->shipping['mobile'];
+        $billingAddress = $request->shipping['address'].$request->shipping['address2'];
+        $billingstate = $request->shipping['state'];
+        $billingzip = $request->shipping['postal_code'];
+        $TOTALAMT = $request->total*100;
+       
+        $productes = $request->items;
         $orderIds = [];
         $orderIdstirng = ''; // Initialize the orderIdstirng variable
         foreach( $productes as $products){
             $slug = $products['slug'];
-            $products['cartquantity'];
-            $products['price'];
+            $quantity = $products['quantity'];
+            $price = $products['price'];
             $productonly = Product::with('photoproduct')->where('slug', $slug)->first();
             if (!$productonly) {
                 // Handle the case where the product is not found
@@ -40,10 +41,10 @@ class PaymentController extends Controller
             $Order->user_id = auth()->user()->id;
             $Order->order_number = 'ORD-' . time() . '-' . bin2hex(random_bytes(5));
             $Order->sub_total = $productonly->price;
-            $Order->quantity = $products['cartquantity'];
-            $Order->total_amount = $productonly->price * $products['cartquantity'];
+            $Order->quantity = $products['quantity'];
+            $Order->total_amount = $productonly->price * $products['quantity'];
             $Order->status = 'new';
-            $Order->payment_method =  'online';
+            $Order->payment_method = 'online';
             $Order->payment_status = "unpaid";
             $Order->first_name = $firstName;
             $Order->last_name = $lastName;
@@ -66,7 +67,7 @@ class PaymentController extends Controller
                 $cart->save();
             }
             $orderIds[] = $Order->order_number;
-            $orderIdstirng = $Order->order_number.'||'.$orderIdstirng; // Concatenate order numbers
+            $orderIdstirng = $Order->order_number; // Concatenate order numbers
         }
 
 
@@ -77,6 +78,7 @@ class PaymentController extends Controller
                'currency'        => 'INR',
                'payment_capture' => 1 // Auto capture
            ];
+
            $order = $api->order->create($orderData);
            return response()->json([
             'orderIds' => $order // Convert the order object to an array
