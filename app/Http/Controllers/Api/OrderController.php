@@ -125,7 +125,6 @@ class OrderController extends Controller
                 $cart->save();
             }
         }
-
         return response()->json([
             'orderId' => $order->order_number,
             'success' => true
@@ -190,7 +189,7 @@ class OrderController extends Controller
     }
 
     public function orderdetails(Request $request,$orid){
-        $orderdetails = Order::where ('order_number',$orid)->get();
+        $orderdetails = Order::where('order_number',$orid)->with(['address','orderItems.product'])->first();
         return response()->json($orderdetails);
     }
 }
