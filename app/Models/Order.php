@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Order extends Model
 {
@@ -22,7 +23,7 @@ class Order extends Model
         'coupon',
         'transaction_id'
     ];
-    
+
     /**
      * Get the user that owns the order.
      */
@@ -51,6 +52,6 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-   
+
 
 }

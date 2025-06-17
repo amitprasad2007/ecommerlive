@@ -99,7 +99,7 @@ class OrderController extends Controller
             'order_number' => 'ORD-' . time() . '-' . bin2hex(random_bytes(5)), // Generate a unique order ID
             'user_id' => auth()->user()->id,
             'address_id' => $request->shipping['id'],
-            'sub_total' => $request->subtotal,        
+            'sub_total' => $request->subtotal,
             'quantity' => $request->totalquantity,
             'shippingcost' => $request->shippingcost,
             'tax' => $request->tax,
@@ -110,7 +110,7 @@ class OrderController extends Controller
             'transaction_id' => $request->payment_method === 'online' ? $request->razorpay_payment_id : null,
             'payment_details' => json_encode($request->all()),
             'shipping_id' => null // Set shipping_id to null since we're using address_id instead
-        ]);       
+        ]);
         foreach( $request->items as $product){
             OrderItem::create([
                 'order_id' => $order->id,
@@ -189,23 +189,39 @@ class OrderController extends Controller
     }
 
     public function orderdetails(Request $request,$orid){
-        $orderdetails = Order::where('order_number',$orid)->with(['address','orderItems.product.photoproduct'])->first();
-        $orderdetails ->map(function($item) {
-            $photo = $item->product->photoproduct->first();
+        $orderdetails = Order::where('order_number',$orid)->with(['address','orderItems.product.photoproduct'])->get();
+        if (!$orderdetails) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        $formattedOrder = $orderdetails->map(function($item) {
+
             return [
-                'slug' => $item->product->slug,
-                'quantity' => $item->quantity,
-                'price' => $item->price,
-                'amount' => $item->amount,
-                'cart_id' => $item->id,
-                'product_id' => $item->product_id,
-                'product_name' => $item->product->title,
-                'product_image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
-                'product_price' => $item->product->price,
-                'product_discount' => $item->product->discount,
-                'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
+                'order_number' => $item->order_number,
+                'order_date' => $item->created_at,
+                'order_status' => $item->status,
+                'order_total' => $item->total_amount,
+                'order_address' => $item->address->address . ' ' . $item->address->address2,
+                'order_city' => $item->address->city,
+                'order_state' => $item->address->state,
+                'order_zip' => $item->address->postal_code,
+                'order_country' => $item->address->country,
+                'order_phone' => $item->address->mobile,
+                'order_email' => $item->user->email,
+                'payment_method' => $item->payment_method,
+                'order_items' => $item->orderItems->map(function($item) {
+                    return [
+                        'product_id' => $item->product_id,
+                        'product_name' => $item->product->title,
+                        'product_image' => $item->product->photoproduct->first() ? asset('storage/products/photos/thumbnails/'.$item->product->photoproduct->first()->photo_path) : null,
+                        'product_price' => $item->product->price,
+                        'product_discount' => $item->product->discount,
+                        'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
+                        'product_quantity' => $item->quantity,
+                    ];
+                })
             ];
         });
-        return response()->json($orderdetails);
+        return response()->json($formattedOrder);
     }
 }
