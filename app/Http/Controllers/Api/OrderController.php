@@ -99,17 +99,17 @@ class OrderController extends Controller
             'order_number' => 'ORD-' . time() . '-' . bin2hex(random_bytes(5)), // Generate a unique order ID
             'user_id' => auth()->user()->id,
             'address_id' => $request->shipping['id'],
-            'sub_total' => $request->subtotal,
-            'shipping_id' => 1, // Assuming a fixed shipping ID for this example
+            'sub_total' => $request->subtotal,        
             'quantity' => $request->totalquantity,
-            'shippingcost'=>$request->shippingcost,
-            'tax'=>$request->tax,
+            'shippingcost' => $request->shippingcost,
+            'tax' => $request->tax,
             'total_amount' => $request->total,
             'payment_method' => $request->paymentMethod,
-            'payment_status' =>  'unpaid',
+            'payment_status' => 'unpaid',
             'status' => 'new',
             'transaction_id' => $request->payment_method === 'online' ? $request->razorpay_payment_id : null,
-            'payment_details' => json_encode($request->all())
+            'payment_details' => json_encode($request->all()),
+            'shipping_id' => null // Set shipping_id to null since we're using address_id instead
         ]);       
         foreach( $request->items as $product){
             OrderItem::create([
@@ -118,9 +118,9 @@ class OrderController extends Controller
                 'quantity'=> $product['quantity'],
                 'price'=> $product['price'],
             ]);
-            $cart = Cart::find($products['cart_id']);
+            $cart = Cart::find($product['cart_id']);
             if ($cart) {
-                $cart->order_id = $Order->id;
+                $cart->order_id = $order->id;
                 $cart->status='progress';
                 $cart->save();
             }
