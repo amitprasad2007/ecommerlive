@@ -14,7 +14,6 @@ use App\Models\Order;
 class PaymentController extends Controller
 {
     public function createOrder(Request $request){
-        //dd( $request->items);
         
         $firstName = $request->shipping['firstName'];
         $lastName = $request->shipping['lastName']; 
@@ -23,8 +22,7 @@ class PaymentController extends Controller
         $billingAddress = $request->shipping['address'].$request->shipping['address2'];
         $billingstate = $request->shipping['state'];
         $billingzip = $request->shipping['postal_code'];
-        $TOTALAMT = $request->total*100;
-       
+        $TOTALAMT = $request->total*100;       
         $productes = $request->items;
         $orderIds = [];
         $orderIdstirng = ''; // Initialize the orderIdstirng variable
@@ -44,7 +42,7 @@ class PaymentController extends Controller
             $Order->quantity = $products['quantity'];
             $Order->total_amount = $productonly->price * $products['quantity'];
             $Order->status = 'new';
-            $Order->payment_method = 'online';
+            $Order->payment_method = $request->paymentMethod;
             $Order->payment_status = "unpaid";
             $Order->first_name = $firstName;
             $Order->last_name = $lastName;

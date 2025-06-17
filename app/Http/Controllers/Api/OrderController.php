@@ -93,22 +93,25 @@ class OrderController extends Controller
     }
 
     public function placeorder(Request $request){
-        $customeremail = $request->customerDetails['email'];
-        $customername = $request->customerDetails['customername'];
-        $nameParts = explode(' ', $customername, 2);
-        $firstName = $nameParts[0];
-        $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
-        $billingAddress = $request->customerDetails['billingAddress'];
-        $billingstate = $request->customerDetails['billingstate'];
-        $billingzip =  $request->customerDetails['billingzip'];
-        $mobile = $request->customerDetails['mobile'];
-        $totalcart = $request->products;
+        $firstName = $request->shipping['firstName'];
+        $lastName = $request->shipping['lastName']; 
+        $customeremail = $request->shipping['email'];
+        $mobile = $request->shipping['mobile'];
+        $billingAddress = $request->shipping['address'].$request->shipping['address2'];
+        $billingstate = $request->shipping['state'];
+        $billingzip = $request->shipping['postal_code'];
+        $TOTALAMT = $request->total*100;       
+        $productes = $request->items;
         $orderIds = [];
-        foreach($totalcart as $products){
+        foreach($productes as $products){
             $slug = $products['slug'];
-            $products['quantity'];
-            $products['price'];
+            $quantity = $products['quantity'];
+            $price = $products['price'];
             $productonly = Product::with('photoproduct')->where('slug', $slug)->first();
+            if (!$productonly) {
+                // Handle the case where the product is not found
+                return response()->json(['error' => 'Product not found'], 404);
+            }
             $Order = new Order;
             $Order->user_id = auth()->user()->id;
             $Order->order_number = 'ORD-' . time() . '-' . bin2hex(random_bytes(5));
@@ -116,8 +119,8 @@ class OrderController extends Controller
             $Order->quantity = $products['quantity'];
             $Order->total_amount = $productonly->price * $products['quantity'];
             $Order->status = 'new';
-            $Order->payment_method =  $products['pay_method'];
-            $Order->payment_status = ($products['pay_method'] == 'cod') ? "unpaid" : "paid";
+            $Order->payment_method =  $request->paymentMethod;
+            $Order->payment_status = "unpaid";
             $Order->first_name = $firstName;
             $Order->last_name = $lastName;
             $Order->email = $customeremail;
@@ -128,6 +131,9 @@ class OrderController extends Controller
             $Order->address1 = $billingAddress;
             $Order->address2 = $billingstate;
             $Order->save();
+            if (!$Order->wasRecentlyCreated) {
+                return response()->json(['error' => 'Order creation failed'], 500);
+            }
             $cart = Cart::find($products['cart_id']);
             if ($cart) {
                 $cart->order_id = $Order->id;
