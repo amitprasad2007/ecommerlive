@@ -203,7 +203,7 @@ class OrderController extends Controller
                 'order_address' => $item->address->address . ' ' . $item->address->address2,
                 'order_city' => $item->address->city,
                 'shippingcost' => $item->shippingcost,
-                'sub_total' => $item->subtotal,
+                'sub_total' => $item->sub_total,
                 'firstName'=> $item->address->firstName,
                 'lastName'=> $item->address->lastName,
                 'order_state' => $item->address->state,
