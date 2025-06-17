@@ -190,6 +190,22 @@ class OrderController extends Controller
 
     public function orderdetails(Request $request,$orid){
         $orderdetails = Order::where('order_number',$orid)->with(['address','orderItems.product.photoproduct'])->first();
+        $orderdetails ->map(function($item) {
+            $photo = $item->product->photoproduct->first();
+            return [
+                'slug' => $item->product->slug,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+                'amount' => $item->amount,
+                'cart_id' => $item->id,
+                'product_id' => $item->product_id,
+                'product_name' => $item->product->title,
+                'product_image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
+                'product_price' => $item->product->price,
+                'product_discount' => $item->product->discount,
+                'product_price_after_discount' => $item->product->price - ($item->product->price * $item->product->discount) / 100,
+            ];
+        });
         return response()->json($orderdetails);
     }
 }
