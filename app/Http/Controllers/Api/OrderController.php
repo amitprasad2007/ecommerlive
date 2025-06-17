@@ -143,7 +143,8 @@ class OrderController extends Controller
             $orderIds[] = $Order->order_number;
         }
         return response()->json([
-            'orderIds' => $orderIds
+            'orderId' => $orderIds,
+            'success' => true
         ]);
     }
 
