@@ -189,7 +189,7 @@ class OrderController extends Controller
     }
 
     public function orderdetails(Request $request,$orid){
-        $orderdetails = Order::where('order_number',$orid)->with(['address','orderItems.product'])->first();
+        $orderdetails = Order::where('order_number',$orid)->with(['address','orderItems.product.photoproduct'])->first();
         return response()->json($orderdetails);
     }
 }
