@@ -202,12 +202,15 @@ class OrderController extends Controller
                 'order_total' => $item->total_amount,
                 'order_address' => $item->address->address . ' ' . $item->address->address2,
                 'order_city' => $item->address->city,
+                'firstName'=> $item->address->firstName,
+                'lastName'=> $item->address->lastName,
                 'order_state' => $item->address->state,
                 'order_zip' => $item->address->postal_code,
                 'order_country' => $item->address->country,
                 'order_phone' => $item->address->mobile,
                 'order_email' => $item->user->email,
                 'tax'=> $item->tax,
+
                 'payment_method' => $item->payment_method,
                 'order_items' => $item->orderItems->map(function($item) {
                     return [
