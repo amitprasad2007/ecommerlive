@@ -69,7 +69,13 @@ class UserController extends Controller
 
     public function getshippinginfo(){
         $user = Auth::user();
-        $address = $user->address_users()->first();
+        $address = $user->address_users()->first();        
+        if (!$address) {
+            return response()->json([
+                'message' => 'No shipping address found',
+                'address' => null
+            ], 200);
+        }
         $addressArray = $address->toArray();
         $addressArray['email'] = $user->email;
         return response()->json(['address' => $addressArray], 200);
