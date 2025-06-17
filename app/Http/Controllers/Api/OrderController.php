@@ -204,4 +204,9 @@ class OrderController extends Controller
         });
         return $formattedCart;
     }
+
+    public function orderdetails(Request $request,$orid){
+        $orderdetails = Order::where ('order_number',$orid)->get();
+        return response()->json($orderdetails);
+    }
 }

@@ -46,7 +46,7 @@ Route::middleware('auth:sanctum')->get('getcartdata',[OrderController::class,'ge
 Route::middleware('auth:sanctum')->post('placeorder', [OrderController::class, 'placeorder']);
 Route::middleware('auth:sanctum')->post('createrazorpayorder', [PaymentController::class, 'createOrder']);
 Route::middleware('auth:sanctum')->post('paychecksave', [PaymentController::class, 'paychecksave']);
-
+Route::middleware('auth:sanctum')->get('orderdetails/{orid}',[OrderController::class, 'orderdetails']);
 Route::middleware('auth:sanctum')->post('saveshippinginfo', [UserController::class, 'saveshippinginfo']);
 Route::middleware('auth:sanctum')->get('getshippinginfo', [UserController::class, 'getshippinginfo']);
 
