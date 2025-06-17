@@ -195,7 +195,6 @@ class OrderController extends Controller
         }
 
         $formattedOrder = $orderdetails->map(function($item) {
-
             return [
                 'order_number' => $item->order_number,
                 'order_date' => $item->created_at,
@@ -208,6 +207,7 @@ class OrderController extends Controller
                 'order_country' => $item->address->country,
                 'order_phone' => $item->address->mobile,
                 'order_email' => $item->user->email,
+                'tax'=> $item->tax,
                 'payment_method' => $item->payment_method,
                 'order_items' => $item->orderItems->map(function($item) {
                     return [
