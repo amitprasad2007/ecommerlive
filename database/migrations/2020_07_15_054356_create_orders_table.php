@@ -18,6 +18,8 @@ class CreateOrdersTable extends Migration
             $table->string('order_number')->unique();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->float('sub_total');
+            $table->float('tax');
+            $table->float('shippingcost');
             $table->unsignedBigInteger('shipping_id')->nullable();
             $table->float('coupon')->nullable();
             $table->float('total_amount');
