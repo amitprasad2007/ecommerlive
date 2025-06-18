@@ -61,13 +61,14 @@ class PaymentController extends Controller
       //  \Log::info('Creating Razorpay order with data:', $orderData);
 
         $rzorder = $api->order->create($orderData);
+        //dd($rzorder);
 
         if (!$rzorder || !isset($rzorder->id)) {
             \Log::error('Razorpay order creation failed:', ['response' => $rzorder]);
             return response()->json(['message' => 'Failed to create Razorpay order'], 500);
         }
         $order->transaction_id = $rzorder->id;
-        $order->payment_details = json_encode($rzorder);
+        $order->payment_details = json_encode($rzorder->toArray());
         $order->save();
 
         return response()->json([
@@ -75,7 +76,7 @@ class PaymentController extends Controller
             'orderId' => $order->order_number,
             'amount' => $amounttotal,
             'currency' => 'INR',
-            'rzdetails' => $rzorder
+            'rzdetails' => $rzorder->toArray()
         ]);
     }
 
