@@ -86,7 +86,7 @@ class PaymentController extends Controller
         // Add Razorpay payment capture logic
         $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
         $payment = $api->payment->fetch($payment_id); // Fetch the payment details
-
+        dd( $payment);
         // Check if the payment is already captured
         if ($payment->status === 'captured') {
             // Payment is already captured, return the payment details
