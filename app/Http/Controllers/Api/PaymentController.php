@@ -105,7 +105,7 @@ class PaymentController extends Controller
             ]);
             Order::where('transaction_id', $payment->order_id)->update(['payment_status' => 'paid','status'=>'process']);
             return response()->json([
-                'orderId' => $payment->order_id,
+                'orderId' => $payment->description,
                 'success' => true
             ]);
         } else {
