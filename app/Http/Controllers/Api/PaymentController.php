@@ -49,6 +49,9 @@ class PaymentController extends Controller
             }
         }
         $amountto = $order->total_amount*100;
+        return response()->json([
+            $amountto
+        ]);
         $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
         $orderData = [
             'receipt'         => $order->order_number,
