@@ -49,7 +49,7 @@ class PaymentController extends Controller
             }
         }
         $amountto = $order->total_amount;
-        $amounttotal = $amountto*100;
+        $amounttotal = round($amountto * 100);
         
         $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
         $orderData = [
