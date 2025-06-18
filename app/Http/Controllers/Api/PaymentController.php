@@ -61,8 +61,10 @@ class PaymentController extends Controller
         $rzorder = $api->order->create($orderData);
 
         return response()->json([
-            'rzorderIds' => $rzorder,
-            'orderId' => $order->order_number  
+            'razorpayOrderId' => $rzorder,
+            'orderId' => $order->order_number,
+            'amount'=> $amounttotal,
+            'currency'=> 'INR',
         ]);
     }
 
