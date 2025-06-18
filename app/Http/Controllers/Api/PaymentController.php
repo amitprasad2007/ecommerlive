@@ -9,6 +9,9 @@ use App\User;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 
 class PaymentController extends Controller
@@ -45,7 +48,7 @@ class PaymentController extends Controller
                 $cart->save();
             }
         }
-        
+
         $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
         $orderData = [
             'receipt'         => $order->order_number,
