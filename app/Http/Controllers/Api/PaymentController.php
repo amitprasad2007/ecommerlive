@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Validator;
 class PaymentController extends Controller
 {
     public function createOrder(Request $request){
-        
+        $user = auth()->user;
         $order = Order::create([
             'order_number' => 'ORD-' . time() . '-' . bin2hex(random_bytes(5)), // Generate a unique order ID
             'user_id' => auth()->user()->id,
@@ -30,8 +30,6 @@ class PaymentController extends Controller
             'payment_method' => $request->paymentMethod,
             'payment_status' => 'unpaid',
             'status' => 'new',
-            'transaction_id' => $request->payment_method === 'online' ? $request->razorpay_payment_id : null,
-            'payment_details' => json_encode($request->all()),
             'shipping_id' => null // Set shipping_id to null since we're using address_id instead
         ]);
         foreach( $request->items as $product){
@@ -48,39 +46,43 @@ class PaymentController extends Controller
                 $cart->save();
             }
         }
+        $customer_name = $request->shipping['firstname']." ".$request->shipping['lastname'];
         $amountto = $order->total_amount;
         $amounttotal = round($amountto * 100);
-        
+
         $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
         $orderData = [
             'receipt'         => $order->order_number,
-            'amount'          => $amounttotal, // Amount in paise
+            'amount'          => $amounttotal,
             'currency'        => 'INR',
-            'payment_capture' => 1 // Auto capture
+            'payment_capture' => 1,
+            'notes'=> array('customer_name'=> $customer_name,'Customer_mobile'=> $user->mobile)
         ];
       //  \Log::info('Creating Razorpay order with data:', $orderData);
-        
+
         $rzorder = $api->order->create($orderData);
-        
+
         if (!$rzorder || !isset($rzorder->id)) {
             \Log::error('Razorpay order creation failed:', ['response' => $rzorder]);
             return response()->json(['message' => 'Failed to create Razorpay order'], 500);
         }
-
-        \Log::info('Razorpay order created successfully:', ['order_id' => $rzorder->id]);
+        $order->transaction_id = $rzorder->id;
+        $order->payment_details = json_encode($rzorder);
+        $order->save();
         
         return response()->json([
             'razorpayOrderId' => $rzorder->id,
             'orderId' => $order->order_number,
             'amount' => $amounttotal,
             'currency' => 'INR',
+            'rzdetails' => $rzorder
         ]);
     }
 
     public function paychecksave(Request $request){
 
-        $payment_id = $request->response['razorpay_payment_id'];    
-        $order_id = $request->response['razorpay_order_id']; 
+        $payment_id = $request->response['razorpay_payment_id'];
+        $order_id = $request->response['razorpay_order_id'];
         $signature = $request->response['razorpay_signature'];
 
         // Add Razorpay payment capture logic
