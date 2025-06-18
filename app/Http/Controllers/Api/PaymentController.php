@@ -58,13 +58,22 @@ class PaymentController extends Controller
             'currency'        => 'INR',
             'payment_capture' => 1 // Auto capture
         ];
+      //  \Log::info('Creating Razorpay order with data:', $orderData);
+        
         $rzorder = $api->order->create($orderData);
+        
+        if (!$rzorder || !isset($rzorder->id)) {
+            \Log::error('Razorpay order creation failed:', ['response' => $rzorder]);
+            return response()->json(['message' => 'Failed to create Razorpay order'], 500);
+        }
 
+        \Log::info('Razorpay order created successfully:', ['order_id' => $rzorder->id]);
+        
         return response()->json([
-            'razorpayOrderId' => $rzorder,
+            'razorpayOrderId' => $rzorder->id,
             'orderId' => $order->order_number,
-            'amount'=> $amounttotal,
-            'currency'=> 'INR',
+            'amount' => $amounttotal,
+            'currency' => 'INR',
         ]);
     }
 
