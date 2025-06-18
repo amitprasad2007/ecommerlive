@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Validator;
 class PaymentController extends Controller
 {
     public function createOrder(Request $request){
-        $user = auth()->user;
+        $user = auth()->user();
         $order = Order::create([
             'order_number' => 'ORD-' . time() . '-' . bin2hex(random_bytes(5)), // Generate a unique order ID
             'user_id' => auth()->user()->id,
@@ -69,7 +69,7 @@ class PaymentController extends Controller
         $order->transaction_id = $rzorder->id;
         $order->payment_details = json_encode($rzorder);
         $order->save();
-        
+
         return response()->json([
             'razorpayOrderId' => $rzorder->id,
             'orderId' => $order->order_number,
