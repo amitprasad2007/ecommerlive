@@ -48,7 +48,8 @@ class PaymentController extends Controller
                 $cart->save();
             }
         }
-        $amountto = $order->total_amount*100;
+        $amountto = $order->total_amount;
+        $amountto = $amountto*100;
         return response()->json([
             $amountto
         ]);
