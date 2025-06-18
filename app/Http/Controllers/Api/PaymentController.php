@@ -48,11 +48,11 @@ class PaymentController extends Controller
                 $cart->save();
             }
         }
-        $amounttotal = $order->total_amount*100;
+        $amountto = $order->total_amount*100;
         $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
         $orderData = [
             'receipt'         => $order->order_number,
-            'amount'          => $amounttotal, // Amount in paise
+            'amount'          => $amountto, // Amount in paise
             'currency'        => 'INR',
             'payment_capture' => 1 // Auto capture
         ];
