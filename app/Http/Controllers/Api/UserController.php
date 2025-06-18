@@ -59,6 +59,7 @@ class UserController extends Controller
             'is_default' => $request->is_default?:false,
         ]);
         $user->email = $request->email;
+        $user->name = $request->firstName." ".$request->lastName;
         $user->save();
         $user->address_users()->update(['is_default' => false]);
         $address->update(['is_default' => true]);
@@ -69,7 +70,7 @@ class UserController extends Controller
 
     public function getshippinginfo(){
         $user = Auth::user();
-        $address = $user->address_users()->first();        
+        $address = $user->address_users()->first();
         if (!$address) {
             return response()->json([
                 'message' => 'No shipping address found',

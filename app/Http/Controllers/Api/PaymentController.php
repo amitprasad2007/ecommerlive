@@ -10,6 +10,7 @@ use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -85,18 +86,32 @@ class PaymentController extends Controller
         $payment_id = $request->response['razorpay_payment_id'];
         $order_id = $request->response['razorpay_order_id'];
         $signature = $request->response['razorpay_signature'];
-
-        // Add Razorpay payment capture logic
         $api = new Api(env('RAZOR_KEY_ID'), env('RAZOR_KEY_SECRET'));
-        $payment = $api->payment->fetch($payment_id); // Fetch the payment details
-        dd( $payment);
+        $payment = $api->payment->fetch($payment_id);
         // Check if the payment is already captured
         if ($payment->status === 'captured') {
-            // Payment is already captured, return the payment details
-            return response()->json(['paymentDetails' => $payment->toArray()]);
+            $payment_save = Payment::create([
+                'payment_id'=> $payment->id,
+                'amount'=> $payment->amount,
+                'status'=> $payment->status,
+                'method'=> $payment->method,
+                'order_id'=> $payment->description,
+                'rzorder_id'=> $payment->order_id,
+                'card_id' => $payment->card_id,
+                'email' => $payment->email,
+                'contact'=> $payment->contact,
+                'user_id' =>auth()->user()->id,
+                'payment_details'=> json_encode($payment->toArray())
+            ]);
+            Order::where('transaction_id', $payment->order_id)->update(['payment_status' => 'paid','status'=>'process']);
+            return response()->json([
+                'orderId' => $payment->order_id,
+                'success' => true
+            ]);
         } else {
             // Capture the payment
             $response = $payment->capture(array('amount' => 50000)); // Capture the payment
+            dd($response);
             return response()->json(['paymentDetails' => $response->toArray()]);
         }
     }
