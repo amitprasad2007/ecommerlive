@@ -110,9 +110,9 @@ class PaymentController extends Controller
             ]);
         } else {
             // Capture the payment
-            $response = $payment->capture(array('amount' => 50000)); // Capture the payment
-            dd($response);
-            return response()->json(['paymentDetails' => $response->toArray()]);
+          //  $response = $payment->capture(array('amount' => 50000)); // Capture the payment
+           // dd($response);
+           // return response()->json(['paymentDetails' => $response->toArray()]);
         }
     }
 }
