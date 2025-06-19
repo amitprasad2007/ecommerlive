@@ -211,7 +211,7 @@ class OrderController extends Controller
                 'order_country' => $item->address->country,
                 'order_phone' => $item->address->mobile,
                 'order_email' => $item->user->email,
-                'payment_status'=> $item->user->payment_status,
+                'payment_status'=> $item->payment_status,
                 'tax'=> $item->tax,
                 'payment_method' => $item->payment_method,
                 'payment_online_details' => $item->payment ? $item->payment->toArray() : [],
