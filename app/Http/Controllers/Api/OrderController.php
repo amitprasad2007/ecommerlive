@@ -213,7 +213,7 @@ class OrderController extends Controller
                 'order_email' => $item->user->email,
                 'tax'=> $item->tax,
                 'payment_method' => $item->payment_method,
-                'payment_online_details' => $item->payment->toArray(),
+                'payment_online_details' => $item->payment ? $item->payment->toArray() : [],
                 'order_items' => $item->orderItems->map(function($item) {
                     return [
                         'product_id' => $item->product_id,
