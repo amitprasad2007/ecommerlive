@@ -56,7 +56,7 @@ class PaymentController extends Controller
             'receipt'         => $order->order_number,
             'amount'          => $amounttotal,
             'currency'        => 'INR',
-            'payment_capture' => 1,
+            // 'payment_capture' => 1,
             'notes'=> array('customer_name'=> $customer_name,'Customer_mobile'=> $user->mobile)
         ];
       //  \Log::info('Creating Razorpay order with data:', $orderData);
