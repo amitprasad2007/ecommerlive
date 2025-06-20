@@ -20,7 +20,7 @@ class PaymentController extends Controller
     public function createOrder(Request $request){
         $user = auth()->user();
         $order = Order::create([
-            'order_number' => 'ORD-' . time() . '-' . bin2hex(random_bytes(5)), // Generate a unique order ID
+            'order_number' => 'ORD'.time().bin2hex(random_bytes(5)), // Generate a unique order ID
             'user_id' => auth()->user()->id,
             'address_id' => $request->shipping['id'],
             'sub_total' => $request->subtotal,
@@ -127,7 +127,7 @@ class PaymentController extends Controller
             return response()->json([
                 'orderId' => $response->description,
                 'success' => true
-            ]);           
+            ]);
         }
     }
 }

@@ -96,7 +96,7 @@ class OrderController extends Controller
     public function placeorder(Request $request){
 
         $order = Order::create([
-            'order_number' => 'ORD-' . time() . '-' . bin2hex(random_bytes(5)), // Generate a unique order ID
+            'order_number' => 'ORD'.time().bin2hex(random_bytes(5)), // Generate a unique order ID
             'user_id' => auth()->user()->id,
             'address_id' => $request->shipping['id'],
             'sub_total' => $request->subtotal,
@@ -230,5 +230,5 @@ class OrderController extends Controller
         });
         return response()->json($formattedOrder);
     }
-    
+
 }
