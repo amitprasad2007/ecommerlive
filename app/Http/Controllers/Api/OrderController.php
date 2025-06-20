@@ -189,11 +189,11 @@ class OrderController extends Controller
     }
 
     public function orderdetails(Request $request,$orid){
-        $orderdetails = Order::where('order_number',$orid)->with(['payment'])->get();
+        $orderdetails = Order::where('order_number',$orid)->with(['address','orderItems.product.photoproduct','payment'])->get();
         if (!$orderdetails) {
             return response()->json(['message' => 'Order not found'], 404);
         }
-        dd($orderdetails->toArray());
+       // dd($orderdetails->toArray());
         $formattedOrder = $orderdetails->map(function($item) {
             return [
                 'order_number' => $item->order_number,
@@ -211,8 +211,10 @@ class OrderController extends Controller
                 'order_country' => $item->address->country,
                 'order_phone' => $item->address->mobile,
                 'order_email' => $item->user->email,
+                'payment_status'=> $item->payment_status,
                 'tax'=> $item->tax,
                 'payment_method' => $item->payment_method,
+                'payment_online_details' => $item->payment ? $item->payment->toArray() : [],
                 'order_items' => $item->orderItems->map(function($item) {
                     return [
                         'product_id' => $item->product_id,
