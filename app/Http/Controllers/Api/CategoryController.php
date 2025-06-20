@@ -8,7 +8,6 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    //
     public function getcategorieslist(){
         $categories = Category::where('is_parent', '!=', 0)
             ->with(['products' => function($query) {
@@ -47,8 +46,7 @@ class CategoryController extends Controller
         return response()->json(['categories' => $categories]);
     }
 
-    private function getGradientForCategory($categoryId)
-    {
+    private function getGradientForCategory($categoryId){
         $gradients = [
             'from-blue-200 to-blue-600',
             'from-green-400 to-blue-500',
@@ -60,6 +58,7 @@ class CategoryController extends Controller
 
         return $gradients[$categoryId % count($gradients)];
     }
+
     public function getcategorybyid($id){
         $category = Category::find($id);
         return response()->json(['category' => $category]);
@@ -70,8 +69,7 @@ class CategoryController extends Controller
         return response()->json(['subcategories' => $subcategories]);
     }
 
-    public function catsubsub()
-    {
+    public function catsubsub(){
         $categories = Category::where('is_parent', '!=', 0)
             ->with(['subcategories.subSubCategories'])
             ->get();
@@ -119,4 +117,5 @@ class CategoryController extends Controller
 
         return response()->json($result);
     }
+
 }

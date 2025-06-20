@@ -38,6 +38,7 @@ class UserController extends Controller
             return response()->json(['message' => 'please send password'], 200);
         }
     }
+    
     public function userauth(){
         return response()->json(['user' => Auth::user()]);
     }
