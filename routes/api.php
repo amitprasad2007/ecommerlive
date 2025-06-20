@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\BrandController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,7 +20,7 @@ use App\Http\Controllers\Api\PaymentController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'userauth'] );
+
 Route::get('getcategorieslist', [CategoryController::class, 'getcategorieslist']);
 Route::get('getcategorybyid/{id}', [CategoryController::class, 'getcategorybyid']);
 Route::get('getsubcategorieslist/{id}', [CategoryController::class, 'getsubcategorieslist']);
@@ -28,7 +29,7 @@ Route::get('getproductbyid/{id}', [ProductController::class, 'getproductbyid']);
 Route::get('getproductbycategoryid/{id}', [ProductController::class, 'getproductbycategoryid']);
 Route::get('getis_featuredproduct', [ProductController::class, 'getis_featuredproduct']);
 Route::get('getbannerlist', [BannerController::class, 'getbannerlist']);
-Route::get('getbrandlist', [\App\Http\Controllers\Api\BrandController::class, 'getbrandlist']);
+Route::get('getbrandlist', [BrandController::class, 'getbrandlist']);
 Route::post('userlogin', [UserController::class, 'userlogin']);
 Route::get('getcatwithsubandsub',[CategoryController::class,'catsubsub']);
 Route::get('getproductSearch/', [ProductController::class, 'getproductSearch']);
@@ -36,17 +37,17 @@ Route::get('getCateidProduct', [ProductController::class, 'getCateidProduct']);
 Route::get('getSubCateidProduct', [ProductController::class, 'getSubCateidProduct']);
 Route::get('getSubSubCateidProduct', [ProductController::class, 'getSubSubCateidProduct']);
 
-
-Route::middleware('auth:sanctum')->post('savecart', [OrderController::class, 'savecart']);
-Route::middleware('auth:sanctum')->post('updatecart', [OrderController::class, 'updatecart']);
-Route::middleware('auth:sanctum')->post('removecart', [OrderController::class, 'removecart']);
-Route::middleware('auth:sanctum')->post('clearcart', [OrderController::class, 'clearcart']);
-
-Route::middleware('auth:sanctum')->get('getcartdata',[OrderController::class,'getcartdata']);
-Route::middleware('auth:sanctum')->post('placeorder', [OrderController::class, 'placeorder']);
-Route::middleware('auth:sanctum')->post('createrazorpayorder', [PaymentController::class, 'createOrder']);
-Route::middleware('auth:sanctum')->post('paychecksave', [PaymentController::class, 'paychecksave']);
-Route::middleware('auth:sanctum')->get('orderdetails/{orid}',[OrderController::class, 'orderdetails']);
-Route::middleware('auth:sanctum')->post('saveshippinginfo', [UserController::class, 'saveshippinginfo']);
-Route::middleware('auth:sanctum')->get('getshippinginfo', [UserController::class, 'getshippinginfo']);
-
+Route::group( [ 'middleware' => ['auth:sanctum']], function () {
+    Route:: get('user', [UserController::class, 'userauth']);
+    Route:: post('savecart', [OrderController::class, 'savecart']);
+    Route:: post('updatecart', [OrderController::class, 'updatecart']);
+    Route:: post('removecart', [OrderController::class, 'removecart']);
+    Route:: post('clearcart', [OrderController::class, 'clearcart']);
+    Route:: get('getcartdata', [OrderController::class,'getcartdata']);
+    Route:: post('placeorder', [OrderController::class, 'placeorder']);
+    Route:: post('createrazorpayorder', [PaymentController::class, 'createOrder']);
+    Route:: post('paychecksave', [PaymentController::class, 'paychecksave']);
+    Route:: get('orderdetails/{orid}', [OrderController::class, 'orderdetails']);
+    Route:: post('saveshippinginfo', [UserController::class, 'saveshippinginfo']);
+    Route:: get('getshippinginfo', [UserController::class, 'getshippinginfo']);
+});
