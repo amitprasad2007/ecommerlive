@@ -18,7 +18,7 @@
     border-bottom: 1px solid gray;
   }
   .site-logo {
-    margin-top: 20px;
+    margin-top: 10px;
   }
   .invoice-right-top h3 {
     padding-right: 20px;
@@ -30,7 +30,7 @@
   .invoice-left-top {
     border-left: 4px solid green;
     padding-left: 20px;
-    padding-top: 20px;
+    padding-top: 15px;
   }
   .invoice-left-top p {
     margin: 0;
@@ -124,7 +124,7 @@
     </div>
     <div class="clearfix"></div>
   </div>
-  <section class="order_details pt-3">
+  <section class="order_details pt-1">
     <div class="table-header">
       <h5>Order Details</h5>
     </div>
