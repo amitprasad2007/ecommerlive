@@ -84,18 +84,30 @@
   <div class="invoice-description">
     <div class="invoice-left-top float-left">
       <h6>Invoice to</h6>
-       <h3>{{$order->first_name}} {{$order->last_name}}</h3>
+       <h3>{{$order->address->firstName}} {{$order->address->lastName}}</h3>
        <div class="address">
         <p>
           <strong>Country: </strong>
-          {{$order->country}}
+          {{$order->address->country}}
         </p>
         <p>
           <strong>Address: </strong>
-          {{ $order->address1 }} OR {{ $order->address2}}
+          {{ $order->address->address }} {{ $order->address->address2}}
         </p>
-         <p><strong>Phone:</strong> {{ $order->phone }}</p>
-         <p><strong>Email:</strong> {{ $order->email }}</p>
+        <p>
+          <strong>City: </strong>
+          {{ $order->address->city }}
+        </p>
+        <p>
+          <strong>State: </strong>
+          {{ $order->address->state }}
+        </p>
+        <p>
+          <strong>Postal Code: </strong>
+          {{ $order->address->postal_code }}
+        </p>
+         <p><strong>Phone:</strong> {{ $order->address->mobile }}</p>
+         <p><strong>Email:</strong> {{ $order->user->email }}</p>
        </div>
     </div>
     <div class="invoice-right-top float-right" class="text-right">
@@ -118,18 +130,11 @@
         </tr>
       </thead>
       <tbody>
-      @foreach($order->cart_info as $cart)
-      @php 
-        $product=DB::table('products')->select('title')->where('id',$cart->product_id)->get();
-      @endphp
+      @foreach($order->orderItems as $item)
         <tr>
-          <td><span>
-              @foreach($product as $pro)
-                {{$pro->title}}
-              @endforeach
-            </span></td>
-          <td>x{{$cart->quantity}}</td>
-          <td><span>${{number_format($cart->price,2)}}</span></td>
+          <td><span>{{$item->product->title}}</span></td>
+          <td>x{{$item->quantity}}</td>
+          <td><span>${{number_format($item->price * $item->quantity,2)}}</span></td>
         </tr>
       @endforeach
       </tbody>
@@ -139,20 +144,17 @@
           <th scope="col" class="text-right">Subtotal:</th>
           <th scope="col"> <span>${{number_format($order->sub_total,2)}}</span></th>
         </tr>
-      {{-- @if(!empty($order->coupon))
+        @if($order->tax > 0)
         <tr>
           <th scope="col" class="empty"></th>
-          <th scope="col" class="text-right">Discount:</th>
-          <th scope="col"><span>-{{$order->coupon->discount(Helper::orderPrice($order->id, $order->user->id))}}{{Helper::base_currency()}}</span></th>
+          <th scope="col" class="text-right">Tax:</th>
+          <th scope="col"><span>${{number_format($order->tax,2)}}</span></th>
         </tr>
-      @endif --}}
+        @endif
         <tr>
           <th scope="col" class="empty"></th>
-          @php
-            $shipping_charge=DB::table('shippings')->where('id',$order->shipping_id)->pluck('price');
-          @endphp
           <th scope="col" class="text-right ">Shipping:</th>
-          <th><span>${{number_format($shipping_charge[0],2)}}</span></th>
+          <th><span>${{number_format($order->shippingcost,2)}}</span></th>
         </tr>
         <tr>
           <th scope="col" class="empty"></th>

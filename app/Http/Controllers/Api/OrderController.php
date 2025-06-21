@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class OrderController extends Controller
 {
@@ -190,10 +191,11 @@ class OrderController extends Controller
 
     public function orderdetails(Request $request,$orid){
         $orderdetails = Order::where('order_number',$orid)->with(['address','orderItems.product.photoproduct','payment'])->get();
+        
         if (!$orderdetails) {
             return response()->json(['message' => 'Order not found'], 404);
         }
-       // dd($orderdetails->toArray());
+
         $formattedOrder = $orderdetails->map(function($item) {
             return [
                 'order_number' => $item->order_number,
@@ -215,6 +217,7 @@ class OrderController extends Controller
                 'tax'=> $item->tax,
                 'payment_method' => $item->payment_method,
                 'payment_online_details' => $item->payment ? $item->payment->toArray() : [],
+                'invoice_download_url' => route('api.order.pdf', $item->order_number),
                 'order_items' => $item->orderItems->map(function($item) {
                     return [
                         'product_id' => $item->product_id,
@@ -229,6 +232,28 @@ class OrderController extends Controller
             ];
         });
         return response()->json($formattedOrder);
+    }
+
+    public function generateInvoicePdf($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)
+            ->with(['address', 'orderItems.product.photoproduct', 'payment', 'user'])
+            ->first();
+        
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        // Check if the authenticated user owns this order
+        if ($order->user_id !== auth()->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $fileName = $order->order_number . '-' . $order->address->firstName . '.pdf';
+        
+        $pdf = PDF::loadView('backend.order.pdf', compact('order'));
+        
+        return $pdf->download($fileName);
     }
 
 }
