@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Order @if($order)- {{$order->order_number}} @endif</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
@@ -8,6 +9,9 @@
 
 @if($order)
 <style type="text/css">
+  body {
+    font-family: 'DejaVu Sans', Arial, sans-serif;
+  }
   .invoice-header {
     background: #f7f7f7;
     padding: 10px 20px 10px 20px;
@@ -67,6 +71,9 @@
   }
   .table td, .table th {
     padding: .30rem;
+  }
+  .currency {
+    font-family: 'DejaVu Sans', Arial, sans-serif;
   }
 </style>
   <div class="invoice-header">
@@ -134,7 +141,7 @@
         <tr>
           <td><span>{{$item->product->title}}</span></td>
           <td>x{{$item->quantity}}</td>
-          <td><span>₹{{number_format($item->price * $item->quantity,2)}}</span></td>
+          <td><span class="currency">Rs. {{number_format($item->price * $item->quantity,2)}}</span></td>
         </tr>
       @endforeach
       </tbody>
@@ -142,26 +149,26 @@
         <tr>
           <th scope="col" class="empty"></th>
           <th scope="col" class="text-right">Subtotal:</th>
-          <th scope="col"> <span>₹{{number_format($order->sub_total,2)}}</span></th>
+          <th scope="col"> <span class="currency">Rs. {{number_format($order->sub_total,2)}}</span></th>
         </tr>
         @if($order->tax > 0)
         <tr>
           <th scope="col" class="empty"></th>
           <th scope="col" class="text-right">Tax:</th>
-          <th scope="col"><span>₹{{number_format($order->tax,2)}}</span></th>
+          <th scope="col"><span class="currency">Rs. {{number_format($order->tax,2)}}</span></th>
         </tr>
         @endif
         <tr>
           <th scope="col" class="empty"></th>
           <th scope="col" class="text-right ">Shipping:</th>
-          <th><span>₹{{number_format($order->shippingcost,2)}}</span></th>
+          <th><span class="currency">Rs. {{number_format($order->shippingcost,2)}}</span></th>
         </tr>
         <tr>
           <th scope="col" class="empty"></th>
           <th scope="col" class="text-right">Total:</th>
           <th>
-            <span>
-                ₹{{number_format($order->total_amount,2)}}
+            <span class="currency">
+                Rs. {{number_format($order->total_amount,2)}}
             </span>
           </th>
         </tr>

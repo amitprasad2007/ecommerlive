@@ -253,7 +253,25 @@ class OrderController extends Controller
         
         $pdf = PDF::loadView('backend.order.pdf', compact('order'));
         
+        // Set UTF-8 encoding and other options to ensure proper display of special characters
+        $pdf->setOption('encoding', 'UTF-8');
+        $pdf->setOption('enable_font_subsetting', true);
+        $pdf->setOption('default_font', 'DejaVu Sans');
+        
         return $pdf->download($fileName);
+    }
+
+    /**
+     * Helper method to format currency with proper rupee symbol
+     */
+    private function formatCurrency($amount)
+    {
+        // Try to use the actual rupee symbol, fallback to "Rs." if needed
+        try {
+            return '₹' . number_format($amount, 2);
+        } catch (Exception $e) {
+            return 'Rs. ' . number_format($amount, 2);
+        }
     }
 
 }
