@@ -134,7 +134,7 @@
         <tr>
           <td><span>{{$item->product->title}}</span></td>
           <td>x{{$item->quantity}}</td>
-          <td><span>${{number_format($item->price * $item->quantity,2)}}</span></td>
+          <td><span>₹{{number_format($item->price * $item->quantity,2)}}</span></td>
         </tr>
       @endforeach
       </tbody>
@@ -142,26 +142,26 @@
         <tr>
           <th scope="col" class="empty"></th>
           <th scope="col" class="text-right">Subtotal:</th>
-          <th scope="col"> <span>${{number_format($order->sub_total,2)}}</span></th>
+          <th scope="col"> <span>₹{{number_format($order->sub_total,2)}}</span></th>
         </tr>
         @if($order->tax > 0)
         <tr>
           <th scope="col" class="empty"></th>
           <th scope="col" class="text-right">Tax:</th>
-          <th scope="col"><span>${{number_format($order->tax,2)}}</span></th>
+          <th scope="col"><span>₹{{number_format($order->tax,2)}}</span></th>
         </tr>
         @endif
         <tr>
           <th scope="col" class="empty"></th>
           <th scope="col" class="text-right ">Shipping:</th>
-          <th><span>${{number_format($order->shippingcost,2)}}</span></th>
+          <th><span>₹{{number_format($order->shippingcost,2)}}</span></th>
         </tr>
         <tr>
           <th scope="col" class="empty"></th>
           <th scope="col" class="text-right">Total:</th>
           <th>
             <span>
-                ${{number_format($order->total_amount,2)}}
+                ₹{{number_format($order->total_amount,2)}}
             </span>
           </th>
         </tr>

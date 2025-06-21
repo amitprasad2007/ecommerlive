@@ -37,6 +37,7 @@ Route::get('getCateidProduct', [ProductController::class, 'getCateidProduct']);
 Route::get('getSubCateidProduct', [ProductController::class, 'getSubCateidProduct']);
 Route::get('getSubSubCateidProduct', [ProductController::class, 'getSubSubCateidProduct']);
 
+
 Route::group( [ 'middleware' => ['auth:sanctum']], function () {
     Route:: get('user', [UserController::class, 'userauth']);
     Route:: post('savecart', [OrderController::class, 'savecart']);
