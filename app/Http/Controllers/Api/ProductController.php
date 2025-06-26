@@ -47,8 +47,11 @@ class ProductController extends Controller
         // Response structure
         $response = [
             'id' => (string)$product->id,
-            'title' => $product->title,
+            'name' => $product->title,
             'brand' => $brand,
+            'cat_id' => $product->cat_id,
+            'sub_sub_cat_id' => $product->sub_child_cat_id,
+            'sub_cat_id' => $product->child_cat_id,
             'slug' => $product->slug,
             'price' => $price,
             'originalPrice' => $originalPrice,
