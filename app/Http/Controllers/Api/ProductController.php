@@ -18,7 +18,66 @@ class ProductController extends Controller
 
     public function getproductbyid($slug){
         $product = Product::getProductBySlug($slug);
-        return response()->json( $product);
+        if (!$product) {
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+
+        // Calculate rating and review count
+        $reviews = $product->getReview;
+        $reviewCount = $reviews ? $reviews->count() : 0;
+        $rating = $reviewCount > 0 ? round($reviews->avg('rate'), 1) : null;
+
+        // Images array
+        $images = $product->photoproduct->map(function($photo) {
+            // You may need to adjust the path as per your storage setup
+            return asset('storage/products/photos/thumbnails/'.$photo->photo_path);
+        })->toArray();
+
+        // Brand name
+        $brand = $product->brand ? $product->brand->title : null;
+
+        // Stock logic
+        $inStock = $product->stock > 0;
+        $stockCount = $product->stock;
+
+        // Price and original price
+        $price = $product->price;
+        $originalPrice = $product->purchase_price ?? null;
+
+        // Response structure
+        $response = [
+            'id' => (string)$product->id,
+            'title' => $product->title,
+            'brand' => $brand,
+            'slug' => $product->slug,
+            'price' => $price,
+            'originalPrice' => $originalPrice,
+            'rating' => $rating ?? 4.8, // fallback to static if not available
+            'reviewCount' => $reviewCount ?? 127, // fallback to static if not available
+            'inStock' => $inStock,
+            'stockCount' => $stockCount,
+            'sku' => $product->sku,
+            'images' => $images,
+            'shortDescription' => $product->meta_description ?? 'Professional-grade frame cutting machine with precision controls and advanced safety features.',
+            'fullDescription' => $product->description ?? 'The Professional Frame Cutter Pro 3000 represents the pinnacle of framing technology...',
+            'specifications' => [
+                'Cutting Capacity' => '48 inches',
+                'Motor Power' => '3 HP',
+                'Weight' => '450 lbs',
+                'Dimensions' => '60" x 36" x 42"',
+                'Power Requirements' => '220V, 15A',
+                'Warranty' => '3 Years',
+            ],
+            'features' => [
+                'Precision digital measurement system',
+                'Automatic dust collection',
+                'Emergency stop safety system',
+                'LED work lighting',
+                'Adjustable cutting angles',
+            ],
+        ];
+
+        return response()->json($response);
     }
 
     public function getproductbycategoryid($id){
