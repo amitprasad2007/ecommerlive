@@ -16,9 +16,9 @@ class ProductController extends Controller
         return response()->json(['products' => $products]);
     }
 
-    public function getproductbyid($id){
-        $product = Product::with('photoproduct')-> where('slug',$id)->get();
-        return response()->json(['product' => $product]);
+    public function getproductbyid($slug){
+        $product = Product::getProductBySlug($slug);
+        return response()->json([ $product]);
     }
 
     public function getproductbycategoryid($id){
