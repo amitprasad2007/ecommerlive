@@ -18,7 +18,7 @@ class ProductController extends Controller
 
     public function getproductbyid($slug){
         $product = Product::getProductBySlug($slug);
-        return response()->json([ $product]);
+        return response()->json( $product);
     }
 
     public function getproductbycategoryid($id){
