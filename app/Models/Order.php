@@ -56,4 +56,11 @@ class Order extends Model
         return $this->hasOne(Payment::class,'order_id','order_number');
     }
 
+    public static function countActiveOrder(){
+        $data=Order::count();
+        if($data){
+            return $data;
+        }
+        return 0;
+    }
 }
