@@ -120,7 +120,7 @@ class ProductController extends Controller
                 'isNew' => $recent_product->created_at >= now()->subMonth(),
             ];
         });
-        return response()->json(['product' => $result,'recent_products' => $result_12]);
+        return response()->json($result);
     }
 
     public function getis_featuredproduct() {
