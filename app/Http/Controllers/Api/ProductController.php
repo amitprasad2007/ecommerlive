@@ -85,7 +85,10 @@ class ProductController extends Controller
 
     public function getproductbycategoryid($category){
         $category = Category::where('slug', $category)->first();
-        $products = Product::with('photoproduct')-> where('cat_id', $category->id)->get();
+        $products = Product::with('photoproduct')-> where('cat_id', $category->id)
+        ->orWhere('child_cat_id', $category->id)
+        ->orWhere('sub_child_cat_id', $category->id)
+        ->get();
        // dd($products);
         $result = $products->map(function($product) {
             $photo = $product->photoproduct->first();
@@ -104,23 +107,6 @@ class ProductController extends Controller
             ];
         });
 
-        $recent_products=Product::where('status','active')->orderBy('id','DESC')->limit(8)->get();
-        $result_12 = $recent_products->map(function($recent_product) {
-            $photo_12 = $recent_product->photoproduct->first();
-            return [
-                'id' => $recent_product->id,
-                'name' => $recent_product->title,
-                'slug'=> $recent_product->slug,
-                'image' => $photo_12 ? asset('storage/products/photos/thumbnails/'.$photo_12->photo_path) : null,
-                'price' => $recent_product->price,
-                'originalPrice' => $recent_product->original_price ?? null,
-                'rating' => $recent_product->rating ?? 4,
-                'reviewCount' => $recent_product->review_count ?? 15,
-                'brand' => $recent_product->brand->title ?? null,
-                'isBestSeller' => $recent_product->is_best_seller ?? false,
-                'isNew' => $recent_product->created_at >= now()->subMonth(),
-            ];
-        });
         return response()->json($result);
     }
 
