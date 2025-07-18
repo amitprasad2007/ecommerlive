@@ -83,8 +83,9 @@ class ProductController extends Controller
         return response()->json($response);
     }
 
-    public function getproductbycategoryid($id){
-        $products = Product::with('photoproduct')-> where('cat_id', $id)->get();
+    public function getproductbycategoryid($category){
+        $category = Category::where('slug', $category)->first();
+        $products = Product::with('photoproduct')-> where('cat_id', $category->id)->get();
         $result = $products->map(function($product) {
             $photo = $product->photoproduct->first();
             return [
