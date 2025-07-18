@@ -26,7 +26,8 @@ Route::get('getcategorybyid/{id}', [CategoryController::class, 'getcategorybyid'
 Route::get('getsubcategorieslist/{id}', [CategoryController::class, 'getsubcategorieslist']);
 Route::get('getproductlist', [ProductController::class, 'getproductlist']);
 Route::get('getproductbyid/{slug}', [ProductController::class, 'getproductbyid']);
-Route::get('getproductbycategoryid/{category}', [ProductController::class, 'getproductbycategoryid']);
+Route::get('getproductbycategory/{category}', [ProductController::class, 'getproductbycategory']);
+Route::get('getproductbycategoryid/{id}', [ProductController::class, 'getproductbycategoryid']);
 Route::get('getis_featuredproduct', [ProductController::class, 'getis_featuredproduct']);
 Route::get('getbannerlist', [BannerController::class, 'getbannerlist']);
 Route::get('getbrandlist', [BrandController::class, 'getbrandlist']);

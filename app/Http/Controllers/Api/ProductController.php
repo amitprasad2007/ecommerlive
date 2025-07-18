@@ -83,7 +83,7 @@ class ProductController extends Controller
         return response()->json($response);
     }
 
-    public function getproductbycategoryid($category){
+    public function getproductbycategory($category){
 
         if($category === 'featured'){
             $products = Product::with('photoproduct')-> where('is_featured', 1)->get();
@@ -113,6 +113,31 @@ class ProductController extends Controller
             ];
         });
 
+        return response()->json($result);
+    }
+
+    public function getproductbycategoryid($id){
+        $category = Category::where('id', $id)->first();
+        $products = Product::with('photoproduct')-> where('cat_id', $category->id)
+        ->orWhere('child_cat_id', $category->id)
+        ->orWhere('sub_child_cat_id', $category->id)
+        ->paginate(9);
+        $result = $products->map(function($product) {
+            $photo = $product->photoproduct->first();
+            return [
+                'id' => $product->id,
+                'name' => $product->title,
+                'slug'=> $product->slug,
+                'image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
+                'price' => $product->price,
+                'originalPrice' => $product->original_price ?? null,
+                'rating' => $product->rating ?? 4,
+                'reviewCount' => $product->review_count ?? 15,
+                'brand' => $product->brand->title ?? null,
+                'isBestSeller' => $product->is_best_seller ?? false,
+                'isNew' => $product->created_at >= now()->subMonth(),
+            ];
+        });
         return response()->json($result);
     }
 
