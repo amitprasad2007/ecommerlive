@@ -135,10 +135,10 @@ class ProductController extends Controller
                 'reviewCount' => $product->review_count ?? 15,
                 'brand' => $product->brand->title ?? null,
                 'isBestSeller' => $product->is_best_seller ?? false,
-                'isNew' => $product->created_at >= now()->subMonth(),
-                'cat_slug' => $category->slug
+                'isNew' => $product->created_at >= now()->subMonth()
             ];
         });
+        $result['cat_slug'] = $category->slug;
         return response()->json($result);
     }
 
