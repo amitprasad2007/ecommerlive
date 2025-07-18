@@ -84,12 +84,18 @@ class ProductController extends Controller
     }
 
     public function getproductbycategoryid($category){
-        $category = Category::where('slug', $category)->first();
-        $products = Product::with('photoproduct')-> where('cat_id', $category->id)
-        ->orWhere('child_cat_id', $category->id)
-        ->orWhere('sub_child_cat_id', $category->id)
-        ->get();
-       // dd($products);
+
+        if($category === 'featured'){
+            $products = Product::with('photoproduct')-> where('is_featured', 1)->get();
+        }elseif($category === 'best-sellers'){
+            $products = Product::with('photoproduct')-> where('is_best_seller', 1)->get();
+        }else{
+            $category = Category::where('slug', $category)->first();
+            $products = Product::with('photoproduct')-> where('cat_id', $category->id)
+            ->orWhere('child_cat_id', $category->id)
+            ->orWhere('sub_child_cat_id', $category->id)
+            ->get();
+        }
         $result = $products->map(function($product) {
             $photo = $product->photoproduct->first();
             return [
