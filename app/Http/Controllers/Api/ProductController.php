@@ -221,7 +221,7 @@ class ProductController extends Controller
         });
 
         // Return both products and brands in the response
-        return response()->json([$result]);
+        return response()->json($result);
     }
 
     protected function apiBrand($productIds){
