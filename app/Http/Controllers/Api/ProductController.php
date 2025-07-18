@@ -203,12 +203,25 @@ class ProductController extends Controller
         // Retrieve brands associated with these products
         $brands = $this->apiBrand($productIds);
 
+        $result = $products->map(function($product) {
+            $photo = $product->photoproduct->first();
+            return [
+                'id' => $product->id,
+                'name' => $product->title,
+                'slug'=> $product->slug,
+                'image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
+                'price' => $product->price,
+                'originalPrice' => $product->original_price ?? null,
+                'rating' => $product->rating ?? 4,
+                'reviewCount' => $product->review_count ?? 15,
+                'brand' => $product->brand->title ?? null,
+                'isBestSeller' => $product->is_best_seller ?? false,
+                'isNew' => $product->created_at >= now()->subMonth(),
+            ];
+        });
+
         // Return both products and brands in the response
-        return response()->json([
-            'product' => $products,
-            'brands' => $brands,
-            'recent_products' => $recent_products
-        ]);
+        return response()->json([$result]);
     }
 
     protected function apiBrand($productIds){
@@ -243,7 +256,7 @@ class ProductController extends Controller
             'recent_products' => $recent_products
         ]);
     }
-    
+
     public function getSubCateidProduct(Request $request){
         $recent_products =  $recent_products = $this->apiRecentProduct();
 
