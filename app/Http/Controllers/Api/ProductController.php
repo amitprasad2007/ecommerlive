@@ -86,7 +86,7 @@ class ProductController extends Controller
     public function getproductbycategoryid($category){
         $category = Category::where('slug', $category)->first();
         $products = Product::with('photoproduct')-> where('cat_id', $category->id)->get();
-        dd($products);
+       // dd($products);
         $result = $products->map(function($product) {
             $photo = $product->photoproduct->first();
             return [
