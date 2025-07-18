@@ -191,7 +191,7 @@ class OrderController extends Controller
 
     public function orderdetails(Request $request,$orid){
         $orderdetails = Order::where('order_number',$orid)->with(['address','orderItems.product.photoproduct','payment'])->get();
-        
+
         if (!$orderdetails) {
             return response()->json(['message' => 'Order not found'], 404);
         }
@@ -239,7 +239,7 @@ class OrderController extends Controller
         $order = Order::where('order_number', $orderNumber)
             ->with(['address', 'orderItems.product.photoproduct', 'payment', 'user'])
             ->first();
-        
+
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
@@ -250,14 +250,14 @@ class OrderController extends Controller
         }
 
         $fileName = $order->order_number . '-' . $order->address->firstName . '.pdf';
-        
+
         $pdf = PDF::loadView('backend.order.pdf', compact('order'));
-        
+
         // Set UTF-8 encoding and other options to ensure proper display of special characters
         $pdf->setOption('encoding', 'UTF-8');
         $pdf->setOption('enable_font_subsetting', true);
         $pdf->setOption('default_font', 'DejaVu Sans');
-        
+
         return $pdf->download($fileName);
     }
 
@@ -272,6 +272,11 @@ class OrderController extends Controller
         } catch (Exception $e) {
             return 'Rs. ' . number_format($amount, 2);
         }
+    }
+
+    public function getorderbyuser(){
+        $orders = Order::where('user_id', auth()->user()->id)->with(['address', 'orderItems.product.photoproduct', 'payment'])->get();
+        return response()->json($orders);
     }
 
 }
