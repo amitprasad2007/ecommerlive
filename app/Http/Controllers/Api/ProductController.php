@@ -136,6 +136,7 @@ class ProductController extends Controller
                 'brand' => $product->brand->title ?? null,
                 'isBestSeller' => $product->is_best_seller ?? false,
                 'isNew' => $product->created_at >= now()->subMonth(),
+                'cat_slug' => $category->slug
             ];
         });
         return response()->json($result);
