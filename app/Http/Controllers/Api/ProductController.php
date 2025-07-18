@@ -85,8 +85,41 @@ class ProductController extends Controller
 
     public function getproductbycategoryid($id){
         $product = Product::with('photoproduct')-> where('cat_id', $id)->get();
+        $result = $products->map(function($product) {
+            $photo = $product->photoproduct->first();
+            return [
+                'id' => $product->id,
+                'name' => $product->title,
+                'slug'=> $product->slug,
+                'image' => $photo ? asset('storage/products/photos/thumbnails/'.$photo->photo_path) : null,
+                'price' => $product->price,
+                'originalPrice' => $product->original_price ?? null,
+                'rating' => $product->rating ?? 4,
+                'reviewCount' => $product->review_count ?? 15,
+                'brand' => $product->brand->title ?? null,
+                'isBestSeller' => $product->is_best_seller ?? false,
+                'isNew' => $product->created_at >= now()->subMonth(),
+            ];
+        });
+
         $recent_products=Product::where('status','active')->orderBy('id','DESC')->limit(8)->get();
-        return response()->json(['product' => $product,'recent_products' => $recent_products]);
+        $result_12 = $recent_products->map(function($recent_product) {
+            $photo_12 = $recent_product->photoproduct->first();
+            return [
+                'id' => $recent_product->id,
+                'name' => $recent_product->title,
+                'slug'=> $recent_product->slug,
+                'image' => $photo_12 ? asset('storage/products/photos/thumbnails/'.$photo_12->photo_path) : null,
+                'price' => $recent_product->price,
+                'originalPrice' => $recent_product->original_price ?? null,
+                'rating' => $recent_product->rating ?? 4,
+                'reviewCount' => $recent_product->review_count ?? 15,
+                'brand' => $recent_product->brand->title ?? null,
+                'isBestSeller' => $recent_product->is_best_seller ?? false,
+                'isNew' => $recent_product->created_at >= now()->subMonth(),
+            ];
+        });
+        return response()->json(['product' => $result,'recent_products' => $result_12]);
     }
 
     public function getis_featuredproduct() {
