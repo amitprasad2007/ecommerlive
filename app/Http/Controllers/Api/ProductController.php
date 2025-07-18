@@ -118,7 +118,7 @@ class ProductController extends Controller
 
     public function getproductbycategoryid($id){
         $category = Category::where('id', $id)->first();
-        $products = Product::with('photoproduct')-> where('cat_id', $category->id)
+        $products = Product::with(['photoproduct','cat_info'])-> where('cat_id', $category->id)
         ->orWhere('child_cat_id', $category->id)
         ->orWhere('sub_child_cat_id', $category->id)
         ->paginate(9);
@@ -135,10 +135,10 @@ class ProductController extends Controller
                 'reviewCount' => $product->review_count ?? 15,
                 'brand' => $product->brand->title ?? null,
                 'isBestSeller' => $product->is_best_seller ?? false,
-                'isNew' => $product->created_at >= now()->subMonth()
+                'isNew' => $product->created_at >= now()->subMonth(),
+                'cat_slug' => $product->cat_info->slug
             ];
         });
-        $result['cat_slug'] = $category->slug;
         return response()->json($result);
     }
 
