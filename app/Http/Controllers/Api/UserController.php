@@ -87,6 +87,22 @@ class UserController extends Controller
 
     public function updateprofile(Request $request){
         $user = Auth::user();
+        $updateaddress = AddressUser ::update([
+            'address'=>$request->address,
+            'address2'=>$request->address2,
+            'city'=>$request->city,
+            'country'=>$request->country,
+            'postal_code'=>$request->postal_code,
+            'state'=>$request->state,
+            'firstName' => $request->firstName,
+            'lastName' => $request->lastName,
+            'mobile' => $request->mobile,
+        ])->where('id',$request->addressid);
+        $user->email = $request->email;
+        $user->mobile = $request->mobile;
+        $user->name = $request->firstName." ".$request->lastName;
+        $user->save();
+        return response()->json(['message' => 'Shipping info saved successfully'], 200);
     }
 
 }
