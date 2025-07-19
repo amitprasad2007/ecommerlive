@@ -105,4 +105,14 @@ class UserController extends Controller
         return response()->json(['message' => 'Shipping info saved successfully'], 200);
     }
 
+    public function changepassword(Request $request){
+        $currentPassword = $request->currentPassword;
+        $newPassword = $request->newPassword;
+        $user = Auth::user();
+        if (Hash::check($currentPassword, $user->password)){
+            $user->password = Hash::make($newPassword);
+            $user->save();            
+        }
+        return response()->json(['message' => 'Password changed successfully'], 200);
+    }
 }

@@ -55,5 +55,6 @@ Route::group( [ 'middleware' => ['auth:sanctum']], function () {
     Route:: get('getshippinginfo', [UserController::class, 'getshippinginfo']);
     Route:: get('getorderbyuser', [OrderController::class, 'getorderbyuser']);
     Route:: post('update-profile',[UserController::class, 'updateprofile']);
+    Route:: post('change-password',[UserController::class, 'changepassword']);
 
 });
