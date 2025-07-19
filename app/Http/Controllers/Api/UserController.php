@@ -41,7 +41,7 @@ class UserController extends Controller
     
     public function userauth(){
         $user = Auth::user();
-        $address = $user->address_users; 
+        $address = $user->default_address; 
         return response()->json(['user' => $user,'address'=>$address]);
     }
 
