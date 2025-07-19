@@ -53,5 +53,7 @@ Route::group( [ 'middleware' => ['auth:sanctum']], function () {
     Route:: get('order/pdf/{orderNumber}', [OrderController::class, 'generateInvoicePdf'])->name('api.order.pdf');
     Route:: post('saveshippinginfo', [UserController::class, 'saveshippinginfo']);
     Route:: get('getshippinginfo', [UserController::class, 'getshippinginfo']);
-    Route::get('getorderbyuser', [OrderController::class, 'getorderbyuser']);
+    Route:: get('getorderbyuser', [OrderController::class, 'getorderbyuser']);
+    Route:: post('update-profile',[UserController::class, 'updateprofile']);
+
 });

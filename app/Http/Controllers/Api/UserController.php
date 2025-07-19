@@ -84,4 +84,9 @@ class UserController extends Controller
         $addressArray['email'] = $user->email;
         return response()->json(['address' => $addressArray], 200);
     }
+
+    public function updateprofile(Request $request){
+        $user = Auth::user();
+    }
+
 }
