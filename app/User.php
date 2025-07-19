@@ -46,6 +46,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\AddressUser');
     }
     public function default_address(){
-        return $this->hasMany('App\Models\AddressUser')->where('is_default',1)->first();
+        return $this->hasOne('App\Models\AddressUser')->where('is_default', 1);
     }
 }
