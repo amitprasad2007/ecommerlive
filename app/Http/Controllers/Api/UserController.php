@@ -87,17 +87,17 @@ class UserController extends Controller
 
     public function updateprofile(Request $request){
         $user = Auth::user();
-        $updateaddress = AddressUser ::update([
-            'address'=>$request->address,
-            'address2'=>$request->address2,
-            'city'=>$request->city,
-            'country'=>$request->country,
-            'postal_code'=>$request->postal_code,
-            'state'=>$request->state,
-            'firstName' => $request->firstName,
-            'lastName' => $request->lastName,
-            'mobile' => $request->mobile,
-        ])->where('id',$request->addressid);
+        $address = AddressUser::find($request->addressid);
+        $address->address=$request->address;
+        $address->address2=$request->address2;
+        $address->city=$request->city;
+        $address->country=$request->country;
+        $address->postal_code=$request->postal_code;
+        $address->state=$request->state;
+        $address->firstName=$request->firstName;
+        $address->lastName=$request->lastName;
+        $address->mobile=$request->mobile;
+        $address->save();        
         $user->email = $request->email;
         $user->mobile = $request->mobile;
         $user->name = $request->firstName." ".$request->lastName;
