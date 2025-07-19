@@ -26,6 +26,7 @@ Route::get('getcategorybyid/{id}', [CategoryController::class, 'getcategorybyid'
 Route::get('getsubcategorieslist/{id}', [CategoryController::class, 'getsubcategorieslist']);
 Route::get('getproductlist', [ProductController::class, 'getproductlist']);
 Route::get('getproductbyid/{slug}', [ProductController::class, 'getproductbyid']);
+Route::get('getproductbycategory/{category}', [ProductController::class, 'getproductbycategory']);
 Route::get('getproductbycategoryid/{id}', [ProductController::class, 'getproductbycategoryid']);
 Route::get('getis_featuredproduct', [ProductController::class, 'getis_featuredproduct']);
 Route::get('getbannerlist', [BannerController::class, 'getbannerlist']);
@@ -52,4 +53,5 @@ Route::group( [ 'middleware' => ['auth:sanctum']], function () {
     Route:: get('order/pdf/{orderNumber}', [OrderController::class, 'generateInvoicePdf'])->name('api.order.pdf');
     Route:: post('saveshippinginfo', [UserController::class, 'saveshippinginfo']);
     Route:: get('getshippinginfo', [UserController::class, 'getshippinginfo']);
+    Route::get('getorderbyuser', [OrderController::class, 'getorderbyuser']);
 });
