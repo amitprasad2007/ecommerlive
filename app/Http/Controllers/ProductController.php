@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\PhotoProduct;
+use App\Models\ProductSpecification;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -322,9 +323,34 @@ class ProductController extends Controller
     public function viewProduct(Product $product)
     {
         $categories = Category::where('is_parent', 1)->get();
-        //dd($product->cat_info->title);
         $photoproduct = PhotoProduct::where('product_id', $product->id)->get();
-        return view('backend.product.viewproduct', compact('product','photoproduct'))->with('categories',$categories);
+        $specifications = ProductSpecification::where('product_id', $product->id)->get();
+        return view('backend.product.viewproduct', compact('product','photoproduct','specifications'))->with('categories',$categories);
+    }
+
+    public function specifications(Request $request, Product $product)
+    {
+      // dd($request->all());
+       $keys = $request->input('spec_key', []);
+       $values = $request->input('spec_value', []);
+       $product_id = $product->id; // or get it from route
+
+       foreach ($keys as $i => $key) {
+           if (!empty($key) && isset($values[$i]) && !empty($values[$i])) {
+               ProductSpecification::create([
+                    'product_id' => $product_id,
+                    'name' => $key,
+                   'value' => $values[$i],
+               ]);
+           }
+       }
+       return redirect()->back()->with('success', 'Specifications added successfully.');
+    }
+    public function removeSpecification($id)
+    {
+        $specification = ProductSpecification::find($id);
+        $specification->delete();
+        return redirect()->back()->with('success', 'Specification removed successfully.');
     }
 
 

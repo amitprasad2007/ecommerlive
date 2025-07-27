@@ -172,6 +172,8 @@ Route::get('/test-logging', function () {
 
         Route::match(['get', 'post', 'patch'], '/product/manage/{id?}', [ProductController::class, 'manageProduct'])->name('product.manage');
         Route::get('/product/view/{product}', [ProductController::class, 'viewProduct'])->name('product.view');
+        Route::post('/product/specifications/{product}', [ProductController::class, 'specifications'])->name('product.specifications');
+        Route::delete('/product/specifications/remove/{id}', [ProductController::class, 'removeSpecification'])->name('product.specifications.remove');
         Route::resource('/product', ProductController::class)->except(['create', 'edit', 'update', 'store']);
 
         // Ajax for sub category

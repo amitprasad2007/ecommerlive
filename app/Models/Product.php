@@ -55,5 +55,10 @@ class Product extends Model
         $photo = $this->hasMany(PhotoProduct::class)->pluck('photo_path')->toArray();
         return implode(',', $photo);
     }
+
+    public function specifications()
+    {
+        return $this->hasMany(ProductSpecification::class);
+    }
 }
 
