@@ -319,5 +319,13 @@ class ProductController extends Controller
     return response()->json(['success' => true, 'message' => 'Photo deleted successfully.']);
 }
 
+    public function viewProduct(Product $product)
+    {
+        $categories = Category::where('is_parent', 1)->get();
+        //dd($product->cat_info->title);
+        $photoproduct = PhotoProduct::where('product_id', $product->id)->get();
+        return view('backend.product.viewproduct', compact('product','photoproduct'))->with('categories',$categories);
+    }
+
 
 }

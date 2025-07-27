@@ -36,7 +36,7 @@ Route::get('/test-logging', function () {
     | contains the "web" middleware group. Now create something great!
     |
     */
- 
+
 
     // CACHE CLEAR ROUTE
     Route::get('cache-clear', function () {
@@ -169,10 +169,11 @@ Route::get('/test-logging', function () {
         Route::post('/products/bulk-upload', [ProductController::class, 'bulkUpload'])->name('product.bulkUpload');
         Route::delete('/products/bulk-delete', [ProductController::class, 'bulkDelete'])->name('product.bulkDelete');
         Route::delete('/product/photos/delete/{id}', [ProductController::class, 'photoDelete'])->name('photos.delete');
-       
+
         Route::match(['get', 'post', 'patch'], '/product/manage/{id?}', [ProductController::class, 'manageProduct'])->name('product.manage');
+        Route::get('/product/view/{product}', [ProductController::class, 'viewProduct'])->name('product.view');
         Route::resource('/product', ProductController::class)->except(['create', 'edit', 'update', 'store']);
-       
+
         // Ajax for sub category
         Route::post('/category/{id}/child', 'CategoryController@getChildByParent');
         Route::post('/category/{id}/subchild', 'CategoryController@getSubChildCategories');

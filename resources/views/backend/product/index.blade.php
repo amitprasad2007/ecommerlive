@@ -108,6 +108,7 @@
                   </td>
                   <td>
                       <a href="{{route('product.manage',$product->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit" data-placement="bottom"><i class="fas fa-edit"></i></a>
+                      <a href="{{route('product.view',$product->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="view" data-placement="bottom"><i class="fas fa-eye"></i></a>
                   <form method="POST" action="{{route('product.destroy',[$product->id])}}">
                     @csrf
                     @method('delete')
@@ -116,11 +117,11 @@
                   </td>
               </tr>
           @endforeach
-        </tbody>         
+        </tbody>
       </table>
       <div class="d-flex justify-content-end mt-3" >
         {{$products->links()}}
-      </div>      
+      </div>
       @else
         <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
           <h6 class="text-center m-0">No Products found! Please create a Product.</h6>
