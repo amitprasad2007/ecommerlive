@@ -57,7 +57,7 @@
         <form method="post" action="{{ $product ? route('product.manage', $product->id) : route('product.manage') }}" enctype="multipart/form-data">
             {{csrf_field()}}
 
-         
+
             <div class="form-group">
                 <label for="inputTitle" class="font-weight-bold">Product Name <span class="text-danger">*</span></label>
                 <input id="inputTitle" type="text" name="title" placeholder="Enter title" value="{{ old('title', $product->title ?? '') }}" class="form-control">
@@ -79,14 +79,14 @@
                 <span class="text-danger">{{$message}}</span>
                 @enderror
             </div>
-           
+
             <div class="row">
                 <div class="col-md-4">
                 <div class="form-group">
                     <label for="is_featured" class="font-weight-bold">Is Featured</label><br>
                     <input type="checkbox" name='is_featured' id='is_featured' value='1' {{ old('is_featured', $product->is_featured ?? 0) ? 'checked' : '' }}> Yes
                 </div>
-                </div>    
+                </div>
                 <div class="col-md-4">
                 <div class="form-group">
                     <label class="font-weight-bold" for="todays_deal" >Today's Deal </label>
@@ -110,7 +110,7 @@
             </div>
             </div>
 
-          
+
 
             <div class="form-group">
                 <label for="cat_id" class="font-weight-bold">Category <span class="text-danger">*</span></label>
@@ -142,7 +142,7 @@
                     @endforeach
                 </select>
             </div>
- 
+
             <div class="form-group {{ old('sub_child_cat_id', $product->sub_child_cat_id ?? '') ? '' : 'd-none' }}" id="sub_child_cat_div">
                 <label for="sub_child_cat_id" class="font-weight-bold">Sub Sub Category</label>
                 <select name="sub_child_cat_id" id="sub_child_cat_id" class="form-control">
@@ -155,7 +155,7 @@
                 </select>
             </div>
 
-              
+
     <div class="row">
     <div class="col-md-6">
             <div class="form-group">
@@ -181,11 +181,11 @@
                 @enderror
             </div>
         </div>
-   
-     
+
+
                </div>
-         
-           
+
+
     <div class="row">
     <div class="col-md-6">
             <div class="form-group">
@@ -199,7 +199,7 @@
         <!-- Purchase Price -->
         <div class="col-md-6">
             <div class="form-group">
-                <label for="purchase_price" class="font-weight-bold">Purchase Price <span class="text-danger">*</span></label>
+                <label for="purchase_price" class="font-weight-bold">MRP <span class="text-danger">*</span></label>
                 <input id="purchase_price" type="number" name="purchase_price" min="0" placeholder="Enter Purchase Price" value="{{ old('price', $product->purchase_price ?? '') }}" class="form-control">
                 @error('purchase_price')
                 <span class="text-danger">{{ $message }}</span>
@@ -207,7 +207,7 @@
             </div>
         </div>
 
-     
+
     </div>
 
 
@@ -293,11 +293,11 @@
             </div>
         </div>
     </div>
- 
-  
+
+
 
             <!-- Product Videos Field -->
-            <div class="row"> 
+            <div class="row">
             <div class="col-md-6">
              <div class="form-group">
                 <label for="video_provider_id" class="font-weight-bold">Product Video Provider</label>
@@ -306,7 +306,7 @@
                         <select name="video_provider_id" id="video_provider_id" class="form-control">
                             <option value="">-- Select Video Provider --</option>
                             @foreach($videoproviders as $videoprovider)
-                                <option value="{{ $videoprovider->id }}" 
+                                <option value="{{ $videoprovider->id }}"
                                     {{ old('video_provider_id', $product->video_provider_id ?? '') == $videoprovider->id ? 'selected' : '' }}>
                                     {{ $videoprovider->name }}
                                 </option>
@@ -334,7 +334,7 @@
             </div>
             </div>
             </div>
-            
+
 
 
             <div class="form-group">
@@ -392,7 +392,7 @@
             <a href="{{route('product.index')}}" class="btn btn-warning">Back</a>
             <button class="btn btn-success" type="submit">Submit</button>
             </div>
- 
+
 
         </form>
     </div>
@@ -491,10 +491,10 @@
     });
 
  var  sub_child_cat_id='{{$product->sub_child_cat_id ?? "" }}';
- 
+
     $('#child_cat_id').change(function() {
         var child_cat_id = $(this).val();
-        
+
         if (child_cat_id != null) {
             $.ajax({
                 url: customVariable + "/admin/category/" + child_cat_id + "/subchild",
@@ -526,12 +526,12 @@
             });
         }
     });
-    
+
 //     if(sub_child_cat_id!=null){
 //       $('#child_cat_id').change();
 //   }
 
- 
+
 
 </script>
 
@@ -554,7 +554,7 @@
                     buttons: true,
                     dangerMode: true,
                 }).then((willDelete) => {
-                    if (willDelete) { 
+                    if (willDelete) {
                         const deleteUrl = `{{ route('photos.delete', ':id') }}`.replace(':id', photoId);
 
                         fetch(deleteUrl, {
@@ -566,7 +566,7 @@
                             })
                             .then((response) => response.json())
                             .then((data) => {
-                                if (data.success) { 
+                                if (data.success) {
                                     const photoItem = document.getElementById(`photo-${photoId}`);
                                     photoItem.remove();
                                     swal("Photo deleted successfully!", {

@@ -122,7 +122,7 @@
                 @enderror
             </div>
             <div class="form-group">
-                <label for="purchase_price">Purchase price <span class="text-danger">*</span></label>
+                <label for="purchase_price">MRP <span class="text-danger">*</span></label>
                 <input id="purchase_price" type="number" name="purchase_price" min="0" placeholder="Enter Purchase price" value="{{old('purchase_price')}}" class="form-control">
                 @error('purchase_price')
                 <span class="text-danger">{{$message}}</span>
@@ -146,7 +146,7 @@
                 <div class="col-lg-12">
                     <input type="text" id="tags" class="form-control p-2 col-md-5" style="width: fit-content" name="tags[]" placeholder="Type to add a tag" data-role="tagsinput" value="{{ old('tags') ? implode(',', old('tags')) : '' }}">
                 </div>
-                
+
                 @error('tags.0')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -263,7 +263,7 @@
                 <span class="text-danger">{{$message}}</span>
                 @enderror
             </div>
-            
+
             <div class="form-group">
                 <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
                 <select name="status" class="form-control">
@@ -318,7 +318,7 @@
 </script>
 
 <script>
- var customVariable = "{{ config('app.url') }}";      
+ var customVariable = "{{ config('app.url') }}";
 $('#cat_id').change(function() {
         var cat_id = $(this).val();
         if (cat_id != null) {
