@@ -62,20 +62,6 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="title">Short Description</label>
-                    <textarea class="form-control" id="description" name="description" readonly>{{$product->description}}</textarea>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="title">Meta Description</label>
-                    <textarea class="form-control" id="description" name="description" readonly>{{$product->meta_description}}</textarea>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
                     <label for="title">Additional Specification</label>
                     <table class="table table-bordered">
                         <thead>
