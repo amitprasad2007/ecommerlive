@@ -69,13 +69,13 @@ class BannerController extends Controller
         // Generate categoryurl based on the most specific category present
         if ($request->sub_child_cat_id) {
             $category = \App\Models\Category::find($request->sub_child_cat_id);
-            $data['categoryurl'] = $category ? route('product-sub-cat', [$category->parent_info->slug ?? '', $category->slug]) : null;
+            $data['categoryurl'] = $category ? $category->slug : null;
         } elseif ($request->child_cat_id) {
             $category = \App\Models\Category::find($request->child_cat_id);
-            $data['categoryurl'] = $category ? route('product-sub-cat', [$category->parent_info->slug ?? '', $category->slug]) : null;
+            $data['categoryurl'] = $category ? $category->slug : null;
         } elseif ($request->cat_id) {
             $category = \App\Models\Category::find($request->cat_id);
-            $data['categoryurl'] = $category ? route('product-cat', $category->slug) : null;
+            $data['categoryurl'] = $category ? $category->slug : null;
         } else {
             $data['categoryurl'] = null;
         }
