@@ -17,6 +17,37 @@
         </div>
 
         <div class="form-group">
+            <label for="cat_id">Category <span class="text-danger">*</span></label>
+            <select name="cat_id" id="cat_id" class="form-control">
+                <option value="">--Select any category--</option>
+                @foreach($categories as $key=>$cat_data)
+                <option value='{{$cat_data->id}}'>{{$cat_data->title}}</option>
+                @endforeach
+            </select>
+        </div>
+        @error('cat_id')
+            <span class="text-danger">{{$message}}</span>
+            @enderror
+        <div class="form-group d-none" id="child_cat_div">
+            <label for="child_cat_id">Sub Category</label>
+            <select name="child_cat_id" id="child_cat_id" class="form-control">
+                <option value="">--Select any category--</option>
+            </select>
+        </div>
+        @error('child_cat_id')
+            <span class="text-danger">{{$message}}</span>
+            @enderror
+        <div class="form-group d-none" id="sub_child_cat_div">
+            <label for="sub_child_cat_id">Sub Sub Category</label>
+            <select name="sub_child_cat_id" id="sub_child_cat_id" class="form-control">
+                <option value="">--Select any category--</option>
+            </select>
+            @error('sub_child_cat_id')
+            <span class="text-danger">{{$message}}</span>
+            @enderror
+        </div>
+
+        <div class="form-group">
           <label for="inputDesc" class="col-form-label">Description</label>
           <textarea class="form-control" id="description" name="description">{{old('description')}}</textarea>
           @error('description')
@@ -105,4 +136,75 @@
         });
     }
 </script>
+
+<script>
+    var customVariable = "{{ config('app.url') }}";
+   $('#cat_id').change(function() {
+           var cat_id = $(this).val();
+           if (cat_id != null) {
+               $.ajax({
+                   url: customVariable +"/admin/category/" + cat_id + "/child",
+                   data: {
+                       _token: "{{csrf_token()}}",
+                       id: cat_id
+                   },
+                   type: "POST",
+                   success: function(response) {
+                       if (typeof(response) != 'object') {
+                           response = $.parseJSON(response)
+                       }
+                       var html_option = "<option value=''>----Select sub category----</option>"
+                       if (response.status) {
+                           var data = response.data;
+                           if (data) {
+                               $('#child_cat_div').removeClass('d-none');
+                               $.each(data, function(id, title) {
+                                   html_option += "<option value='" + id + "'>" + title + "</option>"
+                               });
+                           } else {
+                               $('#child_cat_div').addClass('d-none');
+                           }
+                       } else {
+                           $('#child_cat_div').addClass('d-none');
+                       }
+                       $('#child_cat_id').html(html_option);
+                   }
+               });
+           }
+       });
+   
+       $('#child_cat_id').change(function() {
+           var child_cat_id = $(this).val();
+           if (child_cat_id != null) {
+               $.ajax({
+                   url: customVariable +"/admin/category/" + child_cat_id + "/subchild",
+                   data: {
+                       _token: "{{csrf_token()}}",
+                       id: child_cat_id
+                   },
+                   type: "POST",
+                   success: function(response) {
+                       if (typeof(response) != 'object') {
+                           response = $.parseJSON(response)
+                       }
+                       var html_option = "<option value=''>----Select sub sub category----</option>"
+                       if (response.status) {
+                           var data = response.data;
+                           if (data) {
+                               $('#sub_child_cat_div').removeClass('d-none');
+                               $.each(data, function(id, title) {
+                                   html_option += "<option value='" + id + "'>" + title + "</option>"
+                               });
+                           } else {
+                               $('#sub_child_cat_div').addClass('d-none');
+                           }
+                       } else {
+                           $('#sub_child_cat_div').addClass('d-none');
+                       }
+                       $('#sub_child_cat_id').html(html_option);
+                   }
+               });
+           }
+       });
+   </script>
 @endpush

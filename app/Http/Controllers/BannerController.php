@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Banner;
+use App\Models\Category;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+
 class BannerController extends Controller
 {
     /**
@@ -28,7 +30,8 @@ class BannerController extends Controller
      */
     public function create()
     {
-        return view('backend.banner.create');
+        $category=Category::where('is_parent',1)->get();
+        return view('backend.banner.create')->with('categories',$category);
     }
 
     /**
@@ -39,26 +42,50 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         $this->validate($request,[
             'title'=>'string|required|max:50',
             'description'=>'string|nullable',
             'photo' => 'required|image|max:2048',
             'status'=>'required|in:active,inactive',
+            // At least one category must be present
+            'cat_id' => 'nullable|integer|exists:categories,id',
+            'child_cat_id' => 'nullable|integer|exists:categories,id',
+            'sub_child_cat_id' => 'nullable|integer|exists:categories,id',
         ]);
-        $data=$request->all();
-        $slug=Str::slug($request->title);
-        $count=Banner::where('slug',$slug)->count();
-        if($count>0){
-            $slug=$slug.'-'.date('ymdis').'-'.rand(0,999);
+
+        // Ensure at least one category is present
+        if (!$request->cat_id && !$request->child_cat_id && !$request->sub_child_cat_id) {
+            return back()->withErrors(['cat_id' => 'At least one category must be selected.'])->withInput();
         }
-        $data['slug']=$slug;
-           // Handle photo upload
+
+        $data = $request->all();
+        $slug = Str::slug($request->title);
+        $count = Banner::where('slug', $slug)->count();
+        if ($count > 0) {
+            $slug = $slug . '-' . date('ymdis') . '-' . rand(0, 999);
+        }
+        $data['slug'] = $slug;
+
+        // Generate categoryurl based on the most specific category present
+        if ($request->sub_child_cat_id) {
+            $category = \App\Models\Category::find($request->sub_child_cat_id);
+            $data['categoryurl'] = $category ? route('product-sub-cat', [$category->parent_info->slug ?? '', $category->slug]) : null;
+        } elseif ($request->child_cat_id) {
+            $category = \App\Models\Category::find($request->child_cat_id);
+            $data['categoryurl'] = $category ? route('product-sub-cat', [$category->parent_info->slug ?? '', $category->slug]) : null;
+        } elseif ($request->cat_id) {
+            $category = \App\Models\Category::find($request->cat_id);
+            $data['categoryurl'] = $category ? route('product-cat', $category->slug) : null;
+        } else {
+            $data['categoryurl'] = null;
+        }
+
+        // Handle photo upload
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
             $filename = uniqid() . '.webp';
             $originalPath = $filename;
-            $thumbnailPath = 'photos/1/Banner/'.$filename;
+            $thumbnailPath = 'photos/1/Banner/' . $filename;
             $image = Image::make($file)->encode('webp');
             Storage::disk('public')->put($originalPath, $image);
 
@@ -71,12 +98,11 @@ class BannerController extends Controller
             Storage::disk('public')->put($thumbnailPath, $thumbnail);
             $data['photo'] = $originalPath;
         }
-        $status=Banner::create($data);
-        if($status){
-            request()->session()->flash('success','Banner successfully added');
-        }
-        else{
-            request()->session()->flash('error','Error occurred while adding banner');
+        $status = Banner::create($data);
+        if ($status) {
+            request()->session()->flash('success', 'Banner successfully added');
+        } else {
+            request()->session()->flash('error', 'Error occurred while adding banner');
         }
         return redirect()->route('banner.index');
     }
