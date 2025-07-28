@@ -7,4 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Banner extends Model
 {
     protected $fillable=['title','slug','description','photo','status','categoryurl'];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'categoryurl', 'slug');
+    }
 }

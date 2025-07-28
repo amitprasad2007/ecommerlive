@@ -126,8 +126,24 @@ class BannerController extends Controller
      */
     public function edit($id)
     {
-        $banner=Banner::findOrFail($id);
-        return view('backend.banner.edit')->with('banner',$banner);
+        $banner=Banner::with('category')->findOrFail($id);
+        $parent_cats= Category::where('is_parent',1)->get();
+
+        // Get subcategories where parent_id is not 0 and parent has is_parent = 1
+        $sub_cats = Category::where('parent_id', '!=', 0)
+            ->whereHas('parent_info', function($query) {
+                $query->where('is_parent', 1);
+            })
+            ->get();
+
+        // Get sub-subcategories where sub_cat_id is not 0 and sub-category has parent_id != 0
+        $sub_sub_cats = Category::where('sub_cat_id', '!=', 0)
+            ->whereHas('sub_parent_info', function($query) {
+                $query->where('parent_id', '!=', 0);
+            })
+            ->get();
+
+        return view('backend.banner.edit', compact('banner', 'parent_cats', 'sub_cats', 'sub_sub_cats'));
     }
 
     /**

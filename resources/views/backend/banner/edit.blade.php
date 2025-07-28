@@ -15,7 +15,38 @@
         <span class="text-danger">{{$message}}</span>
         @enderror
         </div>
+        <div class="form-group">
+            <label for="cat_id">Category <span class="text-danger">*</span></label>
+            <select name="cat_id" id="cat_id" class="form-control">
+                <option value="">--Select any category--</option>
+                @foreach($parent_cats as $key=>$cat_data)
+                <option value='{{$cat_data->id}}' {{(($banner->categoryurl==$cat_data->slug)? 'selected' : '')}}>{{$cat_data->title}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="cat_id">Sub Category <span class="text-danger">*</span></label>
+            <select name="cat_id" id="cat_id" class="form-control">
+                <option value="">--Select any category--</option>
+                @foreach($sub_cats as $key=>$cat_data)
+                <option value='{{$cat_data->id}}' {{(($banner->categoryurl==$cat_data->slug)? 'selected' : '')}}>{{$cat_data->title}}</option>
+                @endforeach
+            </select>
+        </div>
 
+        <div class="form-group">
+            <label for="cat_id">Sub Sub Category <span class="text-danger">*</span></label>
+            <select name="cat_id" id="cat_id" class="form-control">
+                <option value="">--Select any category--</option>
+                @foreach($sub_sub_cats as $key=>$cat_data)
+                <option value='{{$cat_data->id}}' {{(($banner->categoryurl==$cat_data->slug)? 'selected' : '')}}>{{$cat_data->title}}</option>
+                @endforeach
+            </select>
+        </div>
+
+        @error('cat_id')
+            <span class="text-danger">{{$message}}</span>
+            @enderror
         <div class="form-group">
           <label for="inputDesc" class="col-form-label">Description</label>
           <textarea class="form-control" id="description" name="description">{{$banner->description}}</textarea>
