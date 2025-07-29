@@ -143,5 +143,74 @@
             reader.readAsDataURL(file);
         });
     }
+
+    var customVariable = "{{ config('app.url') }}";
+   $('#cat_id').change(function() {
+           var cat_id = $(this).val();
+           if (cat_id != null) {
+               $.ajax({
+                   url: customVariable +"/admin/category/" + cat_id + "/child",
+                   data: {
+                       _token: "{{csrf_token()}}",
+                       id: cat_id
+                   },
+                   type: "POST",
+                   success: function(response) {
+                       if (typeof(response) != 'object') {
+                           response = $.parseJSON(response)
+                       }
+                       var html_option = "<option value=''>----Select sub category----</option>"
+                       if (response.status) {
+                           var data = response.data;
+                           if (data) {
+                               $('#child_cat_div').removeClass('d-none');
+                               $.each(data, function(id, title) {
+                                   html_option += "<option value='" + id + "'>" + title + "</option>"
+                               });
+                           } else {
+                               $('#child_cat_div').addClass('d-none');
+                           }
+                       } else {
+                           $('#child_cat_div').addClass('d-none');
+                       }
+                       $('#child_cat_id').html(html_option);
+                   }
+               });
+           }
+       });
+   
+       $('#child_cat_id').change(function() {
+           var child_cat_id = $(this).val();
+           if (child_cat_id != null) {
+               $.ajax({
+                   url: customVariable +"/admin/category/" + child_cat_id + "/subchild",
+                   data: {
+                       _token: "{{csrf_token()}}",
+                       id: child_cat_id
+                   },
+                   type: "POST",
+                   success: function(response) {
+                       if (typeof(response) != 'object') {
+                           response = $.parseJSON(response)
+                       }
+                       var html_option = "<option value=''>----Select sub sub category----</option>"
+                       if (response.status) {
+                           var data = response.data;
+                           if (data) {
+                               $('#sub_child_cat_div').removeClass('d-none');
+                               $.each(data, function(id, title) {
+                                   html_option += "<option value='" + id + "'>" + title + "</option>"
+                               });
+                           } else {
+                               $('#sub_child_cat_div').addClass('d-none');
+                           }
+                       } else {
+                           $('#sub_child_cat_div').addClass('d-none');
+                       }
+                       $('#sub_child_cat_id').html(html_option);
+                   }
+               });
+           }
+       });
 </script>
 @endpush
