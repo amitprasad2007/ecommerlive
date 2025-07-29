@@ -131,16 +131,12 @@ class BannerController extends Controller
 
         // Get subcategories where parent_id is not 0 and parent has is_parent = 1
         $sub_cats = Category::where('parent_id', '!=', 0)
-            ->whereHas('parent_info', function($query) {
-                $query->where('is_parent', 1);
-            })
+            ->where('is_parent',0)
+            ->where ('sub_cat_id', 0)
             ->get();
 
         // Get sub-subcategories where sub_cat_id is not 0 and sub-category has parent_id != 0
-        $sub_sub_cats = Category::where('sub_cat_id', '!=', 0)
-            ->whereHas('sub_parent_info', function($query) {
-                $query->where('parent_id', '!=', 0);
-            })
+        $sub_sub_cats = Category::where('sub_cat_id', '!=', 0)            
             ->get();
 
         return view('backend.banner.edit', compact('banner', 'parent_cats', 'sub_cats', 'sub_sub_cats'));
@@ -161,8 +157,42 @@ class BannerController extends Controller
             'description'=>'string|nullable',
             'photo' => 'required|image|max:2048',
             'status'=>'required|in:active,inactive',
+            // At least one category must be present
+            'cat_id' => 'nullable|integer|exists:categories,id',
+            'child_cat_id' => 'nullable|integer|exists:categories,id',
+            'sub_child_cat_id' => 'nullable|integer|exists:categories,id',
         ]);
+
+         // Ensure at least one category is present
+         if (!$request->cat_id && !$request->child_cat_id && !$request->sub_child_cat_id) {
+            return back()->withErrors(['cat_id' => 'At least one category must be selected.'])->withInput();
+        }
+
+
         $data=$request->all();
+
+        $slug = Str::slug($request->title);
+        $count = Banner::where('slug', $slug)->count();
+        if ($count > 0) {
+            $slug = $slug . '-' . date('ymdis') . '-' . rand(0, 999);
+        }
+        $data['slug'] = $slug;
+
+        // Generate categoryurl based on the most specific category present
+        if ($request->sub_child_cat_id) {
+            $category = \App\Models\Category::find($request->sub_child_cat_id);
+            $data['categoryurl'] = $category ? $category->slug : null;
+        } elseif ($request->child_cat_id) {
+            $category = \App\Models\Category::find($request->child_cat_id);
+            $data['categoryurl'] = $category ? $category->slug : null;
+        } elseif ($request->cat_id) {
+            $category = \App\Models\Category::find($request->cat_id);
+            $data['categoryurl'] = $category ? $category->slug : null;
+        } else {
+            $data['categoryurl'] = null;
+        }
+
+
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
             $filename = uniqid() . '.webp';

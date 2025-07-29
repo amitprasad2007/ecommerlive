@@ -25,8 +25,8 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="cat_id">Sub Category <span class="text-danger">*</span></label>
-            <select name="cat_id" id="cat_id" class="form-control">
+            <label for="child_cat_id">Sub Category <span class="text-danger">*</span></label>
+            <select name="child_cat_id" id="child_cat_id" class="form-control">
                 <option value="">--Select any category--</option>
                 @foreach($sub_cats as $key=>$cat_data)
                 <option value='{{$cat_data->id}}' {{(($banner->categoryurl==$cat_data->slug)? 'selected' : '')}}>{{$cat_data->title}}</option>
@@ -35,8 +35,8 @@
         </div>
 
         <div class="form-group">
-            <label for="cat_id">Sub Sub Category <span class="text-danger">*</span></label>
-            <select name="cat_id" id="cat_id" class="form-control">
+            <label for="sub_child_cat_id">Sub Sub Category <span class="text-danger">*</span></label>
+            <select name="sub_child_cat_id" id="sub_child_cat_id" class="form-control">
                 <option value="">--Select any category--</option>
                 @foreach($sub_sub_cats as $key=>$cat_data)
                 <option value='{{$cat_data->id}}' {{(($banner->categoryurl==$cat_data->slug)? 'selected' : '')}}>{{$cat_data->title}}</option>
