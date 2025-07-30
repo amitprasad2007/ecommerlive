@@ -32,16 +32,16 @@ class UserController extends Controller
                     $token = $user->createToken('authToken')->plainTextToken;
                     return response()->json(['token' => $token]);
                 } else {
-                    return response()->json(['message' => 'Invalid email or password'], 401);
+                    return response()->json(['message' => 'Invalid mobile or password'], 401);
                 }
             }
             return response()->json(['message' => 'please send password'], 200);
         }
     }
-    
+
     public function userauth(){
         $user = Auth::user();
-        $address = $user->default_address; 
+        $address = $user->default_address;
         return response()->json(['user' => $user,'address'=>$address]);
     }
 
@@ -97,7 +97,7 @@ class UserController extends Controller
         $address->firstName=$request->firstName;
         $address->lastName=$request->lastName;
         $address->mobile=$request->mobile;
-        $address->save();        
+        $address->save();
         $user->email = $request->email;
         $user->mobile = $request->mobile;
         $user->name = $request->firstName." ".$request->lastName;
@@ -111,7 +111,7 @@ class UserController extends Controller
         $user = Auth::user();
         if (Hash::check($currentPassword, $user->password)){
             $user->password = Hash::make($newPassword);
-            $user->save();            
+            $user->save();
         }
         return response()->json(['message' => 'Password changed successfully'], 200);
     }
