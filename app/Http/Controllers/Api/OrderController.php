@@ -251,14 +251,11 @@ class OrderController extends Controller
 
         $fileName = $order->order_number . '-' . $order->address->firstName . '.pdf';
 
-        $pdf = PDF::loadView('backend.order.pdf', compact('order'));
-
-        // Set UTF-8 encoding and other options to ensure proper display of special characters
-        $pdf->setOption('encoding', 'UTF-8');
-        $pdf->setOption('enable_font_subsetting', true);
-        $pdf->setOption('default_font', 'DejaVu Sans');
-
-        return $pdf->download($fileName);
+        $order=Order::getAllOrder($order->id);
+        $file_name=$order->order_number.'-'.$order->address->firstName.'.pdf';
+        $pdf=PDF::loadview('user.order.pdf',compact('order'));
+        return $pdf->download($file_name);
+        
     }
 
     /**
