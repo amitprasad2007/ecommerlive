@@ -339,8 +339,10 @@
 
             <div class="form-group">
                 <label for="image" class="font-weight-bold">Product Image</label>
-                <input type="file" name="photo[]" id="thumbnail" class="form-control" onchange="previewImages(event)" multiple>
-                <div id="image-previews"></div>
+                <input type="file" id="image-selector" multiple accept="image/*" onchange="handleFileSelect(event)" hidden>
+                <button type="button" onclick="document.getElementById('image-selector').click()">Choose Image</button>
+                <div id="image-previews" style="margin-top: 10px;"></div>
+                <div id="file-inputs-container"></div>
                 <div style="margin-top: 10px;">
                     <div class="row" id="photo-container">
                         @forelse($product->photoproduct ?? [] as $photo)
@@ -433,25 +435,91 @@
     });
 </script>
 <script>
-    function previewImages(event) {
-        const previewContainer = document.getElementById('image-previews');
-        previewContainer.innerHTML = '';
-        const files = event.target.files;
+let selectedFiles = [];
+let fileIdCounter = 0;
 
-        Array.from(files).forEach(file => {
-            const reader = new FileReader();
+function handleFileSelect(event) {
+    const files = event.target.files;
 
-            reader.onload = function(e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.style.maxWidth = '150px';
-                img.style.margin = '5px';
-                previewContainer.appendChild(img);
-            }
+    for (let file of files) {
+        if (selectedFiles.some(f => f.name === file.name && f.lastModified === file.lastModified)) continue;
 
-            reader.readAsDataURL(file);
-        });
+        const fileId = 'file_' + fileIdCounter++;
+        selectedFiles.push({ file, id: fileId });
+
+        previewFile(file, fileId);
+        appendFileInput(file, fileId);
     }
+
+    event.target.value = '';
+}
+
+function previewFile(file, fileId) {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        const wrapper = document.createElement('div');
+        wrapper.id = 'preview-' + fileId;
+        wrapper.style.display = 'inline-block';
+        wrapper.style.position = 'relative';
+        wrapper.style.margin = '5px';
+
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.maxWidth = '120px';
+        img.style.border = '1px solid #ccc';
+        img.style.borderRadius = '4px';
+
+        const removeBtn = document.createElement('button');
+        removeBtn.innerText = '×';
+        removeBtn.style.position = 'absolute';
+        removeBtn.style.top = '0';
+        removeBtn.style.right = '0';
+        removeBtn.style.background = 'red';
+        removeBtn.style.color = 'white';
+        removeBtn.style.border = 'none';
+        removeBtn.style.cursor = 'pointer';
+        removeBtn.style.borderRadius = '0 4px 0 4px';
+        removeBtn.style.padding = '2px 6px';
+        removeBtn.onclick = () => removeImage(fileId);
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(removeBtn);
+
+        document.getElementById('image-previews').appendChild(wrapper);
+    }
+
+    reader.readAsDataURL(file);
+}
+
+function appendFileInput(file, fileId) {
+    const container = document.getElementById('file-inputs-container');
+
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file);
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.name = 'photo[]';
+    input.files = dataTransfer.files;
+    input.id = 'input-' + fileId;
+    input.style.display = 'none';
+
+    container.appendChild(input);
+}
+
+function removeImage(fileId) {
+    // Remove from selectedFiles array
+    selectedFiles = selectedFiles.filter(item => item.id !== fileId);
+
+    // Remove preview
+    const preview = document.getElementById('preview-' + fileId);
+    if (preview) preview.remove();
+
+    // Remove corresponding hidden file input
+    const input = document.getElementById('input-' + fileId);
+    if (input) input.remove();
+}
 </script>
 <script>
     var customVariable = "{{ config('app.url') }}";
